@@ -25,8 +25,16 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+  
+    protected function authenticated(Auth $request, $user)
+{
+if ( $user->id() == 1 ) {// do your margic here
+    return redirect()->route('galati');
+}
 
+ return redirect('/home');
+} 
+  
     /**
      * Create a new controller instance.
      *

@@ -6,16 +6,16 @@
     <div class="column is-one-third is-offset-one-third m-t-100">
         <div class="card">
             <div class="card-content">
-                <h1 class="title">Log in</h1>
-                <form action="{{ route('login') }}" method="POST" role="form">
+                <h1 class="title">Admin Login</h1>
+                <form action="{{ route('admin.login.submit') }}" method="POST" role="form">
                     {{csrf_field()}}
                 <div class="field">
-                    <label for="email" class="label">Email Address</label>
+                    <label for="username" class="label">Username</label>
                     <p class="control">
-                        <input type="text" class="input {{$errors->has('email') ? 'is-danger' : ''}}" name="email" id="email" value="{{old('email')}}" placeholder="name@example.com" required>
+                        <input type="text" class="input {{$errors->has('username') ? 'is-danger' : ''}}" name="username" id="username" value="{{old('username')}}" required>
                     </p>
-                     @if ($errors->has('email'))
-                        <p class="help is-danger">{{$errors->first('email')}}</p>
+                     @if ($errors->has('username'))
+                        <p class="help is-danger">{{$errors->first('username')}}</p>
                     @endif
                 </div>
                 <div class="field">
@@ -33,7 +33,6 @@
             </div>
             </form>
         </div>
-        <h5 class="has-text-centered m-t-20"><a href="{{ route('password.request') }}" class="is-muted">Forgot your password?</a></h5>
     </div>
 </div>
 @endsection

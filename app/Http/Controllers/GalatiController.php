@@ -6,8 +6,7 @@ use Illuminate\Http\Request;
 use App\Ps_product;
 use App\Test;
 use Config;
-use Illuminate\Support\Facades\Auth;
-class HomeController extends Controller
+class GalatiController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -16,22 +15,13 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-       // $this->middleware('auth');
-    }
+         $this->middleware('auth:user');
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        
-       /* Config::set("database.connections.mysql", [
+         Config::set("database.connections.mysql", [
             'driver' => 'mysql',
             'host' =>'127.0.0.1',
             'port' => '3306',
-            'database' => 'devmarketer',
+            'database' => 'galati',
             'username' => 'root',
             'password' => '',
             'unix_socket' => env('DB_SOCKET', ''),
@@ -42,11 +32,18 @@ class HomeController extends Controller
             'strict' => true,
             'engine' => null,
 ]);
-        $test = new Test;
 
-     echo($test::where('id',1)->get());
-    }*/
-    Auth::logout();
-    return view('home');  
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+    $test = new Test;
+          echo($test::where('id_user',1)->get());
+    //return view('admin');    
     }
 }

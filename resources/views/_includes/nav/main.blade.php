@@ -18,7 +18,16 @@
                         <a href="#" id="button-navbar" class="navbar-item is-tab is-hidden-mobile">Utile</a>
                     </div>
                     <div class="navbar-end">
-                              <a href="{{ route('login') }}" class="navbar-item is-tab">Logout</a>
+                         <a href="{{route('logout')}}" class="navbar-item" onclick="event.preventDefault();
+                         document.getElementById('logout-form').submit();">
+                            <span class="icon">
+                              <i class="fa fa-fw fa-sign-out m-r-5"></i>
+                            </span>
+                            Logout
+                          </a>
+                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                {{ csrf_field() }}
+                            </form>
                     </div>
                 </div>
             </nav>
