@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Ps_product;
-use App\Test;
+use App\Angajati;
 use Config;
-use Illuminate\Support\Facades\Auth;
-class HomeController extends Controller
+class RomanaController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -16,8 +14,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
-               
+         $this->middleware('auth:web');
 
     }
 
@@ -28,12 +25,14 @@ class HomeController extends Controller
      */
     public function index()
     {
-        
-       /* Config::set("database.connections.mysql", [
+        $dm = app("Illuminate\\Database\\DatabaseManager");
+
+$dm->disconnect();
+        Config::set("database.connections.mysql", [
             'driver' => 'mysql',
             'host' =>'127.0.0.1',
             'port' => '3306',
-            'database' => 'devmarketer',
+            'database' => 'romana',
             'username' => 'root',
             'password' => '',
             'unix_socket' => env('DB_SOCKET', ''),
@@ -44,11 +43,9 @@ class HomeController extends Controller
             'strict' => true,
             'engine' => null,
 ]);
-        $test = new Test;
-
-     echo($test::where('id',1)->get());
-    }*/
- 
-    return view('home');  
+    $test = new Angajati;
+          echo($test::where('id_user',4)->get());
+    //return view('admin');    
     }
+  
 }

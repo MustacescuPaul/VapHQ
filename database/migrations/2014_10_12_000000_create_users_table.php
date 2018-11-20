@@ -18,7 +18,6 @@ class CreateUsersTable extends Migration
             $table->string('username')->unique();
             $table->string('prenume')->nullable();
             $table->string('nume')->nullable();
-            $table->string('email');
             $table->tinyInteger('activ')->nullable();
             $table->tinyInteger('bonus')->nullable();
             $table->tinyInteger('banca')->nullable();

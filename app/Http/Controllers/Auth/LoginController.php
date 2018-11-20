@@ -1,9 +1,13 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
-
+use Illuminate\Support\Facades\Auth;
+use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
+
 
 class LoginController extends Controller
 {
@@ -16,25 +20,12 @@ class LoginController extends Controller
     | redirecting them to your home screen. The controller uses a trait
     | to conveniently provide its functionality to your applications.
     |
-    */
+     */
 
     use AuthenticatesUsers;
 
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
   
-    protected function authenticated(Auth $request, $user)
-{
-if ( $user->id() == 1 ) {// do your margic here
-    return redirect()->route('galati');
-}
 
- return redirect('/home');
-} 
-  
     /**
      * Create a new controller instance.
      *
@@ -43,5 +34,67 @@ if ( $user->id() == 1 ) {// do your margic here
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+        var_dump(Auth::id());
+    }
+
+    /**
+     * Check either username or email.
+     * @return string
+     */
+    public function username()
+    {
+        $identity  = request()->get('username');
+        $fieldName = 'username';
+        request()->merge([$fieldName => $identity]);
+        return $fieldName;
+    }
+    /**
+     * Validate the user login.
+     * @param Request $request
+     */
+    protected function validateLogin(Request $request)
+    {
+        $this->validate(
+            $request,
+            [
+                'username' => 'required|string',
+                'password' => 'required|string',
+            ],
+            [
+                'username.required' => 'Username  is required',
+                'password.required' => 'Password is required',
+            ]
+        );
+    }
+    /**
+     * @param Request $request
+     * @throws ValidationException
+     */
+    protected function sendFailedLoginResponse(Request $request)
+    {
+        $request->session()->put('login_error', trans('auth.failed'));
+        throw ValidationException::withMessages(
+            [
+                'error' => [trans('auth.failed')],
+            ]
+        );
+    }
+      /**
+     * Where to redirect users after login.
+     *
+     * @var string
+     */
+
+    protected function authenticated(Request $request, $user)
+    {
+        if (Auth::id() == 1) {
+// do your margic here
+            return redirect()->route('galati');
+        }
+        if (Auth::id() == 2) {
+// do your margic here
+            return redirect()->route('romana');
+        }
+        return redirect('/home');
     }
 }

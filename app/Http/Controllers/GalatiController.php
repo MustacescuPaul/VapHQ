@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Ps_product;
-use App\Test;
+use App\Angajati;
 use Config;
 class GalatiController extends Controller
 {
@@ -15,8 +14,21 @@ class GalatiController extends Controller
      */
     public function __construct()
     {
-         $this->middleware('auth:user');
+         $this->middleware('auth:web');
 
+
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $dm = app("Illuminate\\Database\\DatabaseManager");
+
+$dm->disconnect();
          Config::set("database.connections.mysql", [
             'driver' => 'mysql',
             'host' =>'127.0.0.1',
@@ -32,17 +44,7 @@ class GalatiController extends Controller
             'strict' => true,
             'engine' => null,
 ]);
-
-    }
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-    $test = new Test;
+      $test = new Angajati;
           echo($test::where('id_user',1)->get());
     //return view('admin');    
     }

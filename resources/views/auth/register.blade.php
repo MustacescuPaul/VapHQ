@@ -18,12 +18,12 @@
                     @endif
                 </div>
                 <div class="field">
-                    <label for="email" class="label">Email Address</label>
+                    <label for="username" class="label">Username</label>
                     <p class="control">
-                        <input type="text" class="input {{$errors->has('email') ? 'is-danger' : ''}}" name="email" id="email" value="{{old('email')}}" placeholder="name@example.com" required>
+                        <input type="text" class="input {{$errors->has('username') ? 'is-danger' : ''}}" name="username" id="username" value="{{old('username')}}"  required>
                     </p>
-                     @if ($errors->has('email'))
-                        <p class="help is-danger">{{$errors->first('email')}}</p>
+                     @if ($errors->has('username'))
+                        <p class="help is-danger">{{$errors->first('username')}}</p>
                     @endif
                 </div>
                 <div class="columns">
