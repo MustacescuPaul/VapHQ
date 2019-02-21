@@ -19,13 +19,35 @@ Vue.use(Buefy);
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
 
-//Vue.component('example-component', require('./components/ExampleComponent.vue'));
+/*Vue.component('sidebarComp', require('./components/sidebarComp.vue'));
+Vue.component('subCat', require('./components/subCat.vue'));*/
+Vue.component('categ-menu', require('./components/categmenu.vue'));
+Vue.component('cash-card', require('./components/cashcard.vue'));
+Vue.component('casa-index', require('./components/casaIndex.vue'));
+Vue.component('cart', require('./components/cart.vue'));
+Vue.component('product-list', require('./components/productList.vue'));
+Vue.component('date-client', require('./components/dateClient.vue'));
 
-// const files = require.context('./', true, /\.vue$/i)
+Vue.component('garantii-index', require('./components/garantii/garantiiIndex.vue'));
+Vue.component('date-intrare', require('./components/garantii/dateIntrare.vue'));
+Vue.component('bon-deschis', require('./components/garantii/bonDeschis.vue'));
+Vue.component('intrare-produs', require('./components/garantii/intrareProdus.vue'));
+Vue.component('garantii-intrate', require('./components/garantii/garantiiIntrate.vue'));
+Vue.component('detalii-garantii', require('./components/garantii/detaliiGarantii.vue'));
+Vue.component('detalii-produse', require('./components/garantii/detaliiProduse.vue'));
 
-// files.keys().map(key => {
-//     return Vue.component(_.last(key.split('/')).split('.')[0], files(key))
-// })
+Vue.component('admin-index', require('./components/admin/adminIndex.vue'));
+Vue.component('admin-sidebar', require('./components/admin/adminSidebar.vue'));
+Vue.component('admin-content', require('./components/admin/adminContent.vue'));
+Vue.component('admin-accounts', require('./components/admin/adminAccounts.vue'));
+Vue.component('accounts-settings', require('./components/admin/accountsSettings.vue'));
+Vue.component('admin-service', require('./components/admin/adminService.vue'));
+
+/*const files = require.context('./', true, /\.vue$/i)
+
+files.keys().map(key => {
+    return Vue.component(_.last(key.split('/')).split('.')[0], files(key))
+})*/
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -34,5 +56,10 @@ Vue.use(Buefy);
  */
 
 const app = new Vue({
-    el: '#app'
+    el: '#app',
+    data: {
+    	menu: [],
+    	cart: [],
+    },
+    
 });

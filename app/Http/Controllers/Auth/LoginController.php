@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Config;
 
 
 class LoginController extends Controller
@@ -34,7 +35,7 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
-        var_dump(Auth::id());
+       
     }
 
     /**
@@ -87,14 +88,27 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
-        if (Auth::id() == 1) {
-// do your margic here
-            return redirect()->route('galati');
-        }
-        if (Auth::id() == 2) {
-// do your margic here
-            return redirect()->route('romana');
-        }
-        return redirect('/home');
+         $dm = app("Illuminate\\Database\\DatabaseManager");
+        $dm->disconnect();
+        $user = Auth::user();
+        Config::set("database.connections.mysql", [
+            'driver' => 'mysql',
+            'host' =>'127.0.0.1',
+            'port' => '3306',
+            'database' => $user['magazin'],
+            'username' => 'root',
+            'password' => '',
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+]);
+        
+            return redirect()->route('casa.index');
+        
+       
     }
 }

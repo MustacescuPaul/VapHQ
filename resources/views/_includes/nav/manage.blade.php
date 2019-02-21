@@ -1,8 +1,24 @@
-<div class="side-menu">
+<!-- <div class="side-menu">
   <aside class="menu">
     <ul class="menu-list">
-      <li><a href="#">Manage Users</a></li>
-      <li><a href="#">Roles &amp; Permissions</a></li>
+      @foreach ($menu['1'] as $key => $element)
+         <li><button class="button is-outlined is-fullwidth" name="{{$key}}">{{$element}}</button></li>
+      @endforeach
+       <categMenu></categMenu>
+       
     </ul>
   </aside>
 </div>
+@section('scripts')
+  <script>
+  var app = new Vue({
+      el: '#app',
+      data: {
+       
+      },
+      methods:
+      
+    });
+  
+  </script>
+@endsection -->
