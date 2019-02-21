@@ -156,7 +156,7 @@ class AdminController extends Controller {
 			$intrari = Intrare::on('garantii')->where('status', '=', 'Primit @ ' . $request->vap)->get();
 			return json_encode($intrari);
 		} else {
-			$intrari = Intrare::all();
+			$intrari = Intrare::on('garantii')->get();
 			return json_encode($intrari);
 		}
 	}
@@ -165,7 +165,11 @@ class AdminController extends Controller {
 		$intrari = Intrare_produs::on('garantii')->where('id_service', '=', $request->id)->get();
 		return json_encode($intrari);
 	}
-	public function getVapoints() {
+	public function getVapoints(Request $request) {
+		if ($request->id) {
+			$vapoints = Vapoint::on('garantii')->find($request->id);
+			return json_encode($vapoints);
+		}
 		$vapoints = Vapoint::on('garantii')->get(["nume"]);
 		return json_encode($vapoints);
 	}

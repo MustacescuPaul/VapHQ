@@ -173,4 +173,37 @@ class GarantiiController extends Controller {
 
 	}
 
+	public function primitService(Request $request) {
+		$user = Auth::user();
+		if ($request->stat == "Expediat") {
+			$status = "Expediat @ Service";
+			$intrare = Intrare::on('garantii')->find($request->id);
+			$intrare->status = $status;
+			$intrare->save();
+
+		}
+		if ($request->stat == "Primit") {
+			$intrare = Intrare::on('garantii')->find($request->id);
+			$intrare->status = 'Primit @ Service';
+			$intrare->save();
+		}
+		$intrari = Intrare::on('garantii')->get();
+		return json_encode($intrari);
+
+	}
+	public function rezolvat(Request $request) {
+		$request->validate([
+			'text' => 'required|alpha_dash|max:255',
+			'id' => 'required|numeric',
+		]);
+		$intrare = Intrare::on('garantii')->find($request->id);
+		$intrare->remediat = 1;
+
+		$produs = Intrare_produs::on('garantii')->where('id_service', '=', $intrare->id)->first();
+		$produs->remediere = $request->text;
+		$produs->save();
+		$intrare->save();
+
+	}
+
 }

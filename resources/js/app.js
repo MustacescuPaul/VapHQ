@@ -33,7 +33,6 @@ Vue.component('date-intrare', require('./components/garantii/dateIntrare.vue'));
 Vue.component('bon-deschis', require('./components/garantii/bonDeschis.vue'));
 Vue.component('intrare-produs', require('./components/garantii/intrareProdus.vue'));
 Vue.component('garantii-intrate', require('./components/garantii/garantiiIntrate.vue'));
-Vue.component('detalii-garantii', require('./components/garantii/detaliiGarantii.vue'));
 Vue.component('detalii-produse', require('./components/garantii/detaliiProduse.vue'));
 
 Vue.component('admin-index', require('./components/admin/adminIndex.vue'));

@@ -8,15 +8,17 @@
                 <th>Serial</th>
                 <th>Defect</th>
                 <th>Stare</th>
+                <th>Detalii remediere defect</th>
             </tr>
         </thead>
         <tbody>
             {{this.message}}
             <tr v-for="produs in produse_intrare">
-                <td>Nume: {{produs.nume}}</td>
-                <td>Serial: {{produs.cod}}</td>
-                <td>Defect: {{produs.defect}}</td>
-                <td>Stare: {{produs.stare}}</td>
+                <td>{{produs.nume}}</td>
+                <td>{{produs.cod}}</td>
+                <td>{{produs.defect}}</td>
+                <td>{{produs.stare}}</td>
+                <td>{{produs.remediere}}</td>
             </tr>
         </tbody>
     </table>

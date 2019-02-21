@@ -61,6 +61,8 @@ Route::prefix('garantii')->group(function () {
 	Route::post('/primit_produs', 'GarantiiController@intrareProdus')->name('garantii.primit_produs');
 	Route::post('/produse_intrare', 'GarantiiController@produseIntrare')->name('garantii.produse_intrare');
 	Route::post('/primit_vap', 'GarantiiController@primitVap')->name('garantii.primit_vap');
+	Route::post('/primit_service', 'GarantiiController@primitService')->name('garantii.primit_service');
 	Route::get('/intrate', 'GarantiiController@garantiiIntrate')->name('garantii.intrate');
+	Route::post('/rezolvat', 'GarantiiController@rezolvat')->name('garantii.rezolvat');
 
 });

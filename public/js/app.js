@@ -12398,15 +12398,14 @@ Vue.component('date-intrare', __webpack_require__(66));
 Vue.component('bon-deschis', __webpack_require__(69));
 Vue.component('intrare-produs', __webpack_require__(72));
 Vue.component('garantii-intrate', __webpack_require__(77));
-Vue.component('detalii-garantii', __webpack_require__(80));
-Vue.component('detalii-produse', __webpack_require__(83));
+Vue.component('detalii-produse', __webpack_require__(80));
 
-Vue.component('admin-index', __webpack_require__(86));
-Vue.component('admin-sidebar', __webpack_require__(89));
-Vue.component('admin-content', __webpack_require__(92));
-Vue.component('admin-accounts', __webpack_require__(95));
-Vue.component('accounts-settings', __webpack_require__(98));
-Vue.component('admin-service', __webpack_require__(111));
+Vue.component('admin-index', __webpack_require__(83));
+Vue.component('admin-sidebar', __webpack_require__(86));
+Vue.component('admin-content', __webpack_require__(89));
+Vue.component('admin-accounts', __webpack_require__(92));
+Vue.component('accounts-settings', __webpack_require__(95));
+Vue.component('admin-service', __webpack_require__(98));
 
 /*const files = require.context('./', true, /\.vue$/i)
 
@@ -58584,44 +58583,12 @@ if (false) {
 /* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var normalizeComponent = __webpack_require__(0)
-/* script */
-var __vue_script__ = null
-/* template */
-var __vue_template__ = null
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/js/components/garantii/detaliiGarantii.vue"
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 81 */,
-/* 82 */,
-/* 83 */
-/***/ (function(module, exports, __webpack_require__) {
-
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(84)
+var __vue_script__ = __webpack_require__(81)
 /* template */
-var __vue_template__ = __webpack_require__(85)
+var __vue_template__ = __webpack_require__(82)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -58660,11 +58627,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 84 */
+/* 81 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
 //
 //
 //
@@ -58709,7 +58678,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 85 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -58731,13 +58700,15 @@ var render = function() {
           _vm._v("\n        " + _vm._s(this.message) + "\n        "),
           _vm._l(_vm.produse_intrare, function(produs) {
             return _c("tr", [
-              _c("td", [_vm._v("Nume: " + _vm._s(produs.nume))]),
+              _c("td", [_vm._v(_vm._s(produs.nume))]),
               _vm._v(" "),
-              _c("td", [_vm._v("Serial: " + _vm._s(produs.cod))]),
+              _c("td", [_vm._v(_vm._s(produs.cod))]),
               _vm._v(" "),
-              _c("td", [_vm._v("Defect: " + _vm._s(produs.defect))]),
+              _c("td", [_vm._v(_vm._s(produs.defect))]),
               _vm._v(" "),
-              _c("td", [_vm._v("Stare: " + _vm._s(produs.stare))])
+              _c("td", [_vm._v(_vm._s(produs.stare))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(produs.remediere))])
             ])
           })
         ],
@@ -58759,7 +58730,9 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Defect")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Stare")])
+        _c("th", [_vm._v("Stare")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Detalii remediere defect")])
       ])
     ])
   }
@@ -58774,15 +58747,15 @@ if (false) {
 }
 
 /***/ }),
-/* 86 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(87)
+var __vue_script__ = __webpack_require__(84)
 /* template */
-var __vue_template__ = __webpack_require__(88)
+var __vue_template__ = __webpack_require__(85)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -58821,15 +58794,11 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 87 */
+/* 84 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
 //
 //
 //
@@ -58905,7 +58874,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 88 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -58935,7 +58904,7 @@ var render = function() {
       _vm._v(" "),
       _c(
         "section",
-        { staticClass: "column" },
+        { staticClass: "column", staticStyle: { "overflow-x": "auto" } },
         [
           _vm.show == "service"
             ? _c("div", { staticClass: "select" }, [
@@ -58969,11 +58938,16 @@ var render = function() {
                       ]
                     }
                   },
-                  _vm._l(_vm.vapoints, function(vap) {
-                    return _c("option", { domProps: { value: vap.nume } }, [
-                      _vm._v(_vm._s(vap.nume))
-                    ])
-                  })
+                  [
+                    _vm._l(_vm.vapoints, function(vap) {
+                      return _c("option", { domProps: { value: vap.nume } }, [
+                        _vm._v(_vm._s(vap.nume))
+                      ])
+                    }),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "" } }, [_vm._v("Toate")])
+                  ],
+                  2
                 )
               ])
             : _vm._e(),
@@ -59023,9 +58997,7 @@ var staticRenderFns = [
           ]),
           _vm._v(" "),
           _c("h2", { staticClass: "subtitle" }, [
-            _vm._v(
-              "\n                        Backoffice Vapez\n                    "
-            )
+            _vm._v("\n                    Backoffice Vapez\n                ")
           ])
         ])
       ])
@@ -59042,15 +59014,15 @@ if (false) {
 }
 
 /***/ }),
-/* 89 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(90)
+var __vue_script__ = __webpack_require__(87)
 /* template */
-var __vue_template__ = __webpack_require__(91)
+var __vue_template__ = __webpack_require__(88)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -59089,7 +59061,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 90 */
+/* 87 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -59150,7 +59122,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 91 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -59277,15 +59249,15 @@ if (false) {
 }
 
 /***/ }),
-/* 92 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(93)
+var __vue_script__ = __webpack_require__(90)
 /* template */
-var __vue_template__ = __webpack_require__(94)
+var __vue_template__ = __webpack_require__(91)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -59324,7 +59296,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 93 */
+/* 90 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -59387,7 +59359,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 94 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -59494,15 +59466,15 @@ if (false) {
 }
 
 /***/ }),
-/* 95 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(96)
+var __vue_script__ = __webpack_require__(93)
 /* template */
-var __vue_template__ = __webpack_require__(97)
+var __vue_template__ = __webpack_require__(94)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -59541,7 +59513,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 96 */
+/* 93 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -59655,7 +59627,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 97 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -59918,15 +59890,15 @@ if (false) {
 }
 
 /***/ }),
-/* 98 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(99)
+var __vue_script__ = __webpack_require__(96)
 /* template */
-var __vue_template__ = __webpack_require__(100)
+var __vue_template__ = __webpack_require__(97)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -59965,7 +59937,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 99 */
+/* 96 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -60129,7 +60101,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 100 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -60438,30 +60410,15 @@ if (false) {
 }
 
 /***/ }),
-/* 101 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 102 */,
-/* 103 */,
-/* 104 */,
-/* 105 */,
-/* 106 */,
-/* 107 */,
-/* 108 */,
-/* 109 */,
-/* 110 */,
-/* 111 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = __webpack_require__(112)
+var __vue_script__ = __webpack_require__(99)
 /* template */
-var __vue_template__ = __webpack_require__(113)
+var __vue_template__ = __webpack_require__(100)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -60500,11 +60457,57 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 112 */
+/* 99 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -60570,7 +60573,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
 
             prods: [],
-            show: 'intrari'
+            show: 'intrari',
+            temp: '',
+            id_intrare: '',
+            errors: [],
+            email_client: '',
+            adresa_client: '',
+            telefon_client: '',
+            email_vapoint: '',
+            telefon_vapoint: '',
+            nume_vapoint: '',
+            nume_client: '',
+            id_vapoint: ''
 
         };
     },
@@ -60579,25 +60593,69 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         getProduse: function getProduse(event) {
             var _this = this;
 
-            var id = event.currentTarget.id;
-            axios.post('/admin/getProduseIntrare', { id: id }).then(function (response) {
+            this.id_intrare = event.currentTarget.id;
+            this.email_client = event.currentTarget.getAttribute('email');
+            this.adresa_client = event.currentTarget.getAttribute('adresa');
+            this.telefon_client = event.currentTarget.getAttribute('telefon');
+            this.nume_client = event.currentTarget.getAttribute('nume');
+            this.id_vapoint = event.currentTarget.getAttribute('id_vapoint');
+
+            axios.post('/admin/getVapoints', { id: this.id_vapoint }).then(function (response) {
+                console.log(response.data);
+                _this.nume_vapoint = response.data.nume;
+                _this.telefon_vapoint = response.data.telefon;
+                _this.email_vapoint = response.data.email;
+            });
+
+            axios.post('/admin/getProduseIntrare', { id: this.id_intrare }).then(function (response) {
 
                 _this.prods = response.data;
                 _this.show = 'produse';
             });
+        },
+        showIntrari: function showIntrari(event) {
+            var _this2 = this;
+
+            axios.post('/admin/getService', { vap: this.id_vapoint }).then(function (response) {
+
+                _this2.llist = response.data;
+                _this2.show = 'intrari';
+            });
+        },
+        primitService: function primitService(event) {
+            var _this3 = this;
+
+            var id = event.currentTarget.id;
+            var stat = event.currentTarget.value;
+            axios.post('/garantii/primit_service', { id: id, stat: stat }).then(function (response) {
+
+                _this3.llist = response.data;
+            });
+        },
+        rezolvat: function rezolvat(event) {
+            var _this4 = this;
+
+            var text = event.currentTarget.value;
+
+            axios.post('/garantii/rezolvat', { id: this.id_intrare, text: text }).then(function (response) {
+                _this4.errors = '';
+            }).catch(function (error) {
+
+                _this4.errors = error.response.data.errors;
+            });;
         }
     }
 });
 
 /***/ }),
-/* 113 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "table-container" }, [
+  return _c("div", [
     _c(
       "table",
       {
@@ -60618,24 +60676,60 @@ var render = function() {
           "tbody",
           _vm._l(_vm.llist, function(intrare) {
             return _c("tr", [
-              _c("td", [_vm._v(_vm._s(intrare.nume_vapoint))]),
+              _c("td", [_vm._v(_vm._s(intrare.id))]),
+              _vm._v(" "),
+              _c("td", { class: { "is-danger": !intrare.remediat } }, [
+                _vm._v(_vm._s(intrare.nume_vapoint))
+              ]),
               _vm._v(" "),
               _c("td", [_vm._v(_vm._s(intrare.nume_client))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(intrare.adresa_client))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(intrare.telefon_client))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(intrare.email_client))]),
               _vm._v(" "),
               _c("td", [_vm._v(_vm._s(intrare.data))]),
               _vm._v(" "),
               _c("td", [_vm._v(_vm._s(intrare.status))]),
               _vm._v(" "),
               _c("td", [
+                _c("input", {
+                  staticClass: "checkbox",
+                  attrs: {
+                    type: "checkbox",
+                    value: "Primit",
+                    id: intrare.id,
+                    disabled:
+                      intrare.status != "Expediat @ " + intrare.nume_vapoint
+                  },
+                  domProps: { checked: _vm.temp },
+                  on: { click: _vm.primitService }
+                })
+              ]),
+              _vm._v(" "),
+              _c("td", [
+                _c("input", {
+                  staticClass: "checkbox",
+                  attrs: {
+                    type: "checkbox",
+                    value: "Expediat",
+                    id: intrare.id,
+                    disabled:
+                      intrare.status != "Primit @ Service" ||
+                      intrare.remediat == 0
+                  },
+                  domProps: { checked: _vm.temp },
+                  on: { click: _vm.primitService }
+                })
+              ]),
+              _vm._v(" "),
+              _c("td", [
                 _c("i", {
                   staticClass: "fas fa-chevron-circle-right",
-                  attrs: { id: intrare.id },
+                  attrs: {
+                    id: intrare.id,
+                    telefon: intrare.telefon_client,
+                    adresa: intrare.adresa_client,
+                    nume: intrare.nume_client,
+                    email: intrare.email_client,
+                    id_vapoint: intrare.id_vapoint
+                  },
                   on: { click: _vm.getProduse }
                 })
               ])
@@ -60655,11 +60749,7 @@ var render = function() {
         }
       ],
       staticClass: "fas fa-chevron-circle-left",
-      on: {
-        click: function($event) {
-          _vm.show = "intrari"
-        }
-      }
+      on: { click: _vm.showIntrari }
     }),
     _vm._v(" "),
     _c(
@@ -60696,12 +60786,116 @@ var render = function() {
               _vm._v(" "),
               _c("td", [_vm._v(_vm._s(product.stare))]),
               _vm._v(" "),
-              _vm._m(2, true)
+              _c("td", [
+                _c(
+                  "textarea",
+                  {
+                    staticClass: "textarea",
+                    attrs: { placeholder: "Remediere defect..." },
+                    on: { blur: _vm.rezolvat }
+                  },
+                  [_vm._v(_vm._s(product.remediere))]
+                ),
+                _vm._v(" "),
+                _vm.errors.text
+                  ? _c("p", { staticClass: "help is-danger" }, [
+                      _vm._v(_vm._s(_vm.errors.text))
+                    ])
+                  : _vm._e()
+              ])
             ])
           })
         )
       ]
-    )
+    ),
+    _vm._v(" "),
+    _vm.show == "produse"
+      ? _c("div", { staticClass: "columns" }, [
+          _c("div", { staticClass: "column is-half" }, [
+            _c("div", { staticClass: "card" }, [
+              _c(
+                "div",
+                {
+                  staticClass: "card-content",
+                  staticStyle: {
+                    "justify-content": "center",
+                    "align-items": "center",
+                    "text-align": "center"
+                  }
+                },
+                [
+                  _c("div", { staticClass: "content  is-centered" }, [
+                    _c("p", [_vm._v(_vm._s(_vm.nume_client))]),
+                    _vm._v(" "),
+                    _c("p", [_vm._v(_vm._s(_vm.adresa_client))])
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _c("footer", { staticClass: "card-footer" }, [
+                _c("p", { staticClass: "card-footer-item" }, [
+                  _c("span", [
+                    _vm._v(
+                      "\n                            Telefon: " +
+                        _vm._s(_vm.telefon_client) +
+                        "\n                        "
+                    )
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("p", { staticClass: "card-footer-item" }, [
+                  _c("span", [
+                    _vm._v(
+                      "\n                            Email: " +
+                        _vm._s(_vm.email_client) +
+                        "\n                        "
+                    )
+                  ])
+                ])
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "column" }, [
+            _c("div", { staticClass: "card" }, [
+              _c(
+                "div",
+                {
+                  staticClass: "card-content",
+                  staticStyle: {
+                    "justify-content": "center",
+                    "align-items": "center",
+                    "text-align": "center"
+                  }
+                },
+                [_c("p", [_vm._v(_vm._s(_vm.nume_vapoint))])]
+              ),
+              _vm._v(" "),
+              _c("footer", { staticClass: "card-footer" }, [
+                _c("p", { staticClass: "card-footer-item" }, [
+                  _c("span", [
+                    _vm._v(
+                      "\n                            Telefon: " +
+                        _vm._s(_vm.telefon_vapoint) +
+                        "\n                        "
+                    )
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("p", { staticClass: "card-footer-item" }, [
+                  _c("span", [
+                    _vm._v(
+                      "\n                            Email: " +
+                        _vm._s(_vm.email_vapoint) +
+                        "\n                        "
+                    )
+                  ])
+                ])
+              ])
+            ])
+          ])
+        ])
+      : _vm._e()
   ])
 }
 var staticRenderFns = [
@@ -60711,19 +60905,19 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
+        _c("th", [_vm._v("Id")]),
+        _vm._v(" "),
         _c("th", [_vm._v("Nume Vapoint")]),
         _vm._v(" "),
         _c("th", [_vm._v("Nume client")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Adresa")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Telefon")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Email")]),
-        _vm._v(" "),
         _c("th", [_vm._v("Data")]),
         _vm._v(" "),
         _c("th", [_vm._v("Status")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Primit")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Expediat")]),
         _vm._v(" "),
         _c("th")
       ])
@@ -60752,17 +60946,6 @@ var staticRenderFns = [
         _c("th", [_vm._v("Remediere defect")])
       ])
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", [
-      _c("textarea", {
-        staticClass: "textarea",
-        attrs: { placeholder: "e.g. Hello world" }
-      })
-    ])
   }
 ]
 render._withStripped = true
@@ -60773,6 +60956,12 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-54dd55b1", module.exports)
   }
 }
+
+/***/ }),
+/* 101 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);
