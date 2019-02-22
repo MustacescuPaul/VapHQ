@@ -24,10 +24,10 @@
                     </div>
                     <div class="tile is-parent">
                         <article class="tile is-child notification is-danger">
-                            <p class="title">Wide tile</p>
-                            <p class="subtitle">Aligned with the right tile</p>
+                            <p class="title">Ultima intrare in service</p>
+                            
                             <div class="content">
-                                <!-- Content -->
+                              <p>{{service.nume_vapoint}} || {{service.data}} || {{service.status}}</p>
                             </div>
                         </article>
                     </div>
@@ -35,8 +35,8 @@
                 <div class="tile is-parent">
                     <article class="tile is-child notification is-success">
                         <div class="content">
-                            <p class="title">Tall tile</p>
-                            <p class="subtitle">With even more content</p>
+                            <p class="title has-text-centered" >Vapointuri inregistrare</p>
+                            <p v-for="vap in vapoints" class="has-text-centered">{{vap.nume}}</p>
                             <div class="content">
                                 <!-- Content -->
                             </div>
@@ -50,7 +50,8 @@ export default {
     props: [],
     data: function() {
         return {
-
+            vapoints: [],
+            service: '',
         }
     },
     methods: {
@@ -58,7 +59,16 @@ export default {
 
     },
     mounted() {
+        axios.post('/admin/getVapoints', {registered: 1}).then(response => {
 
+                this.vapoints = response.data;
+
+            });
+        axios.post('/admin/getService', {ultima: 1}).then(response => {
+
+                this.service = response.data;
+
+            });
     }
 }
 

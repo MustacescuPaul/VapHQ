@@ -252,11 +252,12 @@ class CasaController extends Controller {
 		if ($request->cugarantie == 1) {
 			$request->validate([
 				'email' => 'required|email',
-				'nume' => 'required|max:50|alpha_dash',
-				'adresa' => 'required|max:100|alpha_dash',
+				'nume' => 'required|max:50|regex:/^[\pL\s]+$/u',
+				'adresa' => 'required|max:100|regex:/^[\pL\s]+$/u',
 				'telefon' => 'required|numeric',
 
 			]);
+
 			$this->switchDB('garantii');
 			$vapoint = Vapoint::find($user->id_vapoint);
 

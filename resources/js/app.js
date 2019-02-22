@@ -27,6 +27,7 @@ Vue.component('casa-index', require('./components/casaIndex.vue'));
 Vue.component('cart', require('./components/cart.vue'));
 Vue.component('product-list', require('./components/productList.vue'));
 Vue.component('date-client', require('./components/dateClient.vue'));
+Vue.component('stoc-index', require('./components/stocIndex.vue'));
 
 Vue.component('garantii-index', require('./components/garantii/garantiiIndex.vue'));
 Vue.component('date-intrare', require('./components/garantii/dateIntrare.vue'));

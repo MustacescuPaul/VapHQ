@@ -54,6 +54,11 @@ Route::prefix('casa')->group(function () {
 	Route::post('/reducere_tot', 'CasaController@reducere_tot')->name('casa.redTot');
 
 });
+Route::prefix('stoc')->group(function () {
+
+	Route::get('/', 'StocController@index')->name('casa.index');
+
+});
 Route::prefix('garantii')->group(function () {
 	Route::get('/', 'GarantiiController@index')->name('garantii.index');
 	Route::post('/deschideBonuri', 'GarantiiController@deschideBonuri')->name('garantii.deschide_bon');

@@ -22,7 +22,7 @@
                     <td>{{intrare.status}}</td>
                     <td><input type="checkbox" :checked="temp" value="Primit" :id="intrare.id" @click="primitService" :disabled="intrare.status != 'Expediat @ ' + intrare.nume_vapoint" class="checkbox"></td>
                     <td><input type="checkbox" :checked="temp" value="Expediat" :id="intrare.id" @click="primitService" :disabled="intrare.status != 'Primit @ Service' || intrare.remediat == 0" class="checkbox"></td>
-                    <td><i :id="intrare.id" :telefon="intrare.telefon_client" :adresa="intrare.adresa_client" :nume="intrare.nume_client" :email="intrare.email_client" :id_vapoint="intrare.id_vapoint" @click="getProduse" class="fas fa-chevron-circle-right"></i></td>
+                    <td><i :id="intrare.id" :telefon="intrare.telefon_client" :adresa="intrare.adresa_client" :nume="intrare.nume_client" :email="intrare.email_client" :id_vapoint="intrare.id_vapoint" @click="getProduse" class="fas fa-chevron-circle-right" :status="intrare.remediat"></i></td>
                 </tr>
             </tbody>
         </table>
@@ -49,7 +49,7 @@
                     <td>{{product.cod}}</td>
                     <td>{{product.defect}}</td>
                     <td>{{product.stare}}</td>
-                    <td><textarea class="textarea" @blur="rezolvat" placeholder="Remediere defect...">{{product.remediere}}</textarea>
+                    <td><textarea class="textarea" @blur="rezolvat" :disabled="status == 1"  placeholder="Remediere defect...">{{product.remediere}}</textarea>
                         <p v-if="errors.text" class="help is-danger">{{errors.text}}</p>
                     </td>
                 </tr>
@@ -121,6 +121,7 @@ export default {
             nume_vapoint: '',
             nume_client: '',
             id_vapoint: '',
+            status: '',
            
         }
     },
@@ -132,6 +133,7 @@ export default {
             this.telefon_client = event.currentTarget.getAttribute('telefon');
             this.nume_client = event.currentTarget.getAttribute('nume');
             this.id_vapoint = event.currentTarget.getAttribute('id_vapoint');
+            this.status = event.currentTarget.getAttribute('status');
           
             axios.post('/admin/getVapoints', { id: this.id_vapoint}).then(response => {
                 console.log(response.data);

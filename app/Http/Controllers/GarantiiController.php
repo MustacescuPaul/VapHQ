@@ -52,7 +52,8 @@ class GarantiiController extends Controller {
 
 			foreach ($c as $key => $product) {
 				$this->switchDB('garantii');
-				if ($produs = Produse::find($product->id_prod)) {
+				if (Produse::on('garantii')->where('id_prod', '=', $product->id_prod)->exists()) {
+					$produs = Produse::on('garantii')->where('id_prod', '=', $product->id_prod)->first();
 					$sn = $produs->cod;
 					$this->switchDB('vapez');
 					if ($images = Image::where([['id_product', $product->id_prod], ['cover', '1']])->first()) {

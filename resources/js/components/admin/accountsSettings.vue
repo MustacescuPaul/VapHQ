@@ -32,9 +32,9 @@
                     </label></td>
                 <td>
                     <div class="select">
-                        <select v-model="vap[user.id]" :id="user.id" @change="selectVap">
+                        <select v-model="vapoints[user.id_vapoint]" :id="user.id" @change="selectVap">
 
-                            <option  v-for="(vapoint,index) in vapoints" >{{vapoint}}</option>
+                            <option  v-for="(vapoint,index) in vapoints" :value="vapoint" :selected="index == user.id_vapoint">{{vapoint}}</option>
                             
                           
                         </select>
@@ -120,14 +120,10 @@ export default {
         },
         selectVap: function(event){
              let id = event.currentTarget.id;
-             let v = "";
-             for(let vapoint of this.vap){
-                if(vapoint)
-                    v= vapoint;
-             }
+             let v = event.currentTarget.value;
+           
              axios.post('/admin/selectVap', { id: id, vapoint: v }).then(response => {
                
-
 
             }).catch(error => {
 

@@ -63,6 +63,14 @@ return [
 			'username' => env('DB_USERNAME_GALATI'),
 			'password' => env('DB_PASSWORD_GALATI'),
 		],
+		'cluj' => [
+			'driver' => env('DB_CONNECTION_CLUJ'),
+			'host' => env('DB_HOST_CLUJ'),
+			'port' => env('DB_PORT_CLUJ'),
+			'database' => env('DB_DATABASE_CLUJ'),
+			'username' => env('DB_USERNAME_CLUJ'),
+			'password' => env('DB_PASSWORD_CLUJ'),
+		],
 		'garantii' => [
 			'driver' => env('DB_CONNECTION_GARANTII'),
 			'host' => env('DB_HOST_GARANTII'),

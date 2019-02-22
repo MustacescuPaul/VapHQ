@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Admin;
 use App\Intrare;
 use App\Intrare_produs;
 use App\User;
@@ -46,12 +47,14 @@ class AdminController extends Controller {
 		$request->validate([
 			'username' => 'required|unique:mysql.users,username|max:50|alpha_dash',
 			'parola' => 'required|max:50|alpha_dash',
+			'email' => 'required|email',
 
 		]);
 		$admin = new Admin;
 		$admin->username = $request->username;
 		$admin->password = Hash::make($request->parola);
-		$user->save();
+		$admin->email = $request->email;
+		$admin->save();
 
 	}
 	public function createUser(Request $request) {
@@ -141,6 +144,7 @@ class AdminController extends Controller {
 	}
 	public function selectVap(Request $request) {
 		$request->validate([
+
 			'vapoint' => 'required|regex:/^[\pL\s\-]+$/u',
 		]);
 
@@ -149,13 +153,19 @@ class AdminController extends Controller {
 		$user->magazin = $vapoint->db;
 		$user->id_vapoint = $vapoint->id;
 		$user->save();
+		$vapoints = Vapointhq::all('id', 'nume');
+		return json_encode($vapoints);
 	}
 
 	public function getService(Request $request) {
-		if ($request->vap) {
-			$intrari = Intrare::on('garantii')->where('status', '=', 'Primit @ ' . $request->vap)->get();
+		if ($request->ultima) {
+			$intrare = Intrare::on('garantii')->where([['status', 'like', 'Expediat @ %']])->first();
+			return json_encode($intrare);
+		}
+		if ($request->vap != "Toate") {
+			$intrari = Intrare::on('garantii')->where([['nume_vapoint', '=', $request->vap]])->get();
 			return json_encode($intrari);
-		} else {
+		} elseif ($request->vap == "Toate") {
 			$intrari = Intrare::on('garantii')->get();
 			return json_encode($intrari);
 		}
@@ -170,6 +180,11 @@ class AdminController extends Controller {
 			$vapoints = Vapoint::on('garantii')->find($request->id);
 			return json_encode($vapoints);
 		}
+		if ($request->registered) {
+			$vapoints = Vapointhq::on('mysql')->where('db', '!=', null)->get(["nume"]);
+			return json_encode($vapoints);
+		}
+
 		$vapoints = Vapoint::on('garantii')->get(["nume"]);
 		return json_encode($vapoints);
 	}

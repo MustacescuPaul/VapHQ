@@ -12392,6 +12392,7 @@ Vue.component('casa-index', __webpack_require__(48));
 Vue.component('cart', __webpack_require__(51));
 Vue.component('product-list', __webpack_require__(54));
 Vue.component('date-client', __webpack_require__(57));
+Vue.component('stoc-index', __webpack_require__(111));
 
 Vue.component('garantii-index', __webpack_require__(63));
 Vue.component('date-intrare', __webpack_require__(66));
@@ -56301,13 +56302,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: [],
@@ -57751,7 +57745,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this = this;
 
             axios.post('/garantii/deschideBonuri', { cod_bon: this.cod_bon, serial_number: this.serial_number, cod_garantie: this.cod_garantie }).then(function (response) {
-                console.log(response);
+
                 _this.$emit('cartBon', response.data);
             });
         }
@@ -58842,7 +58836,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             list: [],
             service: [],
             vapoints: [],
-            vapoint: 'Paul'
+            vapoint: 'Toate'
         };
     },
     methods: {
@@ -58945,7 +58939,9 @@ var render = function() {
                       ])
                     }),
                     _vm._v(" "),
-                    _c("option", { attrs: { value: "" } }, [_vm._v("Toate")])
+                    _c("option", { attrs: { value: "Toate", selected: "" } }, [
+                      _vm._v("Toate")
+                    ])
                   ],
                   2
                 )
@@ -59352,10 +59348,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: [],
     data: function data() {
-        return {};
+        return {
+            vapoints: [],
+            service: ''
+        };
     },
     methods: {},
-    mounted: function mounted() {}
+    mounted: function mounted() {
+        var _this = this;
+
+        axios.post('/admin/getVapoints', { registered: 1 }).then(function (response) {
+
+            _this.vapoints = response.data;
+        });
+        axios.post('/admin/getService', { ultima: 1 }).then(function (response) {
+
+            _this.service = response.data;
+        });
+    }
 });
 
 /***/ }),
@@ -59366,92 +59376,95 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", { staticClass: "tile is-ancestor" }, [
+    _c("div", { staticClass: "tile is-vertical is-8" }, [
+      _vm._m(0),
+      _vm._v(" "),
+      _c("div", { staticClass: "tile is-parent" }, [
+        _c("article", { staticClass: "tile is-child notification is-danger" }, [
+          _c("p", { staticClass: "title" }, [
+            _vm._v("Ultima intrare in service")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "content" }, [
+            _c("p", [
+              _vm._v(
+                _vm._s(_vm.service.nume_vapoint) +
+                  " || " +
+                  _vm._s(_vm.service.data) +
+                  " || " +
+                  _vm._s(_vm.service.status)
+              )
+            ])
+          ])
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "tile is-parent" }, [
+      _c("article", { staticClass: "tile is-child notification is-success" }, [
+        _c(
+          "div",
+          { staticClass: "content" },
+          [
+            _c("p", { staticClass: "title has-text-centered" }, [
+              _vm._v("Vapointuri inregistrare")
+            ]),
+            _vm._v(" "),
+            _vm._l(_vm.vapoints, function(vap) {
+              return _c("p", { staticClass: "has-text-centered" }, [
+                _vm._v(_vm._s(vap.nume))
+              ])
+            }),
+            _vm._v(" "),
+            _c("div", { staticClass: "content" })
+          ],
+          2
+        )
+      ])
+    ])
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "tile is-ancestor" }, [
-      _c("div", { staticClass: "tile is-vertical is-8" }, [
-        _c("div", { staticClass: "tile" }, [
-          _c("div", { staticClass: "tile is-parent is-vertical" }, [
-            _c(
-              "article",
-              { staticClass: "tile is-child notification is-primary" },
-              [
-                _c("p", { staticClass: "title" }, [_vm._v("Vertical...")]),
-                _vm._v(" "),
-                _c("p", { staticClass: "subtitle" }, [_vm._v("Top tile")])
-              ]
-            ),
+    return _c("div", { staticClass: "tile" }, [
+      _c("div", { staticClass: "tile is-parent is-vertical" }, [
+        _c(
+          "article",
+          { staticClass: "tile is-child notification is-primary" },
+          [
+            _c("p", { staticClass: "title" }, [_vm._v("Vertical...")]),
             _vm._v(" "),
-            _c(
-              "article",
-              { staticClass: "tile is-child notification is-warning" },
-              [
-                _c("p", { staticClass: "title" }, [_vm._v("...tiles")]),
-                _vm._v(" "),
-                _c("p", { staticClass: "subtitle" }, [_vm._v("Bottom tile")])
-              ]
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "tile is-parent" }, [
-            _c(
-              "article",
-              { staticClass: "tile is-child notification is-info" },
-              [
-                _c("p", { staticClass: "title" }, [_vm._v("Middle tile")]),
-                _vm._v(" "),
-                _c("p", { staticClass: "subtitle" }, [_vm._v("With an image")]),
-                _vm._v(" "),
-                _c("figure", { staticClass: "image is-4by3" }, [
-                  _c("img", {
-                    attrs: {
-                      src: "https://bulma.io/images/placeholders/640x480.png"
-                    }
-                  })
-                ])
-              ]
-            )
-          ])
-        ]),
+            _c("p", { staticClass: "subtitle" }, [_vm._v("Top tile")])
+          ]
+        ),
         _vm._v(" "),
-        _c("div", { staticClass: "tile is-parent" }, [
-          _c(
-            "article",
-            { staticClass: "tile is-child notification is-danger" },
-            [
-              _c("p", { staticClass: "title" }, [_vm._v("Wide tile")]),
-              _vm._v(" "),
-              _c("p", { staticClass: "subtitle" }, [
-                _vm._v("Aligned with the right tile")
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "content" })
-            ]
-          )
-        ])
+        _c(
+          "article",
+          { staticClass: "tile is-child notification is-warning" },
+          [
+            _c("p", { staticClass: "title" }, [_vm._v("...tiles")]),
+            _vm._v(" "),
+            _c("p", { staticClass: "subtitle" }, [_vm._v("Bottom tile")])
+          ]
+        )
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "tile is-parent" }, [
-        _c(
-          "article",
-          { staticClass: "tile is-child notification is-success" },
-          [
-            _c("div", { staticClass: "content" }, [
-              _c("p", { staticClass: "title" }, [_vm._v("Tall tile")]),
-              _vm._v(" "),
-              _c("p", { staticClass: "subtitle" }, [
-                _vm._v("With even more content")
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "content" })
-            ])
-          ]
-        )
+        _c("article", { staticClass: "tile is-child notification is-info" }, [
+          _c("p", { staticClass: "title" }, [_vm._v("Middle tile")]),
+          _vm._v(" "),
+          _c("p", { staticClass: "subtitle" }, [_vm._v("With an image")]),
+          _vm._v(" "),
+          _c("figure", { staticClass: "image is-4by3" }, [
+            _c("img", {
+              attrs: { src: "https://bulma.io/images/placeholders/640x480.png" }
+            })
+          ])
+        ])
       ])
     ])
   }
@@ -59580,6 +59593,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: [],
@@ -59587,7 +59606,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             admin: {
                 username: '',
-                parola: ''
+                parola: '',
+                email: ''
             },
             user: {
                 username: '',
@@ -59615,9 +59635,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         RegisterAdmin: function RegisterAdmin(event) {
             var _this2 = this;
 
-            axios.post('/admin/createAdmin', { username: this.admin.username, parola: this.admin.parola }).then(function (response) {
-                console.log(response);
-            }).catch(function (error) {
+            axios.post('/admin/createAdmin', { username: this.admin.username, parola: this.admin.parola, email: this.admin.email }).then(function (response) {}).catch(function (error) {
 
                 _this2.erra = error.response.data.errors;
             });
@@ -59703,6 +59721,36 @@ var render = function() {
             _vm._v(" "),
             _c("p", { staticClass: "help is-danger" }, [
               _vm._v(_vm._s(_vm.erra.parola))
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "field" }, [
+          _c("div", { staticClass: "control" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.admin.email,
+                  expression: "admin.email"
+                }
+              ],
+              staticClass: "input is-large",
+              attrs: { type: "email", placeholder: "Your Email" },
+              domProps: { value: _vm.admin.email },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.admin, "email", $event.target.value)
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("p", { staticClass: "help is-danger" }, [
+              _vm._v(_vm._s(_vm.erra.email))
             ])
           ])
         ]),
@@ -60065,31 +60113,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this5 = this;
 
             var id = event.currentTarget.id;
-            var v = "";
-            var _iteratorNormalCompletion = true;
-            var _didIteratorError = false;
-            var _iteratorError = undefined;
-
-            try {
-                for (var _iterator = this.vap[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                    var vapoint = _step.value;
-
-                    if (vapoint) v = vapoint;
-                }
-            } catch (err) {
-                _didIteratorError = true;
-                _iteratorError = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion && _iterator.return) {
-                        _iterator.return();
-                    }
-                } finally {
-                    if (_didIteratorError) {
-                        throw _iteratorError;
-                    }
-                }
-            }
+            var v = event.currentTarget.value;
 
             axios.post('/admin/selectVap', { id: id, vapoint: v }).then(function (response) {}).catch(function (error) {
 
@@ -60305,8 +60329,8 @@ var render = function() {
                     {
                       name: "model",
                       rawName: "v-model",
-                      value: _vm.vap[user.id],
-                      expression: "vap[user.id]"
+                      value: _vm.vapoints[user.id_vapoint],
+                      expression: "vapoints[user.id_vapoint]"
                     }
                   ],
                   attrs: { id: user.id },
@@ -60322,8 +60346,8 @@ var render = function() {
                             return val
                           })
                         _vm.$set(
-                          _vm.vap,
-                          user.id,
+                          _vm.vapoints,
+                          user.id_vapoint,
                           $event.target.multiple
                             ? $$selectedVal
                             : $$selectedVal[0]
@@ -60334,7 +60358,16 @@ var render = function() {
                   }
                 },
                 _vm._l(_vm.vapoints, function(vapoint, index) {
-                  return _c("option", [_vm._v(_vm._s(vapoint))])
+                  return _c(
+                    "option",
+                    {
+                      domProps: {
+                        value: vapoint,
+                        selected: index == user.id_vapoint
+                      }
+                    },
+                    [_vm._v(_vm._s(vapoint))]
+                  )
                 })
               )
             ])
@@ -60584,7 +60617,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             telefon_vapoint: '',
             nume_vapoint: '',
             nume_client: '',
-            id_vapoint: ''
+            id_vapoint: '',
+            status: ''
 
         };
     },
@@ -60599,6 +60633,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.telefon_client = event.currentTarget.getAttribute('telefon');
             this.nume_client = event.currentTarget.getAttribute('nume');
             this.id_vapoint = event.currentTarget.getAttribute('id_vapoint');
+            this.status = event.currentTarget.getAttribute('status');
 
             axios.post('/admin/getVapoints', { id: this.id_vapoint }).then(function (response) {
                 console.log(response.data);
@@ -60728,7 +60763,8 @@ var render = function() {
                     adresa: intrare.adresa_client,
                     nume: intrare.nume_client,
                     email: intrare.email_client,
-                    id_vapoint: intrare.id_vapoint
+                    id_vapoint: intrare.id_vapoint,
+                    status: intrare.remediat
                   },
                   on: { click: _vm.getProduse }
                 })
@@ -60791,7 +60827,10 @@ var render = function() {
                   "textarea",
                   {
                     staticClass: "textarea",
-                    attrs: { placeholder: "Remediere defect..." },
+                    attrs: {
+                      disabled: _vm.status == 1,
+                      placeholder: "Remediere defect..."
+                    },
                     on: { blur: _vm.rezolvat }
                   },
                   [_vm._v(_vm._s(product.remediere))]
@@ -60962,6 +61001,176 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 102 */,
+/* 103 */,
+/* 104 */,
+/* 105 */,
+/* 106 */,
+/* 107 */,
+/* 108 */,
+/* 109 */,
+/* 110 */,
+/* 111 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(112)
+/* template */
+var __vue_template__ = __webpack_require__(113)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/stocIndex.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-2351b4bc", Component.options)
+  } else {
+    hotAPI.reload("data-v-2351b4bc", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 112 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: [],
+    data: function data() {
+        return {
+            show: 'cart',
+            products: [],
+            menu: [],
+            cart: []
+
+        };
+    },
+    methods: {
+
+        getProdList: function getProdList(event) {
+            var _this = this;
+
+            axios.get('/casa/lista_produse/' + event).then(function (response) {
+                _this.products = response.data.products;
+                _this.show = 'products';
+            });
+        },
+        search: function search(event) {
+            var _this2 = this;
+
+            axios.get('/casa/search/' + event).then(function (response) {
+                _this2.products = response.data;
+
+                _this2.show = 'products';
+            });
+        }
+
+    },
+    created: function created() {
+        var _this3 = this;
+
+        axios.get('/casa/sidebar_categ/1').then(function (response) {
+            _this3.menu = response.data;
+        });
+        axios.get('/casa/showcart').then(function (response) {
+            _this3.cart = response.data;
+        });
+    }
+});
+
+/***/ }),
+/* 113 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "container is-fluid" }, [
+    _c(
+      "div",
+      { staticClass: "columns" },
+      [
+        _c(
+          "div",
+          { staticClass: "colum" },
+          [
+            _c("categ-menu", {
+              attrs: { menu: _vm.menu },
+              on: {
+                getProd: function($event) {
+                  _vm.getProdList($event)
+                },
+                search: function($event) {
+                  _vm.search($event)
+                },
+                showChanged: function($event) {
+                  _vm.show = $event
+                }
+              }
+            })
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _vm.show == "products"
+          ? _c("product-list", { attrs: { products: _vm.products } })
+          : _vm._e()
+      ],
+      1
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-2351b4bc", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

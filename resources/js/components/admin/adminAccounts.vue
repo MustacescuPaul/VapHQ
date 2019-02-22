@@ -20,6 +20,12 @@
                             <p class="help is-danger">{{erra.parola}}</p>
                         </div>
                     </div>
+                    <div class="field">
+                        <div class="control">
+                            <input class="input is-large" v-model="admin.email" type="email" placeholder="Your Email">
+                            <p class="help is-danger">{{erra.email}}</p>
+                        </div>
+                    </div>
                     <button class="button is-block is-info is-large is-fullwidth" @click="RegisterAdmin">Inregistrare</button>
                 
             </div>
@@ -68,6 +74,7 @@ export default {
             admin: {
                 username: '',
                 parola: '',
+                email: '',
             },
             user: {
                 username: '',
@@ -94,8 +101,8 @@ export default {
 
         },
         RegisterAdmin: function(event) {
-            axios.post('/admin/createAdmin', { username: this.admin.username, parola: this.admin.parola }).then(response => {
-                console.log(response);
+            axios.post('/admin/createAdmin', { username: this.admin.username, parola: this.admin.parola,email: this.admin.email }).then(response => {
+               
 
             }).catch(error => {
 

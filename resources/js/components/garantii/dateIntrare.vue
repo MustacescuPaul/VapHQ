@@ -38,7 +38,7 @@ export default {
     methods: {
         deschideBon: function(event) {
             axios.post('/garantii/deschideBonuri', { cod_bon: this.cod_bon,serial_number: this.serial_number,cod_garantie: this.cod_garantie }).then(response => {
-            	console.log(response);
+            	
                 this.$emit('cartBon', response.data);
 
             });

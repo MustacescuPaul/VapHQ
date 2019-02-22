@@ -20,8 +20,8 @@
             <section class="column" style="overflow-x: auto;">
                 <div v-if="show == 'service'" class="select">
                     <select v-model="vapoint" @change="getService">
-                        <option v-for="vap in vapoints" :value="vap.nume">{{vap.nume}}</option>
-                        <option value="">Toate</option>
+                        <option v-for="vap in vapoints" :value="vap.nume" >{{vap.nume}}</option>
+                        <option value="Toate" selected>Toate</option>
                     </select>
                 </div>
                 <admin-content v-if="show == 'dashboard'" style="margin-top:10px;"></admin-content>
@@ -41,7 +41,7 @@ export default {
             list: [],
             service: [],
             vapoints: [],
-            vapoint: 'Paul',
+            vapoint: 'Toate',
         }
     },
     methods: {
