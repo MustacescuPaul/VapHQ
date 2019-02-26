@@ -21,7 +21,7 @@ Vue.use(Buefy);
 
 /*Vue.component('sidebarComp', require('./components/sidebarComp.vue'));
 Vue.component('subCat', require('./components/subCat.vue'));*/
-Vue.component('categ-menu', require('./components/categmenu.vue'));
+Vue.component('categ-menu', require('./components/categMenu.vue'));
 Vue.component('cash-card', require('./components/cashcard.vue'));
 Vue.component('casa-index', require('./components/casaIndex.vue'));
 Vue.component('cart', require('./components/cart.vue'));

@@ -37,6 +37,7 @@
         </table>
         <button class="button is-success is-fullwidth" :disabled="bOk == 0" @click="bon">Bon {{total - val_reducere}}</button>
         <input type="number" class="input" :max="r" v-model="val_reducere" style="width: 20%;margin-top: 1%;" placeholder="Reducere" v-on:keyup.enter="reducere">
+        <button class="button" style="width: 20%;margin-top: 1%;" id_tag="080047299BFD" @click="reducereTag">Reducere TAG</button>
     </div>
 </template>
 <script>
@@ -53,6 +54,15 @@ export default {
         }
     },
     methods: {
+        reducereTag: function(event) {
+            let id_tag =   event.target.getAttribute('id_tag');
+                
+                axios.post('/casa/incasare', { id_tag: id_tag }).then(response => {
+
+
+                });
+            
+        },
         reducere: function(event) {
             if (this.val_reducere <= this.total) {
                 axios.post('/casa/incasare', { reducere: this.val_reducere }).then(response => {

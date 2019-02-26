@@ -10,6 +10,7 @@ use App\Garantii;
 use App\Image;
 use App\Product;
 use App\Produse;
+use App\TagId;
 use App\Vapoint;
 use Auth;
 use Config;
@@ -30,7 +31,7 @@ class CasaController extends Controller {
 			'port' => '3306',
 			'database' => $db,
 			'username' => 'root',
-			'password' => '',
+			'password' => 'root',
 			'unix_socket' => env('DB_SOCKET', ''),
 			'charset' => 'utf8mb4',
 			'collation' => 'utf8mb4_unicode_ci',
@@ -44,12 +45,12 @@ class CasaController extends Controller {
 	public function getParentCats() {
 		$parinti = array();
 		$elem = array();
-		$parents = Category::where('active', 1)->distinct()->get(['id_parent'])->sortBy('nleft');
+		$parents = Category::on('vapez')->where('active', 1)->distinct()->get(['id_parent'])->sortBy('nleft');
 		foreach ($parents as $value) {
 			array_push($parinti, $value->id_parent);
 		}
 		foreach ($parinti as $key => $value) {
-			$categ = Category::where('id_parent', $value)->get()->sortBy('nleft');
+			$categ = Category::on('vapez')->where('id_parent', $value)->get()->sortBy('nleft');
 			$elem[$value] = array();
 			foreach ($categ as $cat) {
 				$elem[$value][$cat->id_category] = $cat->CategoryLang()->first()->name;
@@ -59,7 +60,7 @@ class CasaController extends Controller {
 	}
 
 	public function index() {
-		$this->switchDB('vaphq');
+
 		$tab = session('tab');
 		if (!$tab) {
 			session(['tab' => 'Tab1']);
@@ -72,31 +73,34 @@ class CasaController extends Controller {
 	public function show() {
 
 		$user = Auth::user();
-
-		$this->switchDB($user->magazin);
-
+		$this->reducere_tag();
 		$tab = 'App\\' . session('tab');
-		$cart = $tab::on($user->magazin)->where('id_prod', '!=', 0)->get();
+		$cart = $tab::on($user->magazin)->where([['id_prod', '!=', 99998], ['id_prod', '!=', 99999], ['id_prod', '!=', 99995], ['id_prod', '!=', 99996], ['id_prod', '!=', 99997]])->get();
 
 		if ($cart->isEmpty()) {
-			$tab::truncate();
+			$tab::on($user->magazin)->truncate();
 		}
 
-		$this->switchDB('vapez');
 		foreach ($cart as $key => $product) {
-			$images = Image::where([['id_product', $product->id_prod], ['cover', '1']])->get(['id_image']);
+			$images = Image::on('vapez')->where([['id_product', $product->id_prod], ['cover', '1']])->get(['id_image']);
 			foreach ($images as $image) {
 				$cart[$key]['img'] = $image->id_image;
 			}
 		}
+		$reduceri = $tab::on($user->magazin)->where([['id_prod', '<=', 99999], ['id_prod', '>=', 99990]])->get();
+		$array = array();
+		$array['produse'] = $cart;
+		foreach ($reduceri as $value) {
+			$array['reduceri'][$value->id_prod] = $value;
+		}
 
-		return json_encode($cart);
+		return json_encode($array);
 
 	}
 
 	public function sidebar($id) {
 		if ($id) {
-			$this->switchDB('vapez');
+
 			$items = $this->getParentCats();
 			$items = $items[$id];
 			$items = json_encode($items);
@@ -115,15 +119,15 @@ class CasaController extends Controller {
 	public function productList($id) {
 
 		$user = Auth::user();
-		$this->switchDB($user->magazin);
-		$categ = Category::find($id);
+		//$this->switchDB($user->magazin);
+		$categ = Category::on($user->magazin)->find($id);
 		$products_json = array();
 		$products_json['products'] = $categ->products;
 
-		$this->switchDB('vapez');
+		//$this->switchDB('vapez');
 
 		foreach ($categ->products as $product) {
-			$images = Image::where('id_product', $product->id_prod)->get(['id_image']);
+			$images = Image::on('vapez')->where('id_product', $product->id_prod)->get(['id_image']);
 			$products_json['images'][$product->id_prod] = array();
 			foreach ($images as $image) {
 				array_push($products_json['images'][$product->id_prod], $image->id_image);
@@ -150,22 +154,22 @@ class CasaController extends Controller {
 	public function addToCart($id_prod) {
 
 		$user = Auth::user();
-		$this->switchDB($user->magazin);
-		$prod = Product::find($id_prod);
+
+		$prod = Product::on($user->magazin)->find($id_prod);
 
 		$tab = 'App\\' . session('tab');
-		if (!$tab::find($id_prod)) {
+		if (!$tab::on($user->magazin)->find($id_prod)) {
 			$cart = new $tab;
+			$cart->setConnection($user->magazin);
 			$cart->id_prod = $prod->id_prod;
 			$cart->pret = $prod->pret;
 			$cart->nume = $prod->nume;
 			$cart->cantitate = '1';
 			$cart->intrare = $prod->intrare;
 			$cart->sn = $this->checkWarranty($id_prod);
-			$this->switchDB($user->magazin);
 			$cart->save();
-		} elseif ($tab::find($id_prod)) {
-			$prod = $tab::find($id_prod);
+		} elseif ($tab::on($user->magazin)->find($id_prod)) {
+			$prod = $tab::on($user->magazin)->find($id_prod);
 			$prod->cantitate += 1;
 			$prod->save();
 		}
@@ -176,12 +180,10 @@ class CasaController extends Controller {
 	public function increaseQ($id_prod) {
 
 		$user = Auth::user();
-
-		$this->switchDB($user->magazin);
-		$prod = Product::find($id_prod);
+		$prod = Product::on($user->magazin)->find($id_prod);
 
 		$tab = 'App\\' . session('tab');
-		$cart = $tab::find($id_prod);
+		$cart = $tab::on($user->magazin)->find($id_prod);
 		$cart->cantitate += '1';
 		$cart->save();
 
@@ -192,33 +194,32 @@ class CasaController extends Controller {
 	public function decreaseQ($id_prod) {
 
 		$user = Auth::user();
-		$this->switchDB($user->magazin);
-		$prod = Product::find($id_prod);
+
+		$prod = Product::on($user->magazin)->find($id_prod);
 
 		$tab = 'App\\' . session('tab');
-		$cart = $tab::find($id_prod);
+		$cart = $tab::on($user->magazin)->find($id_prod);
 		if ($cart->cantitate - 1 < 1) {
 			$cart->delete();
-			$cart = $tab::where('id_prod', '!=', 0)->get();
+			$cart = $tab::on($user->magazin)->where('id_prod', '!=', 0)->get();
 			if ($cart->isEmpty()) {
-				$tab::truncate();
+				$tab::on($user->magazin)->truncate();
 			}
 			return json_encode('0');
 		} else {
 			$cart->cantitate -= '1';
 			$cart->save();
 		}
-		$cart = $tab::where('id_prod', '!=', 0)->get();
+		$cart = $tab::on($user->magazin)->where('id_prod', '!=', 0)->get();
 		if ($cart->isEmpty()) {
-			$tab::truncate();
+			$tab::on($user->magazin)->truncate();
 		}
 
 		return json_encode($cart->cantitate);
 	}
 
 	public function checkWarranty($id_prod) {
-		$this->switchDB('garantii');
-		$garantie = A_garantie::find($id_prod);
+		$garantie = A_garantie::on('garantii')->find($id_prod);
 		if ($garantie) {
 			return $garantie->garantie;
 		} else {
@@ -232,18 +233,16 @@ class CasaController extends Controller {
 			'serial' => 'required|alpha_dash',
 		]);
 		$user = Auth::user();
-		$this->switchDB($user->magazin);
 		$tab = 'App\\' . session('tab');
-		$prod = $tab::find($request->id_prod);
+		$prod = $tab::on($user->magazin)->find($request->id_prod);
 
 		$prod->sn = $request->serial;
 		$prod->save();
 
 	}
 	public function search($name) {
-		$this->switchDB('vapez');
-
-		$products = Product::where('nume', $name)->orWhere('nume', 'like', '%' . $name . '%')->get();
+		$user = Auth::user();
+		$products = Product::on($user->magazin)->where('nume', $name)->orWhere('nume', 'like', '%' . $name . '%')->get();
 		return json_encode($products);
 	}
 
@@ -258,10 +257,10 @@ class CasaController extends Controller {
 
 			]);
 
-			$this->switchDB('garantii');
-			$vapoint = Vapoint::find($user->id_vapoint);
+			$vapoint = Vapoint::on('garantii')->find($user->id_vapoint);
 
 			$garantie = new Garantii;
+			$garantie->setConnection('garantii');
 			$garantie->id_vapoint = $vapoint->id;
 			$garantie->nume_vapoint = $vapoint->nume;
 			$garantie->nume_client = $request->nume;
@@ -270,16 +269,14 @@ class CasaController extends Controller {
 			$garantie->email_client = $request->email;
 			$garantie->save();
 
-			$this->switchDB($user->magazin);
-
 			$tab = 'App\\' . session('tab');
-			$cart = $tab::where('sn', '>', 0)->get();
-			$this->switchDB('garantii');
+			$cart = $tab::on($user->magazin)->where('sn', '>', 0)->get();
 
 			foreach ($cart as $key => $product) {
 				$produs = new Produse;
-				$garantie = Garantii::where('email_client', $request->email)->orderBy('data', 'desc')->first();
-				$produs->garantie = A_garantie::find($product->id_prod)->perioada;
+				$produs->setConnection('garantii');
+				$garantie = Garantii::on('garantii')->where('email_client', $request->email)->orderBy('data', 'desc')->first();
+				$produs->garantie = A_garantie::on('garantii')->find($product->id_prod)->perioada;
 				$produs->id_prod = $product->id_prod;
 				$produs->nume = $product->nume;
 				$produs->nume_vapoint = $vapoint->nume;
@@ -289,37 +286,70 @@ class CasaController extends Controller {
 				$produs->save();
 
 			}
-			$this->switchDB($user->magazin);
 
 		}
-		$this->switchDB($user->magazin);
-		if ($request->reducere > 0) {
+		//99999 id tag
+		if ($request->id_tag > 0) {
 			$tab = 'App\\' . session('tab');
-			if (!$tab::find(0)) {
+			if (!$tab::on($user->magazin)->find(99999)) {
 				$produs_reducere = new $tab;
-				$produs_reducere->pret = $request->reducere;
-				$produs_reducere->id_prod = 0;
-				$produs_reducere->nume = 'reducere';
+				$produs_reducere->setConnection($user->magazin);
+				$produs_reducere->pret = 0;
+				$produs_reducere->id_prod = 99999;
+				$produs_reducere->nume = $request->id_tag;
 				$produs_reducere->cantitate = 1;
-				$produs_reducere->intrare = $request->reducere;
+				$produs_reducere->intrare = 0;
 				$produs_reducere->save();
-			} else {
-				$produs_reducere = $tab::find(0);
-				$produs_reducere->pret = $request->reducere;
-				$produs_reducere->id_prod = 0;
-				$produs_reducere->nume = 'reducere';
+
+				$tag = TagId::find($request->id_tag);
+				$total = $tab::on($user->magazin)->where('id_prod', '!=', 99998)->sum('pret');
+
+				$produs_reducere = new $tab;
+				$produs_reducere->setConnection($user->magazin);
+				$produs_reducere->pret = ($tag->reducere / 100) * $total;
+				$produs_reducere->id_prod = 99998;
+				$produs_reducere->nume = 'Reducere fideliTAG';
 				$produs_reducere->cantitate = 1;
-				$produs_reducere->intrare = $request->reducere;
+				$produs_reducere->intrare = 0;
 				$produs_reducere->save();
+			} elseif ($produs_reducere = $tab::on($user->magazin)->find(99999)) {
+
+				$produs_reducere->pret = 0;
+				$produs_reducere->id_prod = 99999;
+				$produs_reducere->nume = $request->id_tag;
+				$produs_reducere->cantitate = 1;
+				$produs_reducere->intrare = 0;
+				$produs_reducere->save();
+
+				$tag = TagId::find($request->id_tag);
+				$total = $tab::on($user->magazin)->where('id_prod', '!=', 99998)->sum('pret');
+
+				$produs_reducere = $tab::on($user->magazin)->find(99998);
+
+				$produs_reducere->pret = ($tag->reducere / 100) * $total;
+				$produs_reducere->id_prod = 99998;
+				$produs_reducere->nume = 'Reducere fideliTAG';
+				$produs_reducere->cantitate = 1;
+				$produs_reducere->intrare = 0;
+				$produs_reducere->save();
+
 			}
 		}
-
-		if ($request->reducere == 0) {
+		if (isset($request->reducere) > 0) {
 			$tab = 'App\\' . session('tab');
-			if (!$tab::find(0)) {
+			if (!$tab::on($user->magazin)->find(99995)) {
 				$produs_reducere = new $tab;
-				$produs_reducere->pret = 0;
-				$produs_reducere->id_prod = 0;
+				$produs_reducere->setConnection($user->magazin);
+				$produs_reducere->pret = -$request->reducere;
+				$produs_reducere->id_prod = 99995;
+				$produs_reducere->nume = 'reducere';
+				$produs_reducere->cantitate = 1;
+				$produs_reducere->intrare = 0;
+				$produs_reducere->save();
+			} else {
+				$produs_reducere = $tab::on($user->magazin)->find(99995);
+				$produs_reducere->pret = -$request->reducere;
+				$produs_reducere->id_prod = 99995;
 				$produs_reducere->nume = 'reducere';
 				$produs_reducere->cantitate = 1;
 				$produs_reducere->intrare = 0;
@@ -327,17 +357,30 @@ class CasaController extends Controller {
 			}
 		}
 
-		if ($request->metoda) {
-
-			$this->switchDB($user->magazin);
+		/*if ($request->reducere == 0) {
 			$tab = 'App\\' . session('tab');
-			$cart = $tab::where('id_prod', '!=', 0)->get();
+			if (!$tab::on($user->magazin)->find(0)) {
+				$produs_reducere = new $tab;
+				$produs_reducere->setConnection($user->magazin);
+				$produs_reducere->pret = 0;
+				$produs_reducere->id_prod = 0;
+				$produs_reducere->nume = 'reducere';
+				$produs_reducere->cantitate = 1;
+				$produs_reducere->intrare = 0;
+				$produs_reducere->save();
+			}
+		}*/
+
+		if ($request->metoda) {
+			$tab = 'App\\' . session('tab');
+			$cart = $tab::on($user->magazin)->where('id_prod', '!=', 0)->get();
 			$bon = new Bon;
-			$produs_reducere = $tab::where('nume', '=', 'reducere')->first();
+			$bon->setConnection($user->magazin);
+			$produs_reducere = $tab::on($user->magazin)->where('nume', '=', 'reducere')->first();
 
 			$sum_pret = $cart->sum('pret');
 			$sum_intrare = $cart->sum('intrare');
-			$bon->angajat = $user->id;
+
 			$bon->intrare = $sum_intrare;
 
 			$intreg = (int) $sum_pret;
@@ -417,28 +460,26 @@ class CasaController extends Controller {
 
 			if ($request->metoda == 'cash') {
 				$bon->cash = $bon->platit;
-				var_dump($bon->cash);
 				$bon->card = 0;
 			}
 			if ($request->metoda == 'card') {
 				$bon->card = $bon->platit;
-				var_dump($bon->card);
-
 				$bon->cash = 0;
 			}
-
+			$bon->id_user = $user->id;
 			$bon->refacut = 0;
 			$bon->cod = rand(10000000, 99999999);
 			$bon->livrat = 0;
 			$bon->anulata = 0;
 
 			$bon->save();
-			$tab::truncate();
+			$tab::on($user->magazin)->truncate();
 
-			$bon = Bon::where('intrare', $sum_intrare)->orderBy('id_bon', 'desc')->first();
+			$bon = Bon::on($user->magazin)->where('intrare', $sum_intrare)->orderBy('id_bon', 'desc')->first();
 
 			foreach ($cart as $product) {
 				$detaliu = new Detaliu_bonuri;
+				$detaliu->setConnection($user->magazin);
 				$detaliu->id_bon = $bon->id_bon;
 				$detaliu->id_prod = $product->id_prod;
 				$detaliu->nume = $product->nume;
@@ -453,7 +494,25 @@ class CasaController extends Controller {
 
 	}
 
+	public function reducere_tag() {
+		$user = Auth::user();
+		$tab = 'App\\' . session('tab');
+		$tag = $tab::on($user->magazin)->find(99999);
+		$tag = TagId::find($tag->nume);
+		$total = $tab::on($user->magazin)->where('id_prod', '!=', 99998)->sum('pret');
+
+		$produs_reducere = $tab::on($user->magazin)->find(99998);
+
+		$produs_reducere->pret = ($tag->reducere / 100) * $total;
+		$produs_reducere->id_prod = 99998;
+		$produs_reducere->nume = 'Reducere fideliTAG';
+		$produs_reducere->cantitate = 1;
+		$produs_reducere->intrare = 0;
+		$produs_reducere->save();
+	}
+
 	public function reducere_tot(Request $request) {
+		$user = Auth::user();
 		$sum_pret = (double) $request->pret;
 		$intreg = (int) $sum_pret;
 		$dec = $sum_pret - $intreg;
@@ -503,11 +562,46 @@ class CasaController extends Controller {
 
 		}
 		if ($adaos > 0) {
+			$tab = 'App\\' . session('tab');
+			if (!$tab::on($user->magazin)->find(99996)) {
+				$produs_reducere = new $tab;
+				$produs_reducere->setConnection($user->magazin);
+				$produs_reducere->pret = $adaos;
+				$produs_reducere->id_prod = 99996;
+				$produs_reducere->nume = 'Adaos Rotunjire';
+				$produs_reducere->cantitate = 1;
+				$produs_reducere->intrare = 0;
+				$produs_reducere->save();
+			} elseif ($produs_reducere = $tab::on($user->magazin)->find(99996)) {
+				$produs_reducere->pret = $adaos;
+				$produs_reducere->id_prod = 99996;
+				$produs_reducere->nume = 'Adaos Rotunjire';
+				$produs_reducere->cantitate = 1;
+				$produs_reducere->intrare = 0;
+				$produs_reducere->save();
+			}
 			return $adaos;
 		}
 		if ($discount > 0) {
-			return -$discount;
+			$tab = 'App\\' . session('tab');
+			if (!$tab::on($user->magazin)->find(99997)) {
+				$produs_reducere = new $tab;
+				$produs_reducere->setConnection($user->magazin);
+				$produs_reducere->pret = -$discount;
+				$produs_reducere->id_prod = 99997;
+				$produs_reducere->nume = 'Reducere Rotunjire';
+				$produs_reducere->cantitate = 1;
+				$produs_reducere->intrare = 0;
+				$produs_reducere->save();
+			} elseif ($produs_reducere = $tab::on($user->magazin)->find(99997)) {
+				$produs_reducere->pret = -$discount;
+				$produs_reducere->id_prod = 99997;
+				$produs_reducere->nume = 'Reducere Rotunjire';
+				$produs_reducere->cantitate = 1;
+				$produs_reducere->intrare = 0;
+				$produs_reducere->save();
+				return -$discount;
+			}
 		}
 	}
-
 }

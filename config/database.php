@@ -87,6 +87,14 @@ return [
 			'username' => env('DB_USERNAME_VAPEZ'),
 			'password' => env('DB_PASSWORD_VAPEZ'),
 		],
+		'vaphq' => [
+			'driver' => env('DB_CONNECTION_VAPHQ'),
+			'host' => env('DB_HOST_VAPHQ'),
+			'port' => env('DB_PORT_VAPHQ'),
+			'database' => env('DB_DATABASE_VAPHQ'),
+			'username' => env('DB_USERNAME_VAPHQ'),
+			'password' => env('DB_PASSWORD_VAPHQ'),
+		],
 
 		'pgsql' => [
 			'driver' => 'pgsql',
