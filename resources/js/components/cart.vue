@@ -38,6 +38,32 @@
         <button class="button is-success is-fullwidth" :disabled="bOk == 0" @click="bon">Bon {{total - val_reducere}}</button>
         <input type="number" class="input" :max="r" v-model="val_reducere" style="width: 20%;margin-top: 1%;" placeholder="Reducere" v-on:keyup.enter="reducere">
         <button class="button" style="width: 20%;margin-top: 1%;" id_tag="080047299BFD" @click="reducereTag">Reducere TAG</button>
+         <nav class="level" style="margin-top: 5%;">
+      <div v-if="reduceri['reducere_tag']" class="level-item has-text-centered">
+        <div>
+          <p class="heading">Reducere TAG</p>
+          <p class="title">{{reduceri['reducere_tag']}}</p>
+        </div>
+      </div>
+      <div v-if="reduceri['reducere_magazin']" class="level-item has-text-centered">
+        <div>
+          <p class="heading">Reducere casa</p>
+          <p class="title">{{reduceri['reducere_magazin']}}</p>
+        </div>
+      </div>
+      <div v-if="reduceri['reducere_discount']" class="level-item has-text-centered">
+        <div>
+          <p class="heading">Reducere rotunjire</p>
+          <p class="title">{{reduceri['reducere_discount']}}</p>
+        </div>
+      </div>
+      <div v-if="reduceri['reducere_adaos']" class="level-item has-text-centered">
+        <div>
+          <p class="heading">Adaos rotunjire</p>
+          <p class="title">{{reduceri['reducere_adaos']}}</p>
+        </div>
+      </div>
+    </nav>
     </div>
 </template>
 <script>
@@ -50,6 +76,7 @@ export default {
             total: '',
             r: 10,
             errors: [],
+            reduceri: [],
 
         }
     },
@@ -58,7 +85,7 @@ export default {
             let id_tag =   event.target.getAttribute('id_tag');
                 
                 axios.post('/casa/incasare', { id_tag: id_tag }).then(response => {
-
+                this.aplicare_reduceri();
 
                 });
             
@@ -66,10 +93,11 @@ export default {
         reducere: function(event) {
             if (this.val_reducere <= this.total) {
                 axios.post('/casa/incasare', { reducere: this.val_reducere }).then(response => {
-
+                    this.aplicare_reduceri();
 
                 });
             }
+            
         },
         serial: function(event) {
 
@@ -92,6 +120,7 @@ export default {
                     if (item['id_prod'] == id_prod)
                         item['cantitate'] = response.data;
                 }
+                this.aplicare_reduceri();
             });
 
 
@@ -112,13 +141,11 @@ export default {
                     if (item['id_prod'] == id_prod)
                         item['cantitate'] = response.data;
                 }
+                    this.aplicare_reduceri();
 
             });
-            if (this.cart.length < 1) {
-
-                this.bOk = 0;
-              
-            }
+           
+            
         },
         bon: function(event) {
             let temp = 1;
@@ -134,14 +161,32 @@ export default {
                 this.$emit('showChanged', 'date-client');
 
         },
+        aplicare_reduceri: function(){
+            axios.post('/casa/aplicare_reduceri', {}).then(response => {
+        
+           if(response.data.reducere_magazin)
+            this.reduceri['reducere_magazin'] = Number(response.data.reducere_magazin).toFixed(2);
+            if(response.data.reducere_tag)
+            this.reduceri['reducere_tag'] = Number(response.data.reducere_tag).toFixed(2);
+            if(response.data.reducere_adaos){
+            this.reduceri['reducere_adaos'] = Number(response.data.reducere_adaos).toFixed(2);
+            this.reduceri['reducere_discount'] = null;
+            }
+            if(response.data.reducere_discount){
+            this.reduceri['reducere_discount'] = Number(response.data.reducere_discount).toFixed(2);
+            this.reduceri['reducere_adaos'] = null; 
+            }
+            this.total = Number(response.data.total).toFixed(1);
+            });
+        }
+        
 
     },
     updated: function(event) {
         let temp = 1;
-        let tot = 0;
+       
         if (this.cart.length > 0) {
             for (let item of this.cart) {
-                tot = Number(tot) + Number(item['pret']) * Number(item['cantitate']);
 
                 if (item['sn'] == 1) {
                     temp = 0;
@@ -151,15 +196,19 @@ export default {
             this.bOk = temp;
         } else {
             this.bOk = 0;
+             this.$set(this.reduceri,'reducere_adaos',0);
+             this.$set(this.reduceri,'reducere_tag',0);
+             this.$set(this.reduceri,'reducere_magazin',0);
+             this.$set(this.reduceri,'reducere_discount',0);
         }
-
-        axios.post('/casa/reducere_tot', { pret: tot }).then(response => {
-
-            this.total = tot + Number(response.data);
-        });
-
+        
+       
+       
     
       
+    },
+    mounted: function(){
+        this.aplicare_reduceri();
     }
 }
 

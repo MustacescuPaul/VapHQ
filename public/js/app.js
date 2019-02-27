@@ -56182,7 +56182,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this = this;
 
             this.tip_plata = event.target.getAttribute('tip');
-            axios.post('/casa/incasare', { metoda: this.tip_plata, email: this.email_client }).then(function (response) {
+            axios.post('/casa/incasare', { metoda: this.tip_plata }).then(function (response) {
                 _this.$emit("Incasat");
             });
         }
@@ -56307,42 +56307,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: [],
   data: function data() {
     return {
-      show: 'cart',
+      show: "cart",
       products: [],
       menu: [],
       cart: [],
       reduceri: []
-
     };
   },
   methods: {
@@ -56352,40 +56326,37 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     showCh2: function showCh2(event) {
       var _this = this;
 
-      axios.get('/casa/showcart').then(function (response) {
+      axios.get("/casa/showcart").then(function (response) {
         _this.cart = response.data.produse;
-        _this.reduceri = response.data.reduceri;
       });
       this.show = event;
     },
     getProdList: function getProdList(event) {
       var _this2 = this;
 
-      axios.get('/casa/lista_produse/' + event).then(function (response) {
+      axios.get("/casa/lista_produse/" + event).then(function (response) {
         _this2.products = response.data.products;
-        _this2.show = 'products';
+        _this2.show = "products";
       });
     },
     search: function search(event) {
       var _this3 = this;
 
-      axios.get('/casa/search/' + event).then(function (response) {
+      axios.get("/casa/search/" + event).then(function (response) {
         _this3.products = response.data;
 
-        _this3.show = 'products';
+        _this3.show = "products";
       });
     }
-
   },
   created: function created() {
     var _this4 = this;
 
-    axios.get('/casa/sidebar_categ/1').then(function (response) {
+    axios.get("/casa/sidebar_categ/1").then(function (response) {
       _this4.menu = response.data;
     });
-    axios.get('/casa/showcart').then(function (response) {
+    axios.get("/casa/showcart").then(function (response) {
       _this4.cart = response.data.produse;
-      _this4.reduceri = response.data.reduceri;
     });
   }
 });
@@ -56476,47 +56447,7 @@ var render = function() {
         )
       ],
       1
-    ),
-    _vm._v(" "),
-    _c("nav", { staticClass: "level", staticStyle: { "margin-top": "5%" } }, [
-      _vm.reduceri["99998"]
-        ? _c("div", { staticClass: "level-item has-text-centered" }, [
-            _c("div", [
-              _c("p", { staticClass: "heading" }, [_vm._v("Reducere TAG")]),
-              _vm._v(" "),
-              _c("p", { staticClass: "title" }, [
-                _vm._v(_vm._s(_vm.reduceri["99998"].pret))
-              ])
-            ])
-          ])
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.reduceri["99995"]
-        ? _c("div", { staticClass: "level-item has-text-centered" }, [
-            _c("div", [
-              _c("p", { staticClass: "heading" }, [_vm._v("Reducere casa")]),
-              _vm._v(" "),
-              _c("p", { staticClass: "title" }, [
-                _vm._v(_vm._s(_vm.reduceri["99995"].pret))
-              ])
-            ])
-          ])
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.reduceri["99997"]
-        ? _c("div", { staticClass: "level-item has-text-centered" }, [
-            _c("div", [
-              _c("p", { staticClass: "heading" }, [
-                _vm._v("Reducere rotunjire")
-              ]),
-              _vm._v(" "),
-              _c("p", { staticClass: "title" }, [
-                _vm._v(_vm._s(_vm.reduceri["99997"].pret))
-              ])
-            ])
-          ])
-        : _vm._e()
-    ])
+    )
   ])
 }
 var staticRenderFns = []
@@ -56624,6 +56555,32 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['cart'],
@@ -56633,34 +56590,43 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             val_reducere: 0,
             total: '',
             r: 10,
-            errors: []
+            errors: [],
+            reduceri: []
 
         };
     },
     methods: {
         reducereTag: function reducereTag(event) {
+            var _this = this;
+
             var id_tag = event.target.getAttribute('id_tag');
 
-            axios.post('/casa/incasare', { id_tag: id_tag }).then(function (response) {});
+            axios.post('/casa/incasare', { id_tag: id_tag }).then(function (response) {
+                _this.aplicare_reduceri();
+            });
         },
         reducere: function reducere(event) {
+            var _this2 = this;
+
             if (this.val_reducere <= this.total) {
-                axios.post('/casa/incasare', { reducere: this.val_reducere }).then(function (response) {});
+                axios.post('/casa/incasare', { reducere: this.val_reducere }).then(function (response) {
+                    _this2.aplicare_reduceri();
+                });
             }
         },
         serial: function serial(event) {
-            var _this = this;
+            var _this3 = this;
 
             var id_prod = event.target.getAttribute('id_prod');
             var serial = event.target.value;
 
             axios.post('/casa/savesn', { id_prod: id_prod, serial: serial }).then(function (response) {}).catch(function (error) {
 
-                _this.errors = error.response.data.errors;
+                _this3.errors = error.response.data.errors;
             });
         },
         increaseQ: function increaseQ(event) {
-            var _this2 = this;
+            var _this4 = this;
 
             var id_prod = event.target.getAttribute('id_prod');
             axios.get('/casa/increase_q/' + id_prod).then(function (response) {
@@ -56669,7 +56635,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 var _iteratorError = undefined;
 
                 try {
-                    for (var _iterator = _this2.cart[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    for (var _iterator = _this4.cart[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
                         var item = _step.value;
 
                         if (item['id_prod'] == id_prod) item['cantitate'] = response.data;
@@ -56688,10 +56654,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                         }
                     }
                 }
+
+                _this4.aplicare_reduceri();
             });
         },
         decreaseQ: function decreaseQ(event) {
-            var _this3 = this;
+            var _this5 = this;
 
             var id_prod = event.target.getAttribute('id_prod');
 
@@ -56703,10 +56671,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     var _iteratorError2 = undefined;
 
                     try {
-                        for (var _iterator2 = _this3.cart[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                        for (var _iterator2 = _this5.cart[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
                             var item = _step2.value;
 
-                            if (item['id_prod'] == id_prod) _this3.cart.splice(i, 1);
+                            if (item['id_prod'] == id_prod) _this5.cart.splice(i, 1);
                             i++;
                         }
                     } catch (err) {
@@ -56728,7 +56696,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 var _iteratorError3 = undefined;
 
                 try {
-                    for (var _iterator3 = _this3.cart[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                    for (var _iterator3 = _this5.cart[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
                         var _item = _step3.value;
 
                         if (_item['id_prod'] == id_prod) _item['cantitate'] = response.data;
@@ -56747,11 +56715,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                         }
                     }
                 }
-            });
-            if (this.cart.length < 1) {
 
-                this.bOk = 0;
-            }
+                _this5.aplicare_reduceri();
+            });
         },
         bon: function bon(event) {
             var temp = 1;
@@ -56783,14 +56749,30 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
 
             if (temp == 1) this.$emit('showChanged', 'cash-card');else this.$emit('showChanged', 'date-client');
+        },
+        aplicare_reduceri: function aplicare_reduceri() {
+            var _this6 = this;
+
+            axios.post('/casa/aplicare_reduceri', {}).then(function (response) {
+
+                if (response.data.reducere_magazin) _this6.reduceri['reducere_magazin'] = Number(response.data.reducere_magazin).toFixed(2);
+                if (response.data.reducere_tag) _this6.reduceri['reducere_tag'] = Number(response.data.reducere_tag).toFixed(2);
+                if (response.data.reducere_adaos) {
+                    _this6.reduceri['reducere_adaos'] = Number(response.data.reducere_adaos).toFixed(2);
+                    _this6.reduceri['reducere_discount'] = null;
+                }
+                if (response.data.reducere_discount) {
+                    _this6.reduceri['reducere_discount'] = Number(response.data.reducere_discount).toFixed(2);
+                    _this6.reduceri['reducere_adaos'] = null;
+                }
+                _this6.total = Number(response.data.total).toFixed(1);
+            });
         }
 
     },
     updated: function updated(event) {
-        var _this4 = this;
-
         var temp = 1;
-        var tot = 0;
+
         if (this.cart.length > 0) {
             var _iteratorNormalCompletion5 = true;
             var _didIteratorError5 = false;
@@ -56800,7 +56782,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 for (var _iterator5 = this.cart[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
                     var item = _step5.value;
 
-                    tot = Number(tot) + Number(item['pret']) * Number(item['cantitate']);
 
                     if (item['sn'] == 1) {
                         temp = 0;
@@ -56824,12 +56805,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.bOk = temp;
         } else {
             this.bOk = 0;
+            this.$set(this.reduceri, 'reducere_adaos', 0);
+            this.$set(this.reduceri, 'reducere_tag', 0);
+            this.$set(this.reduceri, 'reducere_magazin', 0);
+            this.$set(this.reduceri, 'reducere_discount', 0);
         }
-
-        axios.post('/casa/reducere_tot', { pret: tot }).then(function (response) {
-
-            _this4.total = tot + Number(response.data);
-        });
+    },
+    mounted: function mounted() {
+        this.aplicare_reduceri();
     }
 });
 
@@ -57006,7 +56989,61 @@ var render = function() {
           on: { click: _vm.reducereTag }
         },
         [_vm._v("Reducere TAG")]
-      )
+      ),
+      _vm._v(" "),
+      _c("nav", { staticClass: "level", staticStyle: { "margin-top": "5%" } }, [
+        _vm.reduceri["reducere_tag"]
+          ? _c("div", { staticClass: "level-item has-text-centered" }, [
+              _c("div", [
+                _c("p", { staticClass: "heading" }, [_vm._v("Reducere TAG")]),
+                _vm._v(" "),
+                _c("p", { staticClass: "title" }, [
+                  _vm._v(_vm._s(_vm.reduceri["reducere_tag"]))
+                ])
+              ])
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.reduceri["reducere_magazin"]
+          ? _c("div", { staticClass: "level-item has-text-centered" }, [
+              _c("div", [
+                _c("p", { staticClass: "heading" }, [_vm._v("Reducere casa")]),
+                _vm._v(" "),
+                _c("p", { staticClass: "title" }, [
+                  _vm._v(_vm._s(_vm.reduceri["reducere_magazin"]))
+                ])
+              ])
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.reduceri["reducere_discount"]
+          ? _c("div", { staticClass: "level-item has-text-centered" }, [
+              _c("div", [
+                _c("p", { staticClass: "heading" }, [
+                  _vm._v("Reducere rotunjire")
+                ]),
+                _vm._v(" "),
+                _c("p", { staticClass: "title" }, [
+                  _vm._v(_vm._s(_vm.reduceri["reducere_discount"]))
+                ])
+              ])
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.reduceri["reducere_adaos"]
+          ? _c("div", { staticClass: "level-item has-text-centered" }, [
+              _c("div", [
+                _c("p", { staticClass: "heading" }, [
+                  _vm._v("Adaos rotunjire")
+                ]),
+                _vm._v(" "),
+                _c("p", { staticClass: "title" }, [
+                  _vm._v(_vm._s(_vm.reduceri["reducere_adaos"]))
+                ])
+              ])
+            ])
+          : _vm._e()
+      ])
     ]
   )
 }
