@@ -9,9 +9,9 @@ class Image extends Model
     //
     protected $table = 'ps_image';
     protected $primaryKey = 'id_image';
+    protected $connection = 'vapez';
     public function Product()
     {
-    	return $this->belongsTo('App\Product','id_product','id_prod');
+        return $this->belongsTo('App\Product', 'id_product', 'id_prod');
     }
-
 }

@@ -55935,75 +55935,80 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  name: "categMenu",
+  props: ["menu"],
 
-    name: 'categMenu',
-    props: ['menu'],
+  data: function data() {
+    return {
+      menu1: [],
+      menu2: [],
+      menu3: [],
+      products: [],
+      bOk: 0
+    };
+  },
+  methods: {
+    addToCart: function addToCart(event) {
+      var _this = this;
 
-    data: function data() {
-        return {
-            menu1: [],
-            menu2: [],
-            menu3: [],
-            products: [],
-            bOk: 0
-        };
+      var id_prod = event.target.getAttribute("id_prod");
+      this.$emit("addToCart");
+      axios.get("/casa/cart_content/" + id_prod).then(function (response) {
+        _this.cart = response.data.products;
+      });
     },
-    methods: {
+    getSubCat: function getSubCat(event) {
+      var _this2 = this;
 
-        addToCart: function addToCart(event) {
-            var _this = this;
+      var id_cat = event.target.getAttribute("id_cat");
+      var but = event.target.parentElement;
+      var ul = document.createElement("ul");
+      this.menu2 = [];
+      this.menu3 = [];
+      this.$emit("getProd", id_cat);
+      axios.get("/casa/sidebar_categ/" + id_cat).then(function (response) {
+        _this2.menu1 = response.data;
+      });
+    },
+    getSubCat1: function getSubCat1(event) {
+      var _this3 = this;
 
-            var id_prod = event.target.getAttribute('id_prod');
-            this.$emit('addToCart');
-            axios.get('/casa/cart_content/' + id_prod).then(function (response) {
-                _this.cart = response.data.products;
-            });
-        },
-        getSubCat: function getSubCat(event) {
-            var _this2 = this;
+      var id_cat = event.target.getAttribute("id_cat");
+      var but = event.target.parentElement;
+      var ul = document.createElement("ul");
+      this.menu2 = [];
+      this.$emit("getProd", id_cat);
+      axios.get("/casa/sidebar_categ/" + id_cat).then(function (response) {
+        _this3.menu2 = response.data;
+      });
+    },
+    getSubCat2: function getSubCat2(event) {
+      var _this4 = this;
 
-            var id_cat = event.target.getAttribute('id_cat');
-            var but = event.target.parentElement;
-            var ul = document.createElement('ul');
-            this.menu2 = [];
-            this.menu3 = [];
-            this.$emit('getProd', id_cat);
-            axios.get('/casa/sidebar_categ/' + id_cat).then(function (response) {
-                _this2.menu1 = response.data;
-            });
-        },
-        getSubCat1: function getSubCat1(event) {
-            var _this3 = this;
-
-            var id_cat = event.target.getAttribute('id_cat');
-            var but = event.target.parentElement;
-            var ul = document.createElement('ul');
-            this.menu2 = [];
-            this.$emit('getProd', id_cat);
-            axios.get('/casa/sidebar_categ/' + id_cat).then(function (response) {
-
-                _this3.menu2 = response.data;
-            });
-        },
-        getSubCat2: function getSubCat2(event) {
-            var _this4 = this;
-
-            var id_cat = event.target.getAttribute('id_cat');
-            var but = event.target.parentElement;
-            var ul = document.createElement('ul');
-            this.$emit('getProd', id_cat);
-            axios.get('/casa/sidebar_categ/' + id_cat).then(function (response) {
-                _this4.menu3 = response.data;
-            });
-        },
-        search: function search(event) {
-            this.$emit('search', event.target.value);
-        }
-
+      var id_cat = event.target.getAttribute("id_cat");
+      var but = event.target.parentElement;
+      var ul = document.createElement("ul");
+      this.$emit("getProd", id_cat);
+      axios.get("/casa/sidebar_categ/" + id_cat).then(function (response) {
+        _this4.menu3 = response.data;
+      });
+    },
+    search: function search(event) {
+      this.$emit("search", event.target.value);
     }
-
+  }
 });
 
 /***/ }),
@@ -56307,6 +56312,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: [],
@@ -56396,9 +56403,16 @@ var render = function() {
           1
         ),
         _vm._v(" "),
-        _vm.show == "products"
-          ? _c("product-list", { attrs: { products: _vm.products } })
-          : _vm._e(),
+        _c(
+          "div",
+          { staticClass: "column" },
+          [
+            _vm.show == "products"
+              ? _c("product-list", { attrs: { products: _vm.products } })
+              : _vm._e()
+          ],
+          1
+        ),
         _vm._v(" "),
         _vm.show == "cash-card"
           ? _c(
@@ -56429,22 +56443,22 @@ var render = function() {
             })
           : _vm._e(),
         _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "column is-half is-offset-3" },
-          [
-            _vm.show == "date-client"
-              ? _c("date-client", {
+        _vm.show == "date-client"
+          ? _c(
+              "div",
+              { staticClass: "column is-half is-offset-3" },
+              [
+                _c("date-client", {
                   on: {
                     Primit: function($event) {
                       _vm.showCh2("cash-card")
                     }
                   }
                 })
-              : _vm._e()
-          ],
-          1
-        )
+              ],
+              1
+            )
+          : _vm._e()
       ],
       1
     )
@@ -56581,239 +56595,268 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['cart'],
-    data: function data() {
-        return {
-            bOk: 1,
-            val_reducere: 0,
-            total: '',
-            r: 10,
-            errors: [],
-            reduceri: []
+  props: ["cart"],
+  data: function data() {
+    return {
+      bOk: 1,
+      val_reducere: 0,
+      total: "",
+      r: 10,
+      errors: [],
+      reduceri: []
+    };
+  },
+  methods: {
+    reducereTag: function reducereTag(event) {
+      var _this = this;
 
-        };
+      var id_tag = event.target.getAttribute("id_tag");
+
+      axios.post("/casa/incasare", { id_tag: id_tag }).then(function (response) {
+        _this.aplicare_reduceri();
+      });
     },
-    methods: {
-        reducereTag: function reducereTag(event) {
-            var _this = this;
+    reducere: function reducere(event) {
+      var _this2 = this;
 
-            var id_tag = event.target.getAttribute('id_tag');
+      var value = event.target.value;
 
-            axios.post('/casa/incasare', { id_tag: id_tag }).then(function (response) {
-                _this.aplicare_reduceri();
-            });
-        },
-        reducere: function reducere(event) {
-            var _this2 = this;
+      if (value <= this.total) {
+        axios.post("/casa/incasare", { reducere: value }).then(function (response) {
+          _this2.aplicare_reduceri();
+        });
+      }
+    },
+    serial: function serial(event) {
+      var _this3 = this;
 
-            if (this.val_reducere <= this.total) {
-                axios.post('/casa/incasare', { reducere: this.val_reducere }).then(function (response) {
-                    _this2.aplicare_reduceri();
-                });
+      var id_prod = event.target.getAttribute("id_prod");
+      var serial = event.target.value;
+
+      axios.post("/casa/savesn", { id_prod: id_prod, serial: serial }).then(function (response) {}).catch(function (error) {
+        _this3.errors = error.response.data.errors;
+      });
+    },
+    increaseQ: function increaseQ(event) {
+      var _this4 = this;
+
+      var id_prod = event.target.getAttribute("id_prod");
+      axios.get("/casa/increase_q/" + id_prod).then(function (response) {
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+          for (var _iterator = _this4.cart[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var item = _step.value;
+
+            if (item["id_prod"] == id_prod) item["cantitate"] = response.data;
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+              _iterator.return();
             }
-        },
-        serial: function serial(event) {
-            var _this3 = this;
-
-            var id_prod = event.target.getAttribute('id_prod');
-            var serial = event.target.value;
-
-            axios.post('/casa/savesn', { id_prod: id_prod, serial: serial }).then(function (response) {}).catch(function (error) {
-
-                _this3.errors = error.response.data.errors;
-            });
-        },
-        increaseQ: function increaseQ(event) {
-            var _this4 = this;
-
-            var id_prod = event.target.getAttribute('id_prod');
-            axios.get('/casa/increase_q/' + id_prod).then(function (response) {
-                var _iteratorNormalCompletion = true;
-                var _didIteratorError = false;
-                var _iteratorError = undefined;
-
-                try {
-                    for (var _iterator = _this4.cart[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                        var item = _step.value;
-
-                        if (item['id_prod'] == id_prod) item['cantitate'] = response.data;
-                    }
-                } catch (err) {
-                    _didIteratorError = true;
-                    _iteratorError = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion && _iterator.return) {
-                            _iterator.return();
-                        }
-                    } finally {
-                        if (_didIteratorError) {
-                            throw _iteratorError;
-                        }
-                    }
-                }
-
-                _this4.aplicare_reduceri();
-            });
-        },
-        decreaseQ: function decreaseQ(event) {
-            var _this5 = this;
-
-            var id_prod = event.target.getAttribute('id_prod');
-
-            axios.get('/casa/decrease_q/' + id_prod).then(function (response) {
-                var i = 0;
-                if (response.data == 0) {
-                    var _iteratorNormalCompletion2 = true;
-                    var _didIteratorError2 = false;
-                    var _iteratorError2 = undefined;
-
-                    try {
-                        for (var _iterator2 = _this5.cart[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                            var item = _step2.value;
-
-                            if (item['id_prod'] == id_prod) _this5.cart.splice(i, 1);
-                            i++;
-                        }
-                    } catch (err) {
-                        _didIteratorError2 = true;
-                        _iteratorError2 = err;
-                    } finally {
-                        try {
-                            if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                                _iterator2.return();
-                            }
-                        } finally {
-                            if (_didIteratorError2) {
-                                throw _iteratorError2;
-                            }
-                        }
-                    }
-                }var _iteratorNormalCompletion3 = true;
-                var _didIteratorError3 = false;
-                var _iteratorError3 = undefined;
-
-                try {
-                    for (var _iterator3 = _this5.cart[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                        var _item = _step3.value;
-
-                        if (_item['id_prod'] == id_prod) _item['cantitate'] = response.data;
-                    }
-                } catch (err) {
-                    _didIteratorError3 = true;
-                    _iteratorError3 = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                            _iterator3.return();
-                        }
-                    } finally {
-                        if (_didIteratorError3) {
-                            throw _iteratorError3;
-                        }
-                    }
-                }
-
-                _this5.aplicare_reduceri();
-            });
-        },
-        bon: function bon(event) {
-            var temp = 1;
-            var _iteratorNormalCompletion4 = true;
-            var _didIteratorError4 = false;
-            var _iteratorError4 = undefined;
-
-            try {
-                for (var _iterator4 = this.cart[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-                    var item = _step4.value;
-
-                    if (item['sn'] > 0) {
-                        temp = 0;
-                    }
-                }
-            } catch (err) {
-                _didIteratorError4 = true;
-                _iteratorError4 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                        _iterator4.return();
-                    }
-                } finally {
-                    if (_didIteratorError4) {
-                        throw _iteratorError4;
-                    }
-                }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
             }
-
-            if (temp == 1) this.$emit('showChanged', 'cash-card');else this.$emit('showChanged', 'date-client');
-        },
-        aplicare_reduceri: function aplicare_reduceri() {
-            var _this6 = this;
-
-            axios.post('/casa/aplicare_reduceri', {}).then(function (response) {
-
-                if (response.data.reducere_magazin) _this6.reduceri['reducere_magazin'] = Number(response.data.reducere_magazin).toFixed(2);
-                if (response.data.reducere_tag) _this6.reduceri['reducere_tag'] = Number(response.data.reducere_tag).toFixed(2);
-                if (response.data.reducere_adaos) {
-                    _this6.reduceri['reducere_adaos'] = Number(response.data.reducere_adaos).toFixed(2);
-                    _this6.reduceri['reducere_discount'] = null;
-                }
-                if (response.data.reducere_discount) {
-                    _this6.reduceri['reducere_discount'] = Number(response.data.reducere_discount).toFixed(2);
-                    _this6.reduceri['reducere_adaos'] = null;
-                }
-                _this6.total = Number(response.data.total).toFixed(1);
-            });
+          }
         }
 
+        _this4.aplicare_reduceri();
+      });
     },
-    updated: function updated(event) {
-        var temp = 1;
+    decreaseQ: function decreaseQ(event) {
+      var _this5 = this;
 
-        if (this.cart.length > 0) {
-            var _iteratorNormalCompletion5 = true;
-            var _didIteratorError5 = false;
-            var _iteratorError5 = undefined;
+      var id_prod = event.target.getAttribute("id_prod");
 
-            try {
-                for (var _iterator5 = this.cart[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-                    var item = _step5.value;
+      axios.get("/casa/decrease_q/" + id_prod).then(function (response) {
+        var i = 0;
+        if (response.data == 0) {
+          var _iteratorNormalCompletion2 = true;
+          var _didIteratorError2 = false;
+          var _iteratorError2 = undefined;
 
+          try {
+            for (var _iterator2 = _this5.cart[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+              var item = _step2.value;
 
-                    if (item['sn'] == 1) {
-                        temp = 0;
-                    }
-                }
-            } catch (err) {
-                _didIteratorError5 = true;
-                _iteratorError5 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                        _iterator5.return();
-                    }
-                } finally {
-                    if (_didIteratorError5) {
-                        throw _iteratorError5;
-                    }
-                }
+              if (item["id_prod"] == id_prod) _this5.cart.splice(i, 1);
+              i++;
             }
+          } catch (err) {
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                _iterator2.return();
+              }
+            } finally {
+              if (_didIteratorError2) {
+                throw _iteratorError2;
+              }
+            }
+          }
+        }var _iteratorNormalCompletion3 = true;
+        var _didIteratorError3 = false;
+        var _iteratorError3 = undefined;
 
-            this.bOk = temp;
-        } else {
-            this.bOk = 0;
-            this.$set(this.reduceri, 'reducere_adaos', 0);
-            this.$set(this.reduceri, 'reducere_tag', 0);
-            this.$set(this.reduceri, 'reducere_magazin', 0);
-            this.$set(this.reduceri, 'reducere_discount', 0);
+        try {
+          for (var _iterator3 = _this5.cart[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            var _item = _step3.value;
+
+            if (_item["id_prod"] == id_prod) _item["cantitate"] = response.data;
+          }
+        } catch (err) {
+          _didIteratorError3 = true;
+          _iteratorError3 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+              _iterator3.return();
+            }
+          } finally {
+            if (_didIteratorError3) {
+              throw _iteratorError3;
+            }
+          }
         }
+
+        _this5.aplicare_reduceri();
+      });
     },
-    mounted: function mounted() {
-        this.aplicare_reduceri();
+    bon: function bon(event) {
+      var temp = 1;
+      var _iteratorNormalCompletion4 = true;
+      var _didIteratorError4 = false;
+      var _iteratorError4 = undefined;
+
+      try {
+        for (var _iterator4 = this.cart[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+          var item = _step4.value;
+
+          if (item["sn"] > 0) {
+            temp = 0;
+          }
+        }
+      } catch (err) {
+        _didIteratorError4 = true;
+        _iteratorError4 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion4 && _iterator4.return) {
+            _iterator4.return();
+          }
+        } finally {
+          if (_didIteratorError4) {
+            throw _iteratorError4;
+          }
+        }
+      }
+
+      if (temp == 1) this.$emit("showChanged", "cash-card");else this.$emit("showChanged", "date-client");
+    },
+    aplicare_reduceri: function aplicare_reduceri() {
+      var _this6 = this;
+
+      axios.post("/casa/aplicare_reduceri", {}).then(function (response) {
+        if (response.data.reducere_magazin) _this6.reduceri["reducere_magazin"] = Number(response.data.reducere_magazin).toFixed(2);
+        if (response.data.reducere_tag) _this6.reduceri["reducere_tag"] = Number(response.data.reducere_tag).toFixed(2);
+        if (response.data.reducere_adaos) {
+          _this6.reduceri["reducere_adaos"] = Number(response.data.reducere_adaos).toFixed(2);
+          _this6.reduceri["reducere_discount"] = null;
+        }
+        if (response.data.reducere_discount) {
+          _this6.reduceri["reducere_discount"] = Number(response.data.reducere_discount).toFixed(2);
+          _this6.reduceri["reducere_adaos"] = null;
+        }
+        _this6.total = Number(response.data.total).toFixed(1);
+      });
     }
+  },
+  updated: function updated(event) {
+    var temp = 1;
+
+    if (this.cart.length > 0) {
+      var _iteratorNormalCompletion5 = true;
+      var _didIteratorError5 = false;
+      var _iteratorError5 = undefined;
+
+      try {
+        for (var _iterator5 = this.cart[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+          var item = _step5.value;
+
+          if (item["sn"] == 1) {
+            temp = 0;
+          }
+        }
+      } catch (err) {
+        _didIteratorError5 = true;
+        _iteratorError5 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion5 && _iterator5.return) {
+            _iterator5.return();
+          }
+        } finally {
+          if (_didIteratorError5) {
+            throw _iteratorError5;
+          }
+        }
+      }
+
+      this.bOk = temp;
+    } else {
+      this.bOk = 0;
+      this.$set(this.reduceri, "reducere_adaos", 0);
+      this.$set(this.reduceri, "reducere_tag", 0);
+      this.$set(this.reduceri, "reducere_magazin", 0);
+      this.$set(this.reduceri, "reducere_discount", 0);
+    }
+  },
+  mounted: function mounted() {
+    this.aplicare_reduceri();
+  }
 });
 
 /***/ }),
@@ -56828,12 +56871,11 @@ var render = function() {
     "div",
     {
       staticStyle: {
-        "margin-left": "35%",
-        width: "60%",
+        "margin-left": "18%",
+        width: "70%",
         "overflow-x": "visible",
         position: "fixed"
-      },
-      attrs: { id: "products" }
+      }
     },
     [
       _c("table", { staticClass: "table is-fullwidth" }, [
@@ -56856,47 +56898,79 @@ var render = function() {
                 ])
               ]),
               _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(product.nume))]),
+              _c(
+                "td",
+                {
+                  staticStyle: {
+                    "justify-content": "center",
+                    "align-items": "center",
+                    "text-align": "center"
+                  }
+                },
+                [_vm._v(_vm._s(product.nume))]
+              ),
               _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(product.pret) + " lei")]),
+              _c(
+                "td",
+                {
+                  staticStyle: {
+                    "justify-content": "center",
+                    "align-items": "center",
+                    "text-align": "center"
+                  }
+                },
+                [_vm._v(_vm._s(product.pret) + " lei")]
+              ),
               _vm._v(" "),
               _c("td", [
-                _c("div", { staticClass: "field is-grouped" }, [
-                  _c("p", { staticClass: "control" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass: "field is-grouped",
+                    staticStyle: {
+                      "justify-content": "center",
+                      "align-items": "center",
+                      "text-align": "center"
+                    }
+                  },
+                  [
+                    _c("p", { staticClass: "control" }, [
+                      _c(
+                        "a",
+                        {
+                          staticClass: "button is-primary",
+                          attrs: { id_prod: product.id_prod },
+                          on: { click: _vm.increaseQ }
+                        },
+                        [_vm._v("+")]
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticStyle: { width: "50px", "margin-right": "12px" }
+                      },
+                      [
+                        _c("input", {
+                          staticClass: "input",
+                          attrs: { type: "text" },
+                          domProps: { value: product.cantitate }
+                        })
+                      ]
+                    ),
+                    _vm._v(" "),
                     _c(
                       "a",
                       {
-                        staticClass: "button is-primary",
+                        staticClass: "button is-danger",
                         attrs: { id_prod: product.id_prod },
-                        on: { click: _vm.increaseQ }
+                        on: { click: _vm.decreaseQ }
                       },
-                      [_vm._v("+")]
+                      [_vm._v("-")]
                     )
-                  ]),
-                  _c(
-                    "div",
-                    { staticStyle: { width: "50px", "margin-right": "12px" } },
-                    [
-                      _c("input", {
-                        staticClass: "input",
-                        attrs: { type: "text" },
-                        domProps: { value: product.cantitate }
-                      })
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "a",
-                    {
-                      staticClass: "button is-danger",
-                      attrs: { id_prod: product.id_prod },
-                      on: { click: _vm.decreaseQ }
-                    },
-                    [_vm._v("-")]
-                  ),
-                  _vm._v(" "),
-                  _c("p")
-                ])
+                  ]
+                )
               ]),
               _vm._v(" "),
               _c("td", [
@@ -56949,18 +57023,9 @@ var render = function() {
       ),
       _vm._v(" "),
       _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.val_reducere,
-            expression: "val_reducere"
-          }
-        ],
         staticClass: "input",
         staticStyle: { width: "20%", "margin-top": "1%" },
         attrs: { type: "number", max: _vm.r, placeholder: "Reducere" },
-        domProps: { value: _vm.val_reducere },
         on: {
           keyup: function($event) {
             if (
@@ -56970,12 +57035,6 @@ var render = function() {
               return null
             }
             return _vm.reducere($event)
-          },
-          input: function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.val_reducere = $event.target.value
           }
         }
       }),
@@ -57153,23 +57212,28 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ["products"],
 
-    props: ['products'],
-
-    data: function data() {
-        return {};
-    },
-    methods: {
-
-        addToCart: function addToCart(event) {
-            var id_prod = event.target.getAttribute('id_prod');
-            axios.get('/casa/cart_content/' + id_prod).then(function (response) {});
-            this.$emit('add');
-        }
-
+  data: function data() {
+    return {};
+  },
+  methods: {
+    addToCart: function addToCart(event) {
+      var id_prod = event.target.getAttribute("id_prod");
+      axios.get("/casa/cart_content/" + id_prod).then(function (response) {});
+      this.$emit("add");
     }
+  }
 });
 
 /***/ }),
@@ -57180,7 +57244,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("table", { staticClass: "table" }, [
+  return _c("table", { staticClass: "is-scrollable table is-fullwidth" }, [
     _vm._m(0),
     _vm._v(" "),
     _c(
@@ -57195,28 +57259,19 @@ var render = function() {
           _vm._v(" "),
           _vm._m(2, true),
           _vm._v(" "),
-          _c("td", { staticStyle: { "padding-left": "100px", width: "20%" } }, [
-            _vm._v(" " + _vm._s(product.nume))
-          ]),
+          _c("td", [_vm._v(_vm._s(product.nume))]),
           _vm._v(" "),
-          _c(
-            "td",
-            {
-              staticStyle: { "padding-left": "100px" },
-              attrs: { colspan: "5" }
-            },
-            [
-              _c(
-                "button",
-                {
-                  staticClass: "button is-primary is-fullwidth is-block",
-                  attrs: { id_prod: product.id_prod },
-                  on: { click: _vm.addToCart }
-                },
-                [_vm._v(_vm._s(product.pret) + " lei")]
-              )
-            ]
-          )
+          _c("td", [
+            _c(
+              "button",
+              {
+                staticClass: "button is-primary is-fullwidth is-block",
+                attrs: { id_prod: product.id_prod },
+                on: { click: _vm.addToCart }
+              },
+              [_vm._v(_vm._s(product.pret) + " lei")]
+            )
+          ])
         ])
       })
     )

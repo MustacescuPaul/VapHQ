@@ -18,7 +18,6 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/setup', 'SetupController@index')->name('setup');
-Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/galati', 'GalatiController@index')->name('galati');
 Route::get('/romana', 'RomanaController@index')->name('romana');
 Route::prefix('admin')->group(function () {

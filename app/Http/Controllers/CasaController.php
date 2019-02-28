@@ -24,28 +24,6 @@ class CasaController extends Controller
         $this->middleware('auth:web');
     }
 
-    public function switchDB($db)
-    {
-        $dm = app("Illuminate\\Database\\DatabaseManager");
-        $dm->disconnect();
-
-        Config::set("database.connections.mysql", [
-            'driver' => 'mysql',
-            'host' => '127.0.0.1',
-            'port' => '3306',
-            'database' => $db,
-            'username' => 'root',
-            'password' => 'root',
-            'unix_socket' => env('DB_SOCKET', ''),
-            'charset' => 'utf8mb4',
-            'collation' => 'utf8mb4_unicode_ci',
-            'prefix' => '',
-            'prefix_indexes' => true,
-            'strict' => true,
-            'engine' => null,
-        ]);
-    }
-
     public function getParentCats()
     {
         $parinti = array();
@@ -89,7 +67,7 @@ class CasaController extends Controller
         }
 
         foreach ($cart as $key => $product) {
-            $images = Image::on('vapez')->where([['id_product', $product->id_prod], ['cover', '1']])->get(['id_image']);
+            $images = Image::where([['id_product', $product->id_prod], ['cover', '1']])->get(['id_image']);
             foreach ($images as $image) {
                 $cart[$key]['img'] = $image->id_image;
             }
@@ -127,15 +105,12 @@ class CasaController extends Controller
     {
 
         $user = Auth::user();
-        //$this->switchDB($user->magazin);
         $categ = Category::on($user->magazin)->find($id);
         $products_json = array();
         $products_json['products'] = $categ->products;
 
-        //$this->switchDB('vapez');
-
         foreach ($categ->products as $product) {
-            $images = Image::on('vapez')->where('id_product', $product->id_prod)->get(['id_image']);
+            $images = Image::where('id_product', $product->id_prod)->get(['id_image']);
             $products_json['images'][$product->id_prod] = array();
             foreach ($images as $image) {
                 array_push($products_json['images'][$product->id_prod], $image->id_image);
@@ -234,7 +209,7 @@ class CasaController extends Controller
 
     public function checkWarranty($id_prod)
     {
-        $garantie = A_garantie::on('garantii')->find($id_prod);
+        $garantie = A_garantie::find($id_prod);
         if ($garantie) {
             return $garantie->garantie;
         } else {
@@ -273,10 +248,9 @@ class CasaController extends Controller
 
             ]);
 
-            $vapoint = Vapoint::on('garantii')->find($user->id_vapoint);
+            $vapoint = Vapoint::find($user->id_vapoint);
 
             $garantie = new Garantii;
-            $garantie->setConnection('garantii');
             $garantie->id_vapoint = $vapoint->id;
             $garantie->nume_vapoint = $vapoint->nume;
             $garantie->nume_client = $request->nume;
@@ -290,9 +264,8 @@ class CasaController extends Controller
 
             foreach ($cart as $key => $product) {
                 $produs = new Produse;
-                $produs->setConnection('garantii');
-                $garantie = Garantii::on('garantii')->where('email_client', $request->email)->orderBy('data', 'desc')->first();
-                $produs->garantie = A_garantie::on('garantii')->find($product->id_prod)->perioada;
+                $garantie = Garantii::where('email_client', $request->email)->orderBy('data', 'desc')->first();
+                $produs->garantie = A_garantie::find($product->id_prod)->perioada;
                 $produs->id_prod = $product->id_prod;
                 $produs->nume = $product->nume;
                 $produs->nume_vapoint = $vapoint->nume;
