@@ -18,6 +18,7 @@
                         <a href="#" id="button-navbar" class="navbar-item is-tab is-hidden-mobile">Utile</a>
                         <a href="{{route('garantii.index')}}" id="button-navbar" class="navbar-item is-tab is-hidden-mobile">Garantii</a>
                         <a href="{{route('garantii.intrate')}}" id="button-navbar" class="navbar-item is-tab is-hidden-mobile">Garantiile mele</a>
+                        <a href="{{route('stoc.index')}}" id="button-navbar" class="navbar-item is-tab is-hidden-mobile">Stocuri</a>
 
                     </div>
                     <div class="navbar-end">

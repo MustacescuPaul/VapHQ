@@ -18,7 +18,7 @@ export default {
     methods: {
         incasare: function(event) {
             this.tip_plata = event.target.getAttribute('tip');
-            axios.post('/casa/incasare', { metoda: this.tip_plata}).then(response => {
+            axios.post('casa/incasare', { metoda: this.tip_plata}).then(response => {
               this.$emit("Incasat");
 
             });

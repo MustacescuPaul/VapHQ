@@ -115,7 +115,7 @@ export default {
     reducereTag: function(event) {
       let id_tag = event.target.getAttribute("id_tag");
 
-      axios.post("/casa/incasare", { id_tag: id_tag }).then(response => {
+      axios.post("casa/incasare", { id_tag: id_tag }).then(response => {
         this.aplicare_reduceri();
       });
     },
@@ -123,7 +123,7 @@ export default {
       let value = event.target.value;
 
       if (value <= this.total) {
-        axios.post("/casa/incasare", { reducere: value }).then(response => {
+        axios.post("casa/incasare", { reducere: value }).then(response => {
           this.aplicare_reduceri();
         });
       }
@@ -133,7 +133,7 @@ export default {
       let serial = event.target.value;
 
       axios
-        .post("/casa/savesn", { id_prod: id_prod, serial: serial })
+        .post("casa/savesn", { id_prod: id_prod, serial: serial })
         .then(response => {})
         .catch(error => {
           this.errors = error.response.data.errors;
@@ -141,7 +141,7 @@ export default {
     },
     increaseQ: function(event) {
       let id_prod = event.target.getAttribute("id_prod");
-      axios.get("/casa/increase_q/" + id_prod).then(response => {
+      axios.get("casa/increase_q/" + id_prod).then(response => {
         for (let item of this.cart) {
           if (item["id_prod"] == id_prod) item["cantitate"] = response.data;
         }
@@ -151,7 +151,7 @@ export default {
     decreaseQ: function(event) {
       let id_prod = event.target.getAttribute("id_prod");
 
-      axios.get("/casa/decrease_q/" + id_prod).then(response => {
+      axios.get("casa/decrease_q/" + id_prod).then(response => {
         let i = 0;
         if (response.data == 0)
           for (let item of this.cart) {
@@ -175,7 +175,7 @@ export default {
       else this.$emit("showChanged", "date-client");
     },
     aplicare_reduceri: function() {
-      axios.post("/casa/aplicare_reduceri", {}).then(response => {
+      axios.post("casa/aplicare_reduceri", {}).then(response => {
         if (response.data.reducere_magazin)
           this.reduceri["reducere_magazin"] = Number(
             response.data.reducere_magazin

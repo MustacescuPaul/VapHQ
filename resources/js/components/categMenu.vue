@@ -51,7 +51,7 @@ export default {
     addToCart: function(event) {
       let id_prod = event.target.getAttribute("id_prod");
       this.$emit("addToCart");
-      axios.get("/casa/cart_content/" + id_prod).then(response => {
+      axios.get("casa/cart_content/" + id_prod).then(response => {
         this.cart = response.data.products;
       });
     },
@@ -62,7 +62,7 @@ export default {
       this.menu2 = [];
       this.menu3 = [];
       this.$emit("getProd", id_cat);
-      axios.get("/casa/sidebar_categ/" + id_cat).then(response => {
+      axios.get("casa/sidebar_categ/" + id_cat).then(response => {
         this.menu1 = response.data;
       });
     },
@@ -72,7 +72,7 @@ export default {
       var ul = document.createElement("ul");
       this.menu2 = [];
       this.$emit("getProd", id_cat);
-      axios.get("/casa/sidebar_categ/" + id_cat).then(response => {
+      axios.get("casa/sidebar_categ/" + id_cat).then(response => {
         this.menu2 = response.data;
       });
     },
@@ -81,7 +81,7 @@ export default {
       let but = event.target.parentElement;
       var ul = document.createElement("ul");
       this.$emit("getProd", id_cat);
-      axios.get("/casa/sidebar_categ/" + id_cat).then(response => {
+      axios.get("casa/sidebar_categ/" + id_cat).then(response => {
         this.menu3 = response.data;
       });
     },

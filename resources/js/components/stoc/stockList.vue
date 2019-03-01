@@ -32,19 +32,16 @@
     </tbody>
   </table>
 </template>
+
 <script>
 export default {
   props: ["products"],
-
   data: function() {
     return {};
   },
-  methods: {
-    addToCart: function(event) {
-      let id_prod = event.target.getAttribute("id_prod");
-      axios.get("casa/cart_content/" + id_prod).then(response => {});
-      this.$emit("add");
-    }
-  }
+  methods: {}
 };
 </script>
+
+<style scoped>
+</style>
