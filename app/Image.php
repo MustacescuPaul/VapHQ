@@ -14,4 +14,8 @@ class Image extends Model
     {
         return $this->belongsTo('App\Product', 'id_product', 'id_prod');
     }
+    public function ps_product()
+    {
+        return $this->belongsToMany('App\Ps_product', 'id_product', 'id_product');
+    }
 }
