@@ -119,11 +119,11 @@ class CasaController extends Controller
     {
 
         $user = Auth::user();
-        $categ = Category::on('vapez')->find($id);
+        $categ = Category::on($user->magazin)->find($id);
         $products_json = array();
-        $products_json['products'] = $categ->ps_product;
+        $products_json['products'] = $categ->products;
 
-        foreach ($categ->ps_product as $product) {
+        foreach ($categ->products as $product) {
             $images = Image::where('id_product', $product->id_prod)->get(['id_image']);
             $products_json['images'][$product->id_prod] = array();
             foreach ($images as $image) {

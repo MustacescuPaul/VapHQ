@@ -59073,7 +59073,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
       var id = event.currentTarget.id;
       var stat = event.currentTarget.value;
-      axios.post("garantii/primit_vap", { id: id, stat: stat }).then(function (response) {
+      axios.post("primit_vap", { id: id, stat: stat }).then(function (response) {
         console.log(stat);
         _this.intrarii = response.data;
       });
@@ -59081,7 +59081,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     afiseazaProduse: function afiseazaProduse(event) {
       var _this2 = this;
 
-      axios.post("garantii/produse_intrare", { id_intrare: event }).then(function (response) {
+      axios.post("produse_intrare", { id_intrare: event }).then(function (response) {
         _this2.produse_intrare = response.data;
         _this2.show = "produse";
       });

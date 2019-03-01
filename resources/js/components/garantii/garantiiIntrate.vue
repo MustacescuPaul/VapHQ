@@ -75,20 +75,16 @@ export default {
     primitVap: function(event) {
       let id = event.currentTarget.id;
       let stat = event.currentTarget.value;
-      axios
-        .post("garantii/primit_vap", { id: id, stat: stat })
-        .then(response => {
-          console.log(stat);
-          this.intrarii = response.data;
-        });
+      axios.post("primit_vap", { id: id, stat: stat }).then(response => {
+        console.log(stat);
+        this.intrarii = response.data;
+      });
     },
     afiseazaProduse: function(event) {
-      axios
-        .post("garantii/produse_intrare", { id_intrare: event })
-        .then(response => {
-          this.produse_intrare = response.data;
-          this.show = "produse";
-        });
+      axios.post("produse_intrare", { id_intrare: event }).then(response => {
+        this.produse_intrare = response.data;
+        this.show = "produse";
+      });
     }
   },
   mounted() {}
