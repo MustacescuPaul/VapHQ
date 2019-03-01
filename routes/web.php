@@ -36,7 +36,7 @@ Route::prefix('admin')->group(function () {
 Route::prefix('casa')->group(function () {
     Route::get('/', 'CasaController@index')->name('casa.index');
     Route::get('/showcart', 'CasaController@show')->name('casa.show');
-    Route::get('/sidebar_categ/{id}', 'CasaController@sidebar')->name('casa.sidebar');
+    Route::post('/sidebar_categ', 'CasaController@sidebar')->name('casa.sidebar');
     Route::get('/lista_produse/{id}', 'CasaController@productList')->name('casa.productList');
     Route::get('/cart_content/{id}', 'CasaController@addToCart')->name('casa.addToCart');
     Route::get('/increase_q/{id}', 'CasaController@increaseQ')->name('casa.incrQ');

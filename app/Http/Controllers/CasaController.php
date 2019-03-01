@@ -24,21 +24,35 @@ class CasaController extends Controller
         $this->middleware('auth:web');
     }
 
-    public function getParentCats()
+    // public function getParentCats($id)
+    // {
+    //     $parinti = array();
+    //     $elem = array();
+    //     $parents = Category::on('vapez')->where('active', 1)->get(['id_parent'])->sortBy('position');
+
+    //     foreach ($parents as $value) {
+    //         var_dump($value->position);
+    //         array_push($parinti, $value->id_parent);
+    //     }
+    //     foreach ($parinti as $key => $value) {
+    //         $categ = Category::on('vapez')->where('id_parent', $value)->get()->sortBy('position');
+    //         $elem[$value] = array();
+    //         foreach ($categ as $cat) {
+    //             $elem[$value][$cat->id_category] = $cat->CategoryLang()->first()->name;
+    //         }
+    //     }
+    //     return $elem;
+    // }
+    public function getParentCats($id)
     {
         $parinti = array();
         $elem = array();
-        $parents = Category::on('vapez')->where('active', 1)->distinct()->get(['id_parent'])->sortBy('nleft');
-        foreach ($parents as $value) {
-            array_push($parinti, $value->id_parent);
+        $categ = Category::on('vapez')->where([['active', 1], ['id_parent', $id]])->get()->sortBy('position');
+
+        foreach ($categ as $cat) {
+            $elem[$cat->position] = [$cat->id_category, $cat->CategoryLang()->first()->name];
         }
-        foreach ($parinti as $key => $value) {
-            $categ = Category::on('vapez')->where('id_parent', $value)->get()->sortBy('nleft');
-            $elem[$value] = array();
-            foreach ($categ as $cat) {
-                $elem[$value][$cat->id_category] = $cat->CategoryLang()->first()->name;
-            }
-        }
+
         return $elem;
     }
 
@@ -84,13 +98,13 @@ class CasaController extends Controller
         return json_encode($array);
     }
 
-    public function sidebar($id)
+    public function sidebar(Request $request)
     {
-        if ($id) {
+        if ($request->id) {
 
-            $items = $this->getParentCats();
-            $items = $items[$id];
-            $items = json_encode($items);
+            $items = $this->getParentCats($request->id);
+
+
 
             return $items;
         } else {

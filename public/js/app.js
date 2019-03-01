@@ -55943,6 +55943,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "categMenu",
@@ -55976,7 +55980,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.menu2 = [];
       this.menu3 = [];
       this.$emit("getProd", id_cat);
-      axios.get("casa/sidebar_categ/" + id_cat).then(function (response) {
+      axios.post("casa/sidebar_categ", { id: id_cat }).then(function (response) {
         _this2.menu1 = response.data;
       });
     },
@@ -55988,7 +55992,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       var ul = document.createElement("ul");
       this.menu2 = [];
       this.$emit("getProd", id_cat);
-      axios.get("casa/sidebar_categ/" + id_cat).then(function (response) {
+      axios.post("casa/sidebar_categ", { id: id_cat }).then(function (response) {
         _this3.menu2 = response.data;
       });
     },
@@ -55999,7 +56003,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       var but = event.target.parentElement;
       var ul = document.createElement("ul");
       this.$emit("getProd", id_cat);
-      axios.get("casa/sidebar_categ/" + id_cat).then(function (response) {
+      axios.post("casa/sidebar_categ", { id: id_cat }).then(function (response) {
         _this4.menu3 = response.data;
       });
     },
@@ -56028,16 +56032,16 @@ var render = function() {
         "div",
         { staticClass: "column" },
         [
-          _vm._l(_vm.menu, function(cat, index) {
+          _vm._l(_vm.menu, function(cat) {
             return _c("li", [
               _c(
                 "button",
                 {
                   staticClass: "button is-outlined is-fullwidth",
-                  attrs: { id_cat: index },
+                  attrs: { id_cat: cat[0] },
                   on: { click: _vm.getSubCat }
                 },
-                [_vm._v(_vm._s(cat))]
+                [_vm._v(_vm._s(cat[1]))]
               )
             ])
           }),
@@ -56065,16 +56069,16 @@ var render = function() {
       _c(
         "div",
         { staticClass: "column" },
-        _vm._l(_vm.menu1, function(cat, index) {
+        _vm._l(_vm.menu1, function(cat) {
           return _c("li", [
             _c(
               "button",
               {
                 staticClass: "button is-outlined is-fullwidth",
-                attrs: { id_cat: index },
+                attrs: { id_cat: cat[0] },
                 on: { click: _vm.getSubCat1 }
               },
-              [_vm._v(_vm._s(cat))]
+              [_vm._v(_vm._s(cat[1]))]
             )
           ])
         })
@@ -56083,16 +56087,16 @@ var render = function() {
       _c(
         "div",
         { staticClass: "column" },
-        _vm._l(_vm.menu2, function(cat, index) {
+        _vm._l(_vm.menu2, function(cat) {
           return _c("li", [
             _c(
               "button",
               {
                 staticClass: "button is-outlined is-fullwidth",
-                attrs: { id_cat: index },
+                attrs: { id_cat: cat[0] },
                 on: { click: _vm.getSubCat2 }
               },
-              [_vm._v(_vm._s(cat))]
+              [_vm._v(_vm._s(cat[1]))]
             )
           ])
         })
@@ -56319,7 +56323,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     return {
       show: "cart",
       products: [],
-      menu: [],
+      menu: "",
       cart: [],
       reduceri: []
     };
@@ -56357,7 +56361,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   created: function created() {
     var _this4 = this;
 
-    axios.get("casa/sidebar_categ/1").then(function (response) {
+    // axios.post("casa/sidebar_categ", { id: 2 }).then(function(response) {
+    //   console.log(response);
+    //   this.menu = response.data;
+    // });responseType: 'json',
+    axios({
+      method: "post",
+      url: "casa/sidebar_categ",
+      data: {
+        id: 2
+      },
+      responseType: "text"
+    }).then(function (response) {
       _this4.menu = response.data;
     });
     axios.get("casa/showcart").then(function (response) {

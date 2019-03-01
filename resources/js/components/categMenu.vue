@@ -1,8 +1,12 @@
 <template>
   <div class="columns" style="list-style-type: none; margin-top: 2%;">
     <div class="column">
-      <li v-for="(cat,index) in menu">
-        <button class="button is-outlined is-fullwidth" :id_cat="index" @click="getSubCat">{{ cat }}</button>
+      <li v-for="cat in menu">
+        <button
+          class="button is-outlined is-fullwidth"
+          :id_cat="cat[0]"
+          @click="getSubCat"
+        >{{ cat[1] }}</button>
       </li>
 
       <input
@@ -14,21 +18,21 @@
       >
     </div>
     <div class="column">
-      <li v-for="(cat,index) in menu1">
+      <li v-for="cat in menu1">
         <button
           class="button is-outlined is-fullwidth"
-          :id_cat="index"
+          :id_cat="cat[0]"
           @click="getSubCat1"
-        >{{ cat }}</button>
+        >{{ cat[1] }}</button>
       </li>
     </div>
     <div class="column">
-      <li v-for="(cat,index) in menu2">
+      <li v-for="cat in menu2">
         <button
           class="button is-outlined is-fullwidth"
-          :id_cat="index"
+          :id_cat="cat[0]"
           @click="getSubCat2"
-        >{{ cat }}</button>
+        >{{ cat[1] }}</button>
       </li>
     </div>
   </div>
@@ -62,7 +66,7 @@ export default {
       this.menu2 = [];
       this.menu3 = [];
       this.$emit("getProd", id_cat);
-      axios.get("casa/sidebar_categ/" + id_cat).then(response => {
+      axios.post("casa/sidebar_categ", { id: id_cat }).then(response => {
         this.menu1 = response.data;
       });
     },
@@ -72,7 +76,7 @@ export default {
       var ul = document.createElement("ul");
       this.menu2 = [];
       this.$emit("getProd", id_cat);
-      axios.get("casa/sidebar_categ/" + id_cat).then(response => {
+      axios.post("casa/sidebar_categ", { id: id_cat }).then(response => {
         this.menu2 = response.data;
       });
     },
@@ -81,7 +85,7 @@ export default {
       let but = event.target.parentElement;
       var ul = document.createElement("ul");
       this.$emit("getProd", id_cat);
-      axios.get("casa/sidebar_categ/" + id_cat).then(response => {
+      axios.post("casa/sidebar_categ", { id: id_cat }).then(response => {
         this.menu3 = response.data;
       });
     },

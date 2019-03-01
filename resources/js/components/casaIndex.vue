@@ -29,7 +29,7 @@ export default {
     return {
       show: "cart",
       products: [],
-      menu: [],
+      menu: "",
       cart: [],
       reduceri: []
     };
@@ -59,7 +59,18 @@ export default {
     }
   },
   created() {
-    axios.get("casa/sidebar_categ/1").then(response => {
+    // axios.post("casa/sidebar_categ", { id: 2 }).then(function(response) {
+    //   console.log(response);
+    //   this.menu = response.data;
+    // });responseType: 'json',
+    axios({
+      method: "post",
+      url: "casa/sidebar_categ",
+      data: {
+        id: 2
+      },
+      responseType: "text"
+    }).then(response => {
       this.menu = response.data;
     });
     axios.get("casa/showcart").then(response => {
