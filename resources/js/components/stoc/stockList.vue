@@ -22,11 +22,7 @@
         </td>
         <td>{{product.nume}}</td>
         <td>
-          <button
-            class="button is-primary is-fullwidth is-block"
-            :id_prod="product.id_prod"
-            @click="addToCart"
-          >{{product.pret}} lei</button>
+          <button class="button is-primary is-fullwidth is-block" :id_prod="product.id_prod"></button>
         </td>
       </tr>
     </tbody>

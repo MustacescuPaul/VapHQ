@@ -36,7 +36,7 @@ class StocController extends Controller
     public function index()
     {
 
-        return view('casa.stoc')->with('user', Auth::user());
+        return view('index.comanda')->with('user', Auth::user());
     }
 
     public function sidebar($id)

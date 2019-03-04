@@ -4,7 +4,7 @@
       <div class="column is-offset-1">
         <date-intrare @cartBon="cart = $event"></date-intrare>
         <bon-deschis @primeste="primit($event)" :cart="cart"></bon-deschis>
-        <intrare-produs :sn="sn" :id="id" v-if="pr == 1"></intrare-produs>
+        <intrare-produs @gata="redirect" :sn="sn" :id="id" v-if="pr == 1"></intrare-produs>
       </div>
       <div class="column"></div>
     </div>
@@ -29,10 +29,10 @@ export default {
           this.sn = event.sn;
           this.pr = 1;
         });
+    },
+    redirect: function(event) {
+      window.location.href = "garantii/intrate";
     }
-  },
-  mounted() {
-    console.log("Component mounted.");
   }
 };
 </script>

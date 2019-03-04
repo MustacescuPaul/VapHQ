@@ -40,11 +40,18 @@ export default {
     }
   },
   created() {
-    axios.get("casa/sidebar_categ/1").then(response => {
+    axios({
+      method: "post",
+      url: "casa/sidebar_categ",
+      data: {
+        id: 2
+      },
+      responseType: "text"
+    }).then(response => {
       this.menu = response.data;
     });
     axios.get("casa/showcart").then(response => {
-      this.cart = response.data;
+      this.cart = response.data.produse;
     });
   }
 };

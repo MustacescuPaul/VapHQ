@@ -16,6 +16,10 @@ use Illuminate\Http\Request;
 
 class GarantiiController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:web');
+    }
 
     public function index()
     {
@@ -25,31 +29,22 @@ class GarantiiController extends Controller
     public function deschideBonuri(Request $request)
     {
         $user = Auth::user();
-        if ($request->cod_bon) {
-            $bon = Bon::on($user->magazin)->where('cod', '=', $request->cod_bon)->first();
+        if ($request->serial_number) {
             $cart = array();
-            $c = $bon->detaliu_bonuri;
-
-            foreach ($c as $key => $product) {
-                if (Produse::where('id_prod', '=', $product->id_prod)->exists()) {
-                    $produs = Produse::where('id_prod', '=', $product->id_prod)->first();
-                    $sn = $produs->cod;
+            if (Produse::where('cod', '=', $request->serial_number)->exists()) {
+                $prod = Produse::where('cod', '=', $request->serial_number)->get();
+                foreach ($prod as $produs) {
+                    $product = Product::on($user->magazin)->find($produs->id_prod);
                     if ($images = Image::where([['id_product', $product->id_prod], ['cover', '1']])->first()) {
-                        $cart[$key] = ['img' => $images->id_image, 'name' => $product->nume, 'id_prod' => $product->id_prod, 'sn' => $sn];
+                        $cart['rezultate'][$produs->id_prod] = ['img' => $images->id_image, 'name' => $product->nume, 'id_prod' => $product->id_prod, 'sn' => $request->serial_number];
                     } else {
-                        $cart[$key] = ['img' => '', 'name' => $product->nume, 'id_prod' => $product->id_prod, 'sn' => $sn];
+                        $cart['rezultate'][$produs->id_prod] = ['img' => '', 'name' => $product->nume, 'id_prod' => $product->id_prod, 'sn' => $request->serial_number];
                     }
                 }
-            }
-            return json_encode($cart);
-        }
-        if ($request->serial_number) {
-            $produs = Produse::where('cod', '=', $request->serial_number)->first();
-            $product = Product::on($user->magazin)->find($produs->id_prod);
-            if ($images = Image::where([['id_product', $product->id_prod], ['cover', '1']])->first()) {
-                $cart[0] = ['img' => $images->id_image, 'name' => $product->nume, 'id_prod' => $product->id_prod, 'sn' => $request->serial_number];
+                $cart['nr_rezultate'] = count($cart['rezultate']);
             } else {
-                $cart[0] = ['img' => '', 'name' => $product->nume, 'id_prod' => $product->id_prod, 'sn' => $request->serial_number];
+                $cart = array();
+                $cart['nr_rezultate'] = count($cart);
             }
             return json_encode($cart);
         }
@@ -59,9 +54,9 @@ class GarantiiController extends Controller
 
                 $sn = $prod->cod;
                 if ($images = Image::where([['id_product', $prod->id_prod], ['cover', '1']])->first()) {
-                    $cart[$key] = ['img' => $images->id_image, 'name' => $prod->nume, 'id_prod' => $prod->id_prod, 'sn' => $sn];
+                    $cart['rezultate'][$key] = ['img' => $images->id_image, 'name' => $prod->nume, 'id_prod' => $prod->id_prod, 'sn' => $sn];
                 } else {
-                    $cart[$key] = ['img' => '', 'name' => $prod->nume, 'id_prod' => $prod->id_prod, 'sn' => $sn];
+                    $cart['rezultate'][$key] = ['img' => '', 'name' => $prod->nume, 'id_prod' => $prod->id_prod, 'sn' => $sn];
                 }
             }
         }
@@ -156,7 +151,7 @@ class GarantiiController extends Controller
     public function rezolvat(Request $request)
     {
         $request->validate([
-            'text' => 'required|alpha_dash|max:255',
+            'text' => 'required|max:255',
             'id' => 'required|numeric',
         ]);
         $intrare = Intrare::find($request->id);

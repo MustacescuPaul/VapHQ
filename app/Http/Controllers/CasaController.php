@@ -64,7 +64,7 @@ class CasaController extends Controller
             session(['tab' => 'Tab1']);
         }
 
-        $this->show();
+        // $this->show();
         return view('casa.index')->with('user', Auth::user());
     }
 

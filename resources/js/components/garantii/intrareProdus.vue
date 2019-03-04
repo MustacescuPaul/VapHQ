@@ -49,7 +49,9 @@ export default {
           sn: this.sn,
           id: this.id
         })
-        .then(response => {});
+        .then(response => {
+          this.$emit("gata");
+        });
     }
   }
 };

@@ -1,5 +1,5 @@
 @extends('layouts.navside')
 
 @section('content')
-<stoc-index :menu="menu" ></stoc-index>
+<comanda-index :menu="menu" ></comanda-index>
 @endsection

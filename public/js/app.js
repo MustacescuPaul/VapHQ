@@ -57803,11 +57803,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   created: function created() {
     var _this3 = this;
 
-    axios.get("casa/sidebar_categ/1").then(function (response) {
+    axios({
+      method: "post",
+      url: "casa/sidebar_categ",
+      data: {
+        id: 2
+      },
+      responseType: "text"
+    }).then(function (response) {
       _this3.menu = response.data;
     });
     axios.get("casa/showcart").then(function (response) {
-      _this3.cart = response.data;
+      _this3.cart = response.data.produse;
     });
   }
 });
@@ -57951,7 +57958,7 @@ exports = module.exports = __webpack_require__(4)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -57962,10 +57969,6 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
 //
 //
 //
@@ -58032,15 +58035,10 @@ var render = function() {
           _c("td", [_vm._v(_vm._s(product.nume))]),
           _vm._v(" "),
           _c("td", [
-            _c(
-              "button",
-              {
-                staticClass: "button is-primary is-fullwidth is-block",
-                attrs: { id_prod: product.id_prod },
-                on: { click: _vm.addToCart }
-              },
-              [_vm._v(_vm._s(product.pret) + " lei")]
-            )
+            _c("button", {
+              staticClass: "button is-primary is-fullwidth is-block",
+              attrs: { id_prod: product.id_prod }
+            })
           ])
         ])
       })
@@ -58178,10 +58176,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         _this.sn = event.sn;
         _this.pr = 1;
       });
+    },
+    redirect: function redirect(event) {
+      window.location.href = "garantii/intrate";
     }
-  },
-  mounted: function mounted() {
-    console.log("Component mounted.");
   }
 });
 
@@ -58217,7 +58215,10 @@ var render = function() {
           }),
           _vm._v(" "),
           _vm.pr == 1
-            ? _c("intrare-produs", { attrs: { sn: _vm.sn, id: _vm.id } })
+            ? _c("intrare-produs", {
+                attrs: { sn: _vm.sn, id: _vm.id },
+                on: { gata: _vm.redirect }
+              })
             : _vm._e()
         ],
         1
@@ -58324,26 +58325,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      cod_bon: "",
       serial_number: "",
       cod_garantie: ""
     };
@@ -58353,16 +58338,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       var _this = this;
 
       axios.post("garantii/deschideBonuri", {
-        cod_bon: this.cod_bon,
         serial_number: this.serial_number,
         cod_garantie: this.cod_garantie
       }).then(function (response) {
         _this.$emit("cartBon", response.data);
       });
     }
-  },
-  mounted: function mounted() {
-    console.log("Component mounted.");
   }
 });
 
@@ -58375,47 +58356,6 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "columns" }, [
-    _c("div", { staticClass: "column" }, [
-      _c("div", { staticClass: "field" }, [
-        _c("label", { staticClass: "label" }, [
-          _vm._v("Cod Unic de Identificare Bon")
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "control" }, [
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.cod_bon,
-                expression: "cod_bon"
-              }
-            ],
-            staticClass: "input",
-            attrs: { autofocus: "", type: "text", placeholder: "Cod" },
-            domProps: { value: _vm.cod_bon },
-            on: {
-              keyup: function($event) {
-                if (
-                  !("button" in $event) &&
-                  _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-                ) {
-                  return null
-                }
-                return _vm.deschideBon($event)
-              },
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.cod_bon = $event.target.value
-              }
-            }
-          })
-        ])
-      ])
-    ]),
-    _vm._v(" "),
     _c("div", { staticClass: "column" }, [
       _c("div", { staticClass: "field" }, [
         _c("label", { staticClass: "label" }, [_vm._v("Serial Number")]),
@@ -58594,18 +58534,38 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['cart'],
-    methods: {
-        primeste: function primeste(event) {
-            var id_prod = event.target.getAttribute('id_prod');
-            var sn = event.target.getAttribute('sn');
+  props: ["cart"],
+  data: function data() {
+    return {
+      eroare_rezultate: ""
+    };
+  },
+  methods: {
+    primeste: function primeste(event) {
+      var id_prod = event.target.getAttribute("id_prod");
+      var sn = event.target.getAttribute("sn");
 
-            this.$emit('primeste', { 'id_prod': id_prod, 'sn': sn });
-        }
+      this.$emit("primeste", { id_prod: id_prod, sn: sn });
     }
-
+  },
+  beforeUpdate: function beforeUpdate() {
+    if (this.cart.nr_rezultate > 1) {
+      this.eroare_rezultate = "Atentie!Au fost gasite mai multe produse cu acelasi S/N!";
+    }
+    if (this.cart.nr_rezultate == 1) {
+      this.eroare_rezultate = "";
+    }
+    if (this.cart.nr_rezultate == 0) {
+      this.eroare_rezultate = "Nu a fost gasit nici un produs.";
+    }
+  }
 });
 
 /***/ }),
@@ -58619,65 +58579,76 @@ var render = function() {
   return _c(
     "div",
     { staticClass: "container" },
-    _vm._l(_vm.cart, function(product) {
-      return _c("ul", [
-        _c("div", { staticClass: "columns" }, [
-          _c("div", { staticClass: "column" }, [
-            _c("hr"),
-            _vm._v(" "),
-            _c("li", [
-              _c("figure", { staticClass: "image is-128x128" }, [
-                _c("img", {
-                  attrs: {
-                    src:
-                      "https://vapez.ro/" +
-                      product.img +
-                      "-home_default/poza.jpg"
-                  }
-                })
+    [
+      _vm.eroare_rezultate
+        ? _c(
+            "div",
+            { staticClass: "notification is-danger has-text-centered" },
+            [_c("strong", [_vm._v(_vm._s(_vm.eroare_rezultate))])]
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _vm._l(_vm.cart.rezultate, function(product) {
+        return _c("ul", [
+          _c("div", { staticClass: "columns" }, [
+            _c("div", { staticClass: "column" }, [
+              _c("hr"),
+              _vm._v(" "),
+              _c("li", [
+                _c("figure", { staticClass: "image is-128x128" }, [
+                  _c("img", {
+                    attrs: {
+                      src:
+                        "https://vapez.ro/" +
+                        product.img +
+                        "-home_default/poza.jpg"
+                    }
+                  })
+                ])
               ])
-            ])
-          ]),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "column", staticStyle: { "margin-top": "5%" } },
-            [_c("li", [_vm._v(_vm._s(product.name))])]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "column", staticStyle: { "margin-top": "5%" } },
-            [_c("li", [_vm._v(_vm._s(product.sn))])]
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "column is-one-third" }, [
-            _c("li", [
-              _c(
-                "div",
-                {
-                  staticClass: "field",
-                  staticStyle: { "margin-top": "15%", "margin-right": "10%" }
-                },
-                [
-                  _c("p", { staticClass: "control" }, [
-                    _c(
-                      "a",
-                      {
-                        staticClass: "button is-primary",
-                        attrs: { id_prod: product.id_prod, sn: product.sn },
-                        on: { click: _vm.primeste }
-                      },
-                      [_vm._v("Primeste in garantie")]
-                    )
-                  ])
-                ]
-              )
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "column", staticStyle: { "margin-top": "5%" } },
+              [_c("li", [_vm._v(_vm._s(product.name))])]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "column", staticStyle: { "margin-top": "5%" } },
+              [_c("li", [_vm._v(_vm._s(product.sn))])]
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "column is-one-third" }, [
+              _c("li", [
+                _c(
+                  "div",
+                  {
+                    staticClass: "field",
+                    staticStyle: { "margin-top": "15%", "margin-right": "10%" }
+                  },
+                  [
+                    _c("p", { staticClass: "control" }, [
+                      _c(
+                        "a",
+                        {
+                          staticClass: "button is-primary",
+                          attrs: { id_prod: product.id_prod, sn: product.sn },
+                          on: { click: _vm.primeste }
+                        },
+                        [_vm._v("Primeste in garantie")]
+                      )
+                    ])
+                  ]
+                )
+              ])
             ])
           ])
         ])
-      ])
-    })
+      })
+    ],
+    2
   )
 }
 var staticRenderFns = []
@@ -58776,7 +58747,7 @@ exports = module.exports = __webpack_require__(4)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -58832,12 +58803,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
   methods: {
     primeste: function primeste(event) {
+      var _this = this;
+
       axios.post("garantii/primit_produs", {
         stare: this.stare,
         defect: this.defect,
         sn: this.sn,
         id: this.id
-      }).then(function (response) {});
+      }).then(function (response) {
+        _this.$emit("gata");
+      });
     }
   }
 });
@@ -60248,49 +60223,99 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: [],
-    data: function data() {
-        return {
-            admin: {
-                username: '',
-                parola: '',
-                email: ''
-            },
-            user: {
-                username: '',
-                nume: '',
-                prenume: '',
-                parola: ''
-            },
-            erru: [],
-            erra: []
-        };
+  props: [],
+  data: function data() {
+    return {
+      admin: {
+        username: "",
+        parola: "",
+        email: ""
+      },
+      user: {
+        username: "",
+        nume: "",
+        prenume: "",
+        parola: ""
+      },
+      erru: [],
+      erra: []
+    };
+  },
+
+  methods: {
+    RegisterUser: function RegisterUser(event) {
+      var _this = this;
+
+      axios.post("admin/createUser", {
+        nume: this.user.nume,
+        prenume: this.user.prenume,
+        username: this.user.username,
+        parola: this.user.parola
+      }).then(function (response) {
+        _this.$emit("reg");
+      }).catch(function (error) {
+        _this.erru = error.response.data.errors;
+      });
     },
+    RegisterAdmin: function RegisterAdmin(event) {
+      var _this2 = this;
 
-    methods: {
-
-        RegisterUser: function RegisterUser(event) {
-            var _this = this;
-
-            axios.post('/admin/createUser', { nume: this.user.nume, prenume: this.user.prenume, username: this.user.username, parola: this.user.parola }).then(function (response) {
-                _this.$emit('reg');
-            }).catch(function (error) {
-
-                _this.erru = error.response.data.errors;
-            });
-        },
-        RegisterAdmin: function RegisterAdmin(event) {
-            var _this2 = this;
-
-            axios.post('/admin/createAdmin', { username: this.admin.username, parola: this.admin.parola, email: this.admin.email }).then(function (response) {}).catch(function (error) {
-
-                _this2.erra = error.response.data.errors;
-            });
-        }
-    },
-    updated: function updated() {}
+      axios.post("admin/createAdmin", {
+        username: this.admin.username,
+        parola: this.admin.parola,
+        email: this.admin.email
+      }).then(function (response) {}).catch(function (error) {
+        _this2.erra = error.response.data.errors;
+      });
+    }
+  },
+  updated: function updated() {}
 });
 
 /***/ }),
