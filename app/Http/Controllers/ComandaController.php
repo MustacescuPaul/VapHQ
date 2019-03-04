@@ -8,7 +8,7 @@ use App\Product;
 use Auth;
 use Config;
 
-class StocController extends Controller
+class ComandaController extends Controller
 {
     public function __construct()
     {
@@ -36,7 +36,7 @@ class StocController extends Controller
     public function index()
     {
 
-        return view('index.comanda')->with('user', Auth::user());
+        return view('comanda.index')->with('user', Auth::user());
     }
 
     public function sidebar($id)

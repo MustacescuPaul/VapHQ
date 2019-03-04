@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
+
 use Illuminate\Support\Facades\Auth;
 use App\User;
 use App\Http\Controllers\Controller;
@@ -25,7 +26,7 @@ class LoginController extends Controller
 
     use AuthenticatesUsers;
 
-  
+
 
     /**
      * Create a new controller instance.
@@ -35,7 +36,6 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
-       
     }
 
     /**
@@ -80,7 +80,7 @@ class LoginController extends Controller
             ]
         );
     }
-      /**
+    /**
      * Where to redirect users after login.
      *
      * @var string
@@ -88,27 +88,8 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
-         $dm = app("Illuminate\\Database\\DatabaseManager");
-        $dm->disconnect();
-        $user = Auth::user();
-        Config::set("database.connections.mysql", [
-            'driver' => 'mysql',
-            'host' =>'127.0.0.1',
-            'port' => '3306',
-            'database' => $user['magazin'],
-            'username' => 'root',
-            'password' => '',
-            'unix_socket' => env('DB_SOCKET', ''),
-            'charset' => 'utf8mb4',
-            'collation' => 'utf8mb4_unicode_ci',
-            'prefix' => '',
-            'prefix_indexes' => true,
-            'strict' => true,
-            'engine' => null,
-]);
-        
-            return redirect()->route('casa.index');
-        
-       
+
+
+        return redirect()->route('redirect.index');
     }
 }

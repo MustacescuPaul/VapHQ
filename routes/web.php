@@ -15,6 +15,10 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
+Route::prefix('redirect')->group(function () {
+    Route::get('/', 'RedirectController@index')->name('redirect.index');
+});
+
 Auth::routes();
 
 Route::prefix('admin')->group(function () {
@@ -53,6 +57,10 @@ Route::prefix('casa')->group(function () {
 Route::prefix('stoc')->group(function () {
 
     Route::get('/', 'StocController@index')->name('stoc.index');
+});
+Route::prefix('comanda')->group(function () {
+
+    Route::get('/', 'ComandaController@index')->name('comanda.index');
 });
 Route::prefix('garantii')->group(function () {
     Route::get('/', 'GarantiiController@index')->name('garantii.index');

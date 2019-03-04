@@ -18,15 +18,26 @@ Vue.use(Buefy);
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
 
-Vue.component("categ-menu", require("./components/categMenu.vue"));
-Vue.component("cash-card", require("./components/cashcard.vue"));
-Vue.component("casa-index", require("./components/casaIndex.vue"));
-Vue.component("cart", require("./components/cart.vue"));
-Vue.component("product-list", require("./components/productList.vue"));
-Vue.component("date-client", require("./components/dateClient.vue"));
+Vue.component("categ-menu", require("./components/casa/categMenu.vue"));
+Vue.component("cash-card", require("./components/casa/cashcard.vue"));
+Vue.component("casa-index", require("./components/casa/casaIndex.vue"));
+Vue.component("cart", require("./components/casa/cart.vue"));
+Vue.component("product-list", require("./components/casa/productList.vue"));
+Vue.component("date-client", require("./components/casa/dateClient.vue"));
 
-Vue.component("stoc-index", require("./components/stocIndex.vue"));
+Vue.component("stoc-index", require("./components/stoc/stocIndex.vue"));
 Vue.component("stock-list", require("./components/stoc/stockList.vue"));
+
+Vue.component(
+    "redirect-index",
+    require("./components/redirect/redirectIndex.vue")
+);
+
+Vue.component("comanda-list", require("./components/comanda/comandaList.vue"));
+Vue.component(
+    "comanda-index",
+    require("./components/comanda/comandaIndex.vue")
+);
 
 Vue.component(
     "garantii-index",
