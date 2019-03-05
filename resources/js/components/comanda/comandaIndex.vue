@@ -2,14 +2,11 @@
   <div class="container is-fluid">
     <div class="columns">
       <div class="colum">
-        <categ-menu
-          @getProd="getProdList($event)"
-          @search="search($event)"
-          @showChanged="show = $event"
-          :menu="menu"
-        ></categ-menu>
+        <comanda-sidebar @getProd="getProdList($event)" :menu="menu"></comanda-sidebar>
       </div>
-      <stock-list v-if="show == 'products'" :products="products"></stock-list>
+      <div class="column">
+        <comanda-list v-if="show == 'products'" :viz_preturi="viz_preturi" :products="products"></comanda-list>
+      </div>
     </div>
   </div>
 </template>
@@ -18,22 +15,18 @@ export default {
   props: [],
   data: function() {
     return {
-      show: "cart",
+      show: "",
       products: [],
       menu: [],
-      cart: []
+      cart: [],
+      viz_preturi: ""
     };
   },
   methods: {
     getProdList: function(event) {
-      axios.get("casa/lista_produse/" + event).then(response => {
-        this.products = response.data.products;
-        this.show = "products";
-      });
-    },
-    search: function(event) {
-      axios.get("casa/search/" + event).then(response => {
-        this.products = response.data;
+      axios.get("comanda/lista_produse/" + event).then(response => {
+        this.products = response.data.prods;
+        this.viz_preturi = response.data.viz_preturi;
 
         this.show = "products";
       });
@@ -42,7 +35,7 @@ export default {
   created() {
     axios({
       method: "post",
-      url: "casa/sidebar_categ",
+      url: "comanda/comenzi_sidebar",
       data: {
         id: 2
       },
@@ -50,9 +43,9 @@ export default {
     }).then(response => {
       this.menu = response.data;
     });
-    axios.get("casa/showcart").then(response => {
-      this.cart = response.data.produse;
-    });
+    // axios.get("comanda/comenzi_cart").then(response => {
+    //   this.cart = response.data.produse;
+    // });
   }
 };
 </script>

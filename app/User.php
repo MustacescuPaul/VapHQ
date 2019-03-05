@@ -32,4 +32,12 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Role::class, 'role_users');
     }
+    public function Users_permisiuni()
+    {
+        return $this->hasOne('App\Users_permisiuni', 'id', 'id');
+    }
+    public function Lista_reselleri()
+    {
+        return $this->hasMany('App\Lista_reselleri', 'id_vapoint', 'id_client');
+    }
 }

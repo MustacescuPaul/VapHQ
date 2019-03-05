@@ -32,8 +32,16 @@ Vue.component(
     "redirect-index",
     require("./components/redirect/redirectIndex.vue")
 );
+Vue.component(
+    "redirect-menu",
+    require("./components/redirect/redirectMenu.vue")
+);
 
 Vue.component("comanda-list", require("./components/comanda/comandaList.vue"));
+Vue.component(
+    "comanda-sidebar",
+    require("./components/comanda/comandaSidebar.vue")
+);
 Vue.component(
     "comanda-index",
     require("./components/comanda/comandaIndex.vue")
