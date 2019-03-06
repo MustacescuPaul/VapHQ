@@ -2,7 +2,7 @@
   <div class="columns">
     <div class="column">
       <p class="has-text-centered mar-top-30">Vanzare</p>
-      <button class="button mar-top-5 is-fullwidth is-primary">Vanzare</button>
+      <button @click="vanzare" class="button mar-top-5 is-fullwidth is-primary">Vanzare</button>
       <button class="button mar-top-5 is-fullwidth is-primary">Casa</button>
       <button class="button mar-top-5 is-fullwidth is-primary">Stocuri</button>
       <button class="button mar-top-5 is-fullwidth is-primary">Sertar</button>
@@ -11,7 +11,10 @@
     <div class="column">
       <p class="has-text-centered mar-top-30">Garantii</p>
       <button class="button mar-top-5 is-fullwidth is-primary">Emitere</button>
-      <button class="button mar-top-5 is-fullwidth is-primary">Primire service</button>
+      <button
+        @click="primireService"
+        class="button mar-top-5 is-fullwidth is-primary"
+      >Primire service</button>
       <button class="button mar-top-5 is-fullwidth is-primary">Eliberare Service</button>
     </div>
     <div class="column">
@@ -35,6 +38,12 @@ export default {
   methods: {
     comenzi: function(event) {
       this.$emit("comenzi");
+    },
+    vanzare: function(event) {
+      this.$emit("vanzare");
+    },
+    primireService: function(event) {
+      this.$emit("primireService");
     }
   }
 };

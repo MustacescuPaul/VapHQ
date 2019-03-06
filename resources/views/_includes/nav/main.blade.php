@@ -15,10 +15,7 @@
                         <a href="{{route('casa.index') }}"  class="navbar-item is-tab is-hidden-mobile mr-l-30">Produse</a>
                         <a href="#" id="button-navbar" class="navbar-item is-tab is-hidden-mobile">Tag</a>
                         <a href="#" id="button-navbar" class="navbar-item is-tab is-hidden-mobile">Resetare</a>
-                        <a href="#" id="button-navbar" class="navbar-item is-tab is-hidden-mobile">Utile</a>
-                        <a href="{{route('garantii.index')}}" id="button-navbar" class="navbar-item is-tab is-hidden-mobile">Garantii</a>
-                        <a href="{{route('garantii.intrate')}}" id="button-navbar" class="navbar-item is-tab is-hidden-mobile">Garantiile mele</a>
-                        <a href="{{route('stoc.index')}}" id="button-navbar" class="navbar-item is-tab is-hidden-mobile">Stocuri</a>
+                       
 
                     </div>
                     <div class="navbar-end">
@@ -32,6 +29,7 @@
                              <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                 {{ csrf_field() }}
                             </form>
+                            <a href="{{route('redirect.index') }}" class="navbar-item is-tab is-hidden-mobile">Meniu principal</a>
                     </div>
                 </div>
             </nav>

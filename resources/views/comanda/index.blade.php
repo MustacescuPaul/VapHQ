@@ -1,5 +1,5 @@
 @extends('layouts.app')
 
 @section('content')
-<comanda-index :menu="menu" ></comanda-index>
+<comanda-index comanda="{{ json_encode($comanda) }}" ></comanda-index>
 @endsection

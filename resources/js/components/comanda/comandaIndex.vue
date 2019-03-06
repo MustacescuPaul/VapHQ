@@ -6,16 +6,17 @@
       </div>
       <div class="column">
         <comanda-list v-if="show == 'products'" :viz_preturi="viz_preturi" :products="products"></comanda-list>
+        <comanda-cos v-if="show == 'cos'" :comanda="comanda"></comanda-cos>
       </div>
     </div>
   </div>
 </template>
 <script>
 export default {
-  props: [],
+  props: ["comanda"],
   data: function() {
     return {
-      show: "",
+      show: "cos",
       products: [],
       menu: [],
       cart: [],
@@ -27,8 +28,8 @@ export default {
       axios.get("comanda/lista_produse/" + event).then(response => {
         this.products = response.data.prods;
         this.viz_preturi = response.data.viz_preturi;
-
-        this.show = "products";
+        if (response.data.prods) this.show = "products";
+        else this.show = "";
       });
     }
   },

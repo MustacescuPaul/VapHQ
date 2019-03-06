@@ -15,4 +15,8 @@ class Preturi_reselleri extends Model
     {
         return $this->belongsTo('App\Ps_product', 'id_produs', 'id_product');
     }
+    public function Comanda()
+    {
+        return $this->belongsTo(Comanda::class, 'id_prod', 'id_produs');
+    }
 }

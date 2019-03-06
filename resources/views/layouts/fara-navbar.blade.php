@@ -25,8 +25,6 @@
 <body>
     <div id="app">
 
-        @include('_includes.nav.comanda')
-
             @yield('content')
 
     </div>

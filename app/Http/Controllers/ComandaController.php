@@ -5,15 +5,16 @@ namespace App\Http\Controllers;
 use App\Category;
 use App\Image;
 use App\Product;
+use App\Comanda;
+use App\Preturi_reselleri;
 use App\Ps_product;
 use App\Ps_stock_available;
 use App\Lista_reselleri;
-
-use App\Preturi_reselleri;
 use App\User;
 use Auth;
 use Config;
 use Illuminate\Http\Request;
+use function GuzzleHttp\json_encode;
 
 
 class ComandaController extends Controller
@@ -39,7 +40,9 @@ class ComandaController extends Controller
     {
         $permisiuni_comenzi = Auth::user()->users_permisiuni->comanda;
         if ($permisiuni_comenzi) {
-            return view('comanda.index')->with('user', Auth::user());
+            $comanda = Comanda::on(Auth::user()->magazin)->first()->preturi_reselleri;
+            //var_dump($comanda);
+            return view('comanda.index')->with('user', Auth::user())->with('comanda', $comanda);
         } else {
             return view('index')->with('user', Auth::user());
         }
@@ -117,4 +120,7 @@ class ComandaController extends Controller
         $products = Product::on($user->magazin)->where('nume', $name)->orWhere('nume', 'like', '%' . $name . '%')->get();
         return json_encode($products);
     }
+
+    public function showCos()
+    { }
 }

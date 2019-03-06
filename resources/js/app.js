@@ -46,6 +46,7 @@ Vue.component(
     "comanda-index",
     require("./components/comanda/comandaIndex.vue")
 );
+Vue.component("comanda-cos", require("./components/comanda/comandaCos.vue"));
 
 Vue.component(
     "garantii-index",

@@ -1,6 +1,11 @@
 <template>
   <div>
-    <redirect-menu v-if="show == 'menu'" @comenzi="interfataComenzi"></redirect-menu>
+    <redirect-menu
+      v-if="show == 'menu'"
+      @comenzi="interfataComenzi"
+      @vanzare="interfataVanzare"
+      @primireService="primireService"
+    ></redirect-menu>
   </div>
 </template>
 
@@ -16,29 +21,13 @@ export default {
   },
   methods: {
     interfataComenzi: function() {
-      // axios
-      //   .get("comanda/")
-      //   .then(response => {
-      //     this.comenzi = response.data;
-      //     axios({
-      //       method: "post",
-      //       url: "comanda/comenzi_sidebar",
-      //       data: {
-      //         id: 2
-      //       },
-      //       responseType: "text"
-      //     }).then(response => {
-      //       this.comenzi_menu = response.data;
-      //     });
-      //     //   axios.get("comanda/showcart").then(response => {
-      //     //     this.comenzi_cart = response.data.produse;
-      //     //   });
-      //     this.show = "comenzi";
-      //   })
-      //   .catch(error => {
-      //     console.log(error.response.data.errors);
-      //   });
       window.location.href = "comanda/";
+    },
+    interfataVanzare: function() {
+      window.location.href = "casa/";
+    },
+    primireService: function() {
+      window.location.href = "garantii/";
     }
   }
 };

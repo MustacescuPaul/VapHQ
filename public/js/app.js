@@ -12399,6 +12399,7 @@ Vue.component("redirect-menu", __webpack_require__(76));
 Vue.component("comanda-list", __webpack_require__(81));
 Vue.component("comanda-sidebar", __webpack_require__(86));
 Vue.component("comanda-index", __webpack_require__(89));
+Vue.component("comanda-cos", __webpack_require__(134));
 
 Vue.component("garantii-index", __webpack_require__(92));
 Vue.component("date-intrare", __webpack_require__(95));
@@ -58202,6 +58203,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -58214,29 +58220,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   },
   methods: {
     interfataComenzi: function interfataComenzi() {
-      // axios
-      //   .get("comanda/")
-      //   .then(response => {
-      //     this.comenzi = response.data;
-      //     axios({
-      //       method: "post",
-      //       url: "comanda/comenzi_sidebar",
-      //       data: {
-      //         id: 2
-      //       },
-      //       responseType: "text"
-      //     }).then(response => {
-      //       this.comenzi_menu = response.data;
-      //     });
-      //     //   axios.get("comanda/showcart").then(response => {
-      //     //     this.comenzi_cart = response.data.produse;
-      //     //   });
-      //     this.show = "comenzi";
-      //   })
-      //   .catch(error => {
-      //     console.log(error.response.data.errors);
-      //   });
       window.location.href = "comanda/";
+    },
+    interfataVanzare: function interfataVanzare() {
+      window.location.href = "casa/";
+    },
+    primireService: function primireService() {
+      window.location.href = "garantii/";
     }
   }
 });
@@ -58253,7 +58243,13 @@ var render = function() {
     "div",
     [
       _vm.show == "menu"
-        ? _c("redirect-menu", { on: { comenzi: _vm.interfataComenzi } })
+        ? _c("redirect-menu", {
+            on: {
+              comenzi: _vm.interfataComenzi,
+              vanzare: _vm.interfataVanzare,
+              primireService: _vm.primireService
+            }
+          })
         : _vm._e()
     ],
     1
@@ -58355,7 +58351,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -58398,11 +58394,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   methods: {
     comenzi: function comenzi(event) {
       this.$emit("comenzi");
+    },
+    vanzare: function vanzare(event) {
+      this.$emit("vanzare");
+    },
+    primireService: function primireService(event) {
+      this.$emit("primireService");
     }
   }
 });
@@ -58416,9 +58421,71 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "columns" }, [
-    _vm._m(0),
+    _c("div", { staticClass: "column" }, [
+      _c("p", { staticClass: "has-text-centered mar-top-30" }, [
+        _vm._v("Vanzare")
+      ]),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "button mar-top-5 is-fullwidth is-primary",
+          on: { click: _vm.vanzare }
+        },
+        [_vm._v("Vanzare")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        { staticClass: "button mar-top-5 is-fullwidth is-primary" },
+        [_vm._v("Casa")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        { staticClass: "button mar-top-5 is-fullwidth is-primary" },
+        [_vm._v("Stocuri")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        { staticClass: "button mar-top-5 is-fullwidth is-primary" },
+        [_vm._v("Sertar")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        { staticClass: "button mar-top-5 is-fullwidth is-primary" },
+        [_vm._v("Mixer baze")]
+      )
+    ]),
     _vm._v(" "),
-    _vm._m(1),
+    _c("div", { staticClass: "column" }, [
+      _c("p", { staticClass: "has-text-centered mar-top-30" }, [
+        _vm._v("Garantii")
+      ]),
+      _vm._v(" "),
+      _c(
+        "button",
+        { staticClass: "button mar-top-5 is-fullwidth is-primary" },
+        [_vm._v("Emitere")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "button mar-top-5 is-fullwidth is-primary",
+          on: { click: _vm.primireService }
+        },
+        [_vm._v("Primire service")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        { staticClass: "button mar-top-5 is-fullwidth is-primary" },
+        [_vm._v("Eliberare Service")]
+      )
+    ]),
     _vm._v(" "),
     _c("div", { staticClass: "column" }, [
       _c("p", { staticClass: "has-text-centered mar-top-30" }, [
@@ -58447,78 +58514,10 @@ var render = function() {
       )
     ]),
     _vm._v(" "),
-    _vm._m(2)
+    _vm._m(0)
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "column" }, [
-      _c("p", { staticClass: "has-text-centered mar-top-30" }, [
-        _vm._v("Vanzare")
-      ]),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "button mar-top-5 is-fullwidth is-primary" },
-        [_vm._v("Vanzare")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "button mar-top-5 is-fullwidth is-primary" },
-        [_vm._v("Casa")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "button mar-top-5 is-fullwidth is-primary" },
-        [_vm._v("Stocuri")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "button mar-top-5 is-fullwidth is-primary" },
-        [_vm._v("Sertar")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "button mar-top-5 is-fullwidth is-primary" },
-        [_vm._v("Mixer baze")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "column" }, [
-      _c("p", { staticClass: "has-text-centered mar-top-30" }, [
-        _vm._v("Garantii")
-      ]),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "button mar-top-5 is-fullwidth is-primary" },
-        [_vm._v("Emitere")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "button mar-top-5 is-fullwidth is-primary" },
-        [_vm._v("Primire service")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "button mar-top-5 is-fullwidth is-primary" },
-        [_vm._v("Eliberare Service")]
-      )
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -59192,12 +59191,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: [],
+  props: ["comanda"],
   data: function data() {
     return {
-      show: "",
+      show: "cos",
       products: [],
       menu: [],
       cart: [],
@@ -59211,8 +59211,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       axios.get("comanda/lista_produse/" + event).then(function (response) {
         _this.products = response.data.prods;
         _this.viz_preturi = response.data.viz_preturi;
-
-        _this.show = "products";
+        if (response.data.prods) _this.show = "products";else _this.show = "";
       });
     }
   },
@@ -59269,6 +59268,10 @@ var render = function() {
             ? _c("comanda-list", {
                 attrs: { viz_preturi: _vm.viz_preturi, products: _vm.products }
               })
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.show == "cos"
+            ? _c("comanda-cos", { attrs: { comanda: _vm.comanda } })
             : _vm._e()
         ],
         1
@@ -62913,6 +62916,303 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 131 */,
+/* 132 */,
+/* 133 */,
+/* 134 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(135)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(137)
+/* template */
+var __vue_template__ = __webpack_require__(138)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/comanda/comandaCos.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-ace0f26a", Component.options)
+  } else {
+    hotAPI.reload("data-v-ace0f26a", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 135 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(136);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(3)("45864df5", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-ace0f26a\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./comandaCos.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-ace0f26a\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./comandaCos.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 136 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(2)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\ntable {\n  font-size: 15px;\n}\n.button {\n  padding-left: 5px;\n  padding-right: 5px;\n  padding-top: 0px;\n  padding-bottom: 0px;\n  font-size: 15px;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 137 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ["products", "viz_preturi"],
+
+  data: function data() {
+    return {};
+  },
+  methods: {
+    addToCart: function addToCart(event) {
+      var id_prod = event.target.getAttribute("id_prod");
+      axios.get("casa/cart_content/" + id_prod).then(function (response) {});
+      this.$emit("add");
+    }
+  }
+});
+
+/***/ }),
+/* 138 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "table",
+    { staticClass: "is-scrollable table is-narrow is-fullwidth" },
+    [
+      _c("thead", [
+        _c("tr", [
+          _c("th", [_vm._v("ID")]),
+          _vm._v(" "),
+          _c("th", [_vm._v("Ref")]),
+          _vm._v(" "),
+          _c("th", [_vm._v("Nume")]),
+          _vm._v(" "),
+          _c("th", [_vm._v("Stoc")]),
+          _vm._v(" "),
+          _c("th", [_vm._v("Cos")]),
+          _vm._v(" "),
+          _c("th"),
+          _vm._v(" "),
+          _vm.viz_preturi > 0 ? _c("th", [_vm._v("fTVA")]) : _vm._e(),
+          _vm._v(" "),
+          _vm.viz_preturi > 0 ? _c("th", [_vm._v("cTVA")]) : _vm._e(),
+          _vm._v(" "),
+          _vm.viz_preturi > 0 ? _c("th", [_vm._v("Site")]) : _vm._e(),
+          _vm._v(" "),
+          _vm.viz_preturi > 0 ? _c("th", [_vm._v("Adaos")]) : _vm._e(),
+          _vm._v(" "),
+          _vm.viz_preturi > 0 ? _c("th") : _vm._e()
+        ])
+      ]),
+      _vm._v(" "),
+      _c(
+        "tbody",
+        _vm._l(_vm.products, function(product) {
+          return _c("tr", [
+            _c("td", { staticStyle: { padding: "0px", margin: "0px" } }, [
+              _c("button", { staticClass: "button is-primary" }, [
+                _vm._v(_vm._s(product.id))
+              ])
+            ]),
+            _vm._v(" "),
+            _c(
+              "td",
+              {
+                staticClass: "has-text-centered",
+                staticStyle: { padding: "0px", margin: "0px" }
+              },
+              [_vm._v(_vm._s(product.ref))]
+            ),
+            _vm._v(" "),
+            _c(
+              "td",
+              {
+                staticClass: "has-text-centered",
+                staticStyle: { padding: "0px", margin: "0px" }
+              },
+              [_vm._v(_vm._s(product.nume))]
+            ),
+            _vm._v(" "),
+            _c("td", [_vm._v(_vm._s(product.stoc))]),
+            _vm._v(" "),
+            _c("td"),
+            _vm._v(" "),
+            product.stoc != "Nu este disponibil pt comanda!"
+              ? _c("td", [
+                  _c("button", { staticClass: "button" }, [_vm._v("+")]),
+                  _vm._v(" "),
+                  _c("button", { staticClass: "button" }, [_vm._v("-")]),
+                  _vm._v(" "),
+                  _c("button", { staticClass: "button" }, [_vm._v("+5")]),
+                  _vm._v(" "),
+                  _c("button", { staticClass: "button" }, [_vm._v("+10")]),
+                  _vm._v(" "),
+                  _c("button", { staticClass: "button is-danger" }, [
+                    _vm._v("DEL")
+                  ])
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.viz_preturi > 0 &&
+            product.stoc != "Nu este disponibil pt comanda!"
+              ? _c("td", [_vm._v(_vm._s(product.ftva))])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.viz_preturi > 0 &&
+            product.stoc != "Nu este disponibil pt comanda!"
+              ? _c("td", [_vm._v(_vm._s(product.ctva))])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.viz_preturi > 0 &&
+            product.stoc != "Nu este disponibil pt comanda!"
+              ? _c("td", [_vm._v(_vm._s(product.site))])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.viz_preturi > 0 &&
+            product.stoc != "Nu este disponibil pt comanda!"
+              ? _c("td", [_vm._v(_vm._s(product.adaos_nr))])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.viz_preturi > 0 &&
+            product.stoc != "Nu este disponibil pt comanda!"
+              ? _c("td", [_vm._v(_vm._s(product.adaos_proc) + "%")])
+              : _vm._e()
+          ])
+        })
+      )
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-ace0f26a", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

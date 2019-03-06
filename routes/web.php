@@ -64,6 +64,7 @@ Route::prefix('comanda')->group(function () {
     Route::get('/comenzi_cart', 'ComandaController@show')->name('comanda.show');
     Route::post('/comenzi_sidebar', 'ComandaController@sidebar')->name('comanda.sidebar');
     Route::get('lista_produse/{id}', 'ComandaController@productList')->name('comanda.prodlist');
+    Route::get('/showCos', 'ComandaController@showCos')->name('comanda.show_cos');
 });
 Route::prefix('garantii')->group(function () {
     Route::get('/', 'GarantiiController@index')->name('garantii.index');
