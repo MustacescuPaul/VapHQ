@@ -67,6 +67,7 @@ Route::prefix('comanda')->group(function () {
     Route::get('/showCos', 'ComandaController@showCos')->name('comanda.show_cos');
     Route::post('/addToCmd', 'ComandaController@addToCmd')->name('comanda.add_to_cmd');
     Route::post('/rmCmd', 'ComandaController@rmCmd')->name('comanda.rm_cmd');
+    Route::post('/salveazaCmd', 'ComandaController@salveazaCmd')->name('comanda.salveaza_cmd');
 });
 Route::prefix('garantii')->group(function () {
     Route::get('/', 'GarantiiController@index')->name('garantii.index');

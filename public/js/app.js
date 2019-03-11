@@ -59543,6 +59543,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       _this2.comandapr = response.data.prods;
       _this2.viz_preturi = response.data.viz_preturi;
     });
+  },
+  salveazaCmd: function salveazaCmd(event) {
+    var _this3 = this;
+
+    axios.post("comanda/salveazaCmd", {
+      id_prod: id_prod
+    }).then(function (response) {
+      _this3.comandapr = response.data.prods;
+      _this3.viz_preturi = response.data.viz_preturi;
+    });
   }
 }), _props$props$data$met);
 
@@ -59694,7 +59704,20 @@ var render = function() {
             ])
           }),
           _vm._v(" "),
-          _vm._m(0)
+          _c("tr", [
+            _c("td", [
+              _c(
+                "button",
+                {
+                  staticClass: "button is-fullwidth is-primary",
+                  on: { click: _vm.salveazaCmd }
+                },
+                [_vm._v("Salveaza Comanda")]
+              )
+            ]),
+            _vm._v(" "),
+            _vm._m(0)
+          ])
         ],
         2
       )
@@ -59706,17 +59729,9 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("tr", [
-      _c("td", [
-        _c("button", { staticClass: "button is-fullwidth is-primary" }, [
-          _vm._v("Salveaza Comanda")
-        ])
-      ]),
-      _vm._v(" "),
-      _c("td", [
-        _c("button", { staticClass: "button is-fullwidth is-primary" }, [
-          _vm._v("Finalizeaza Comanda")
-        ])
+    return _c("td", [
+      _c("button", { staticClass: "button is-fullwidth is-primary" }, [
+        _vm._v("Finalizeaza Comanda")
       ])
     ])
   }

@@ -172,38 +172,43 @@ class ComandaController extends Controller
     { }
     public function addToCmd(Request $request)
     {
-        $cantitate = $request->cantitate;
-        $id = $request->id_prod;
-        if (Comanda::on(Auth::user()->magazin)->find($id)) {
-            $produs_comanda = Comanda::on(Auth::user()->magazin)->find($id);
-        } else {
-            $produs_comanda = new Comanda;
-            $produs_comanda->setConnection(Auth::user()->magazin);
-            $produs_comanda->id_prod = $id;
-        }
-        $stoc = Ps_stock_available::find($id);
-        $products_json = array();
-        $produs_comanda->cantitate += $cantitate;
-        if ($produs_comanda->cantitate == 0) {
-            $produs_comanda->delete();
-        } else {
-            if (($stoc->quantity >= $produs_comanda->cantitate) && ($produs_comanda->cantitate >= 0)) {
-                $produs_comanda->save();
-            }
-        }
-        if ($request->list) {
-            $permisiuni_comenzi = Auth::user()->users_permisiuni->comanda;
+        $permisiuni_comenzi = Auth::user()->users_permisiuni->comanda;
+
+        $permisiuni_viz_stocuri = Auth::user()->users_permisiuni->viz_stocuri_vap;
+
+        $permisiuni_viz_preturi_res = Auth::user()->users_permisiuni->viz_preturi_res;
+        $permisiuni_user_activ = Auth::user()->activ;
+
+        $permisiuni_finalizare_comanda = Auth::user()->users_permisiuni->finalizare;
+
+        if (($permisiuni_comenzi) && ($permisiuni_user_activ)) {
+
+            $cantitate = $request->cantitate;
+            $id = $request->id_prod;
+            $products_json = array();
+            $stoc = Ps_stock_available::find($id);
             $reducere = Lista_reselleri::where('id_client', '=', Auth::user()->id_vapoint)->first()->reducere;
-            if ($permisiuni_comenzi) {
+            if (Comanda::on(Auth::user()->magazin)->find($id)) {
+                $produs_comanda = Comanda::on(Auth::user()->magazin)->find($id);
+            } else {
+                $produs_comanda = new Comanda;
+                $produs_comanda->setConnection(Auth::user()->magazin);
+                $produs_comanda->id_prod = $id;
+            }
+            $produs_comanda->cantitate += $cantitate;
+            if ($produs_comanda->cantitate == 0) {
+                $produs_comanda->delete();
+            } else {
+                if (($stoc->quantity >= $produs_comanda->cantitate) && ($produs_comanda->cantitate >= 0)) {
+                    $produs_comanda->save();
+                }
+            }
+            if ($request->list) {
 
-                $reseller = Preturi_reselleri::find($id);
-                $stoc = Ps_stock_available::find($id);
-                $permisiuni_viz_stocuri = Auth::user()->users_permisiuni->viz_stocuri_vap;
-                $permisiuni_viz_preturi_res = Auth::user()->users_permisiuni->viz_preturi_res;
-
-                $temp['ref'] = $reseller->ref;
-                $temp['id'] = $reseller->id_produs;
-                $temp['nume'] = $reseller->nume;
+                $produs_comanda = Comanda::on(Auth::user()->magazin)->find($id);
+                $temp['ref'] = $produs_comanda->preturi_reselleri->ref;
+                $temp['id'] = $produs_comanda->preturi_reselleri->id_produs;
+                $temp['nume'] = $produs_comanda->preturi_reselleri->nume;
                 $temp['cos'] = $produs_comanda->cantitate;
                 if ($stoc['quantity'] > 0) {
                     $temp['stoc'] = 'da';
@@ -214,34 +219,24 @@ class ComandaController extends Controller
                 if ($permisiuni_viz_stocuri) {
                     $temp['stoc'] = $stoc['quantity'];
                 }
-                if ($reseller->$reducere > 0)
+                if ($produs_comanda->preturi_reselleri->$reducere > 0)
                     if ($permisiuni_viz_preturi_res) {
-                        $temp['ftva'] = $reseller->$reducere;
-                        $temp['ctva'] = round($reseller->$reducere * 1.19, 2);
-                        $temp['site'] = $reseller->vct;
-                        $temp['adaos_nr'] = round($reseller->vct - round($reseller->$reducere * 1.19, 2), 2);
+                        $temp['ftva'] = $produs_comanda->preturi_reselleri->$reducere;
+                        $temp['ctva'] = round($produs_comanda->preturi_reselleri->$reducere * 1.19, 2);
+                        $temp['site'] = $produs_comanda->preturi_reselleri->vct;
+                        $temp['adaos_nr'] = round($produs_comanda->preturi_reselleri->vct - round($produs_comanda->preturi_reselleri->$reducere * 1.19, 2), 2);
                         $temp['adaos_proc'] = round(($temp['adaos_nr'] / $temp['ctva']) * 100, 2);
                         $products_json['viz_preturi'] = 1;
                     }
-                if ($reseller->$reducere == 0) {
+                if ($produs_comanda->preturi_reselleri->$reducere == 0) {
                     $temp['stoc'] = 'Nu este disponibil pt comanda!';
                 }
                 $products_json['prods'][$id] = $temp;
                 return $products_json;
             }
-        }
-        $permisiuni_comenzi = Auth::user()->users_permisiuni->comanda;
-        $reducere = Lista_reselleri::where('id_client', '=', Auth::user()->id_vapoint)->first()->reducere;
-        if ($permisiuni_comenzi) {
             $comanda = Comanda::on(Auth::user()->magazin)->get();
-            //--------------------
             foreach ($comanda as $linie) {
-
                 $stoc = Ps_stock_available::find($linie->id_prod);
-                $permisiuni_viz_stocuri = Auth::user()->users_permisiuni->viz_stocuri_vap;
-                $permisiuni_viz_preturi_res = Auth::user()->users_permisiuni->viz_preturi_res;
-                $permisiuni_finalizare_comanda = Auth::user()->users_permisiuni->finalizare;
-
                 $temp['nume'] = $linie->preturi_reselleri->nume;
                 $temp['id'] = $linie->preturi_reselleri->id_produs;
                 if ($stoc['quantity'] > 0) {
@@ -268,16 +263,15 @@ class ComandaController extends Controller
                 $temp['image'] = $image;
                 $products_json['prods'][$linie->id_prod] = $temp;
             }
-            //--------------------
-            //var_dump($comanda);
+            return json_encode($products_json);
         } else {
             return "Nu aveti permisiunile necesare!";
         }
-        return json_encode($products_json);
     }
 
     public function rmCmd(Request $request)
     {
+
         $permisiuni_comenzi = Auth::user()->users_permisiuni->comanda;
         $id = $request->id_prod;
         if ($permisiuni_comenzi) {
@@ -363,5 +357,18 @@ class ComandaController extends Controller
                 return json_encode($products_json);
             }
         }
+    }
+    public function salveazaCmd(Request $request)
+    {
+        $permisiuni_comenzi = Auth::user()->users_permisiuni->comanda;
+
+        $permisiuni_viz_stocuri = Auth::user()->users_permisiuni->viz_stocuri_vap;
+
+        $permisiuni_viz_preturi_res = Auth::user()->users_permisiuni->viz_preturi_res;
+        $permisiuni_user_activ = Auth::user()->activ;
+
+        $permisiuni_finalizare_comanda = Auth::user()->users_permisiuni->finalizare;
+
+        if ($permisiuni_comenzi && $permisiuni_user_activ && $permisiuni_finalizare_comanda) { }
     }
 }

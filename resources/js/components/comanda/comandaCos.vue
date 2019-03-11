@@ -48,7 +48,7 @@
       </tr>
       <tr>
         <td>
-          <button class="button is-fullwidth is-primary">Salveaza Comanda</button>
+          <button @click="salveazaCmd" class="button is-fullwidth is-primary">Salveaza Comanda</button>
         </td>
         <td>
           <button class="button is-fullwidth is-primary">Finalizeaza Comanda</button>
@@ -84,6 +84,16 @@ export default {
       var id_prod = event.target.getAttribute("id_prod");
       axios
         .post("comanda/rmCmd", {
+          id_prod: id_prod
+        })
+        .then(response => {
+          this.comandapr = response.data.prods;
+          this.viz_preturi = response.data.viz_preturi;
+        });
+    },
+    salveazaCmd: function(event) {
+      axios
+        .post("comanda/salveazaCmd", {
           id_prod: id_prod
         })
         .then(response => {
