@@ -65,6 +65,8 @@ Route::prefix('comanda')->group(function () {
     Route::post('/comenzi_sidebar', 'ComandaController@sidebar')->name('comanda.sidebar');
     Route::get('lista_produse/{id}', 'ComandaController@productList')->name('comanda.prodlist');
     Route::get('/showCos', 'ComandaController@showCos')->name('comanda.show_cos');
+    Route::post('/addToCmd', 'ComandaController@addToCmd')->name('comanda.add_to_cmd');
+    Route::post('/rmCmd', 'ComandaController@rmCmd')->name('comanda.rm_cmd');
 });
 Route::prefix('garantii')->group(function () {
     Route::get('/', 'GarantiiController@index')->name('garantii.index');

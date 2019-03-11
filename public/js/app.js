@@ -58721,9 +58721,34 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   },
   methods: {
     addToCart: function addToCart(event) {
+      var _this = this;
+
+      var cantitate = event.target.getAttribute("cantitate");
       var id_prod = event.target.getAttribute("id_prod");
-      axios.get("casa/cart_content/" + id_prod).then(function (response) {});
-      this.$emit("add");
+      axios.post("comanda/addToCmd", {
+        cantitate: cantitate,
+        id_prod: id_prod,
+        list: 1
+      }).then(function (response) {
+        console.log(_this.products[id_prod]);
+        _this.$set(_this.products, id_prod, response.data.prods[id_prod]);
+        //this.products.id_prod = response.data.prods.id_prod;
+        _this.viz_preturi = response.data.viz_preturi;
+      });
+    },
+    rmCmd: function rmCmd(event) {
+      var _this2 = this;
+
+      var id_prod = event.target.getAttribute("id_prod");
+      axios.post("comanda/rmCmd", {
+        id_prod: id_prod,
+        list: 1
+      }).then(function (response) {
+        console.log(_this2.products[id_prod]);
+        _this2.$set(_this2.products, id_prod, response.data.prods[id_prod]);
+        //this.products.id_prod = response.data.prods.id_prod;
+        _this2.viz_preturi = response.data.viz_preturi;
+      });
     }
   }
 });
@@ -58796,21 +58821,59 @@ var render = function() {
             _vm._v(" "),
             _c("td", [_vm._v(_vm._s(product.stoc))]),
             _vm._v(" "),
-            _c("td"),
+            _c("td", [_vm._v(_vm._s(product.cos))]),
             _vm._v(" "),
             product.stoc != "Nu este disponibil pt comanda!"
               ? _c("td", [
-                  _c("button", { staticClass: "button" }, [_vm._v("+")]),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "button",
+                      attrs: { cantitate: "1", id_prod: product.id },
+                      on: { click: _vm.addToCart }
+                    },
+                    [_vm._v("+")]
+                  ),
                   _vm._v(" "),
-                  _c("button", { staticClass: "button" }, [_vm._v("-")]),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "button",
+                      attrs: { cantitate: "-1", id_prod: product.id },
+                      on: { click: _vm.addToCart }
+                    },
+                    [_vm._v("-")]
+                  ),
                   _vm._v(" "),
-                  _c("button", { staticClass: "button" }, [_vm._v("+5")]),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "button",
+                      attrs: { cantitate: "5", id_prod: product.id },
+                      on: { click: _vm.addToCart }
+                    },
+                    [_vm._v("+5")]
+                  ),
                   _vm._v(" "),
-                  _c("button", { staticClass: "button" }, [_vm._v("+10")]),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "button",
+                      attrs: { cantitate: "10", id_prod: product.id },
+                      on: { click: _vm.addToCart }
+                    },
+                    [_vm._v("+10")]
+                  ),
                   _vm._v(" "),
-                  _c("button", { staticClass: "button is-danger" }, [
-                    _vm._v("DEL")
-                  ])
+                  _c(
+                    "button",
+                    {
+                      staticClass: "button is-danger",
+                      attrs: { id_prod: product.id },
+                      on: { click: _vm.rmCmd }
+                    },
+                    [_vm._v("DEL")]
+                  )
                 ])
               : _vm._e(),
             _vm._v(" "),
@@ -59441,6 +59504,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = (_props$props$data$met = {
   props: ["comanda"]
@@ -59453,9 +59524,25 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   };
 }), _defineProperty(_props$props$data$met, "methods", {
   addToCart: function addToCart(event) {
+    var _this = this;
+
+    var cantitate = event.target.getAttribute("cantitate");
     var id_prod = event.target.getAttribute("id_prod");
-    axios.get("casa/cart_content/" + id_prod).then(function (response) {});
-    this.$emit("add");
+    axios.post("comanda/addToCmd", { cantitate: cantitate, id_prod: id_prod }).then(function (response) {
+      _this.comandapr = response.data.prods;
+      _this.viz_preturi = response.data.viz_preturi;
+    });
+  },
+  rmCmd: function rmCmd(event) {
+    var _this2 = this;
+
+    var id_prod = event.target.getAttribute("id_prod");
+    axios.post("comanda/rmCmd", {
+      id_prod: id_prod
+    }).then(function (response) {
+      _this2.comandapr = response.data.prods;
+      _this2.viz_preturi = response.data.viz_preturi;
+    });
   }
 }), _props$props$data$met);
 
@@ -59495,83 +59582,145 @@ var render = function() {
       _vm._v(" "),
       _c(
         "tbody",
-        _vm._l(_vm.comandapr, function(product) {
-          return _c("tr", [
-            _c("td", { staticStyle: { padding: "0px", margin: "0px" } }, [
-              _c("figure", { staticClass: "image is-128x128" }, [
-                _c("img", {
-                  attrs: {
-                    src:
-                      "https://vapez.ro/" +
-                      product.image +
-                      "-home_default/poza.jpg"
-                  }
-                })
-              ])
-            ]),
-            _vm._v(" "),
-            _c(
-              "td",
-              {
-                staticClass: "has-text-centered",
-                staticStyle: { padding: "0px", margin: "0px" }
-              },
-              [_vm._v(_vm._s(product.nume))]
-            ),
-            _vm._v(" "),
-            _c(
-              "td",
-              {
-                staticClass: "has-text-centered",
-                staticStyle: { padding: "0px", margin: "0px" }
-              },
-              [_vm._v(_vm._s(product.stoc))]
-            ),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(product.cos))]),
-            _vm._v(" "),
-            product.stoc != "Nu este disponibil pt comanda!"
-              ? _c("td", [
-                  _c("button", { staticClass: "button" }, [_vm._v("+")]),
-                  _vm._v(" "),
-                  _c("button", { staticClass: "button" }, [_vm._v("-")]),
-                  _vm._v(" "),
-                  _c("button", { staticClass: "button" }, [_vm._v("+5")]),
-                  _vm._v(" "),
-                  _c("button", { staticClass: "button" }, [_vm._v("+10")]),
-                  _vm._v(" "),
-                  _c("button", { staticClass: "button is-danger" }, [
-                    _vm._v("DEL")
-                  ])
+        [
+          _vm._l(_vm.comandapr, function(product) {
+            return _c("tr", [
+              _c("td", { staticStyle: { padding: "0px", margin: "0px" } }, [
+                _c("figure", { staticClass: "image is-128x128" }, [
+                  _c("img", {
+                    attrs: {
+                      src:
+                        "https://vapez.ro/" +
+                        product.image +
+                        "-home_default/poza.jpg"
+                    }
+                  })
                 ])
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.viz_preturi > 0 &&
-            product.stoc != "Nu este disponibil pt comanda!"
-              ? _c("td", [_vm._v(_vm._s(product.ctva))])
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.viz_preturi > 0 &&
-            product.stoc != "Nu este disponibil pt comanda!"
-              ? _c("td", [_vm._v(_vm._s(product.total_ctva))])
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.viz_preturi > 0 &&
-            product.stoc != "Nu este disponibil pt comanda!"
-              ? _c("td", [_vm._v(_vm._s(product.adaos_nr))])
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.viz_preturi > 0 &&
-            product.stoc != "Nu este disponibil pt comanda!"
-              ? _c("td", [_vm._v(_vm._s(product.adaos_proc) + "%")])
-              : _vm._e()
-          ])
-        })
+              ]),
+              _vm._v(" "),
+              _c(
+                "td",
+                {
+                  staticClass: "has-text-centered",
+                  staticStyle: { padding: "0px", margin: "0px" }
+                },
+                [_vm._v(_vm._s(product.nume))]
+              ),
+              _vm._v(" "),
+              _c(
+                "td",
+                {
+                  staticClass: "has-text-centered",
+                  staticStyle: { padding: "0px", margin: "0px" }
+                },
+                [_vm._v(_vm._s(product.stoc))]
+              ),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(product.cos))]),
+              _vm._v(" "),
+              product.stoc != "Nu este disponibil pt comanda!"
+                ? _c("td", [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "button",
+                        attrs: { cantitate: "1", id_prod: product.id },
+                        on: { click: _vm.addToCart }
+                      },
+                      [_vm._v("+")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "button",
+                        attrs: { cantitate: "-1", id_prod: product.id },
+                        on: { click: _vm.addToCart }
+                      },
+                      [_vm._v("-")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "button",
+                        attrs: { cantitate: "5", id_prod: product.id },
+                        on: { click: _vm.addToCart }
+                      },
+                      [_vm._v("+5")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "button",
+                        attrs: { cantitate: "10", id_prod: product.id },
+                        on: { click: _vm.addToCart }
+                      },
+                      [_vm._v("+10")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "button is-danger",
+                        attrs: { id_prod: product.id },
+                        on: { click: _vm.rmCmd }
+                      },
+                      [_vm._v("DEL")]
+                    )
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.viz_preturi > 0 &&
+              product.stoc != "Nu este disponibil pt comanda!"
+                ? _c("td", [_vm._v(_vm._s(product.ctva))])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.viz_preturi > 0 &&
+              product.stoc != "Nu este disponibil pt comanda!"
+                ? _c("td", [_vm._v(_vm._s(product.total_ctva))])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.viz_preturi > 0 &&
+              product.stoc != "Nu este disponibil pt comanda!"
+                ? _c("td", [_vm._v(_vm._s(product.adaos_nr))])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.viz_preturi > 0 &&
+              product.stoc != "Nu este disponibil pt comanda!"
+                ? _c("td", [_vm._v(_vm._s(product.adaos_proc) + "%")])
+                : _vm._e()
+            ])
+          }),
+          _vm._v(" "),
+          _vm._m(0)
+        ],
+        2
       )
     ]
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("td", [
+        _c("button", { staticClass: "button is-fullwidth is-primary" }, [
+          _vm._v("Salveaza Comanda")
+        ])
+      ]),
+      _vm._v(" "),
+      _c("td", [
+        _c("button", { staticClass: "button is-fullwidth is-primary" }, [
+          _vm._v("Finalizeaza Comanda")
+        ])
+      ])
+    ])
+  }
+]
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {

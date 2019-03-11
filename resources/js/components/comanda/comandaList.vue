@@ -26,13 +26,13 @@
         <td class="has-text-centered" style=" padding: 0px;
   margin: 0px;">{{product.nume}}</td>
         <td>{{product.stoc}}</td>
-        <td></td>
+        <td>{{product.cos}}</td>
         <td v-if="product.stoc != 'Nu este disponibil pt comanda!'">
-          <button class="button">+</button>
-          <button class="button">-</button>
-          <button class="button">+5</button>
-          <button class="button">+10</button>
-          <button class="button is-danger">DEL</button>
+          <button @click="addToCart" cantitate="1" :id_prod="product.id" class="button">+</button>
+          <button @click="addToCart" cantitate="-1" :id_prod="product.id" class="button">-</button>
+          <button @click="addToCart" cantitate="5" :id_prod="product.id" class="button">+5</button>
+          <button @click="addToCart" cantitate="10" :id_prod="product.id" class="button">+10</button>
+          <button @click="rmCmd" :id_prod="product.id" class="button is-danger">DEL</button>
         </td>
         <td
           v-if="viz_preturi > 0 && product.stoc != 'Nu este disponibil pt comanda!'"
@@ -62,9 +62,34 @@ export default {
   },
   methods: {
     addToCart: function(event) {
-      let id_prod = event.target.getAttribute("id_prod");
-      axios.get("casa/cart_content/" + id_prod).then(response => {});
-      this.$emit("add");
+      let cantitate = event.target.getAttribute("cantitate");
+      var id_prod = event.target.getAttribute("id_prod");
+      axios
+        .post("comanda/addToCmd", {
+          cantitate: cantitate,
+          id_prod: id_prod,
+          list: 1
+        })
+        .then(response => {
+          console.log(this.products[id_prod]);
+          this.$set(this.products, id_prod, response.data.prods[id_prod]);
+          //this.products.id_prod = response.data.prods.id_prod;
+          this.viz_preturi = response.data.viz_preturi;
+        });
+    },
+    rmCmd: function(event) {
+      var id_prod = event.target.getAttribute("id_prod");
+      axios
+        .post("comanda/rmCmd", {
+          id_prod: id_prod,
+          list: 1
+        })
+        .then(response => {
+          console.log(this.products[id_prod]);
+          this.$set(this.products, id_prod, response.data.prods[id_prod]);
+          //this.products.id_prod = response.data.prods.id_prod;
+          this.viz_preturi = response.data.viz_preturi;
+        });
     }
   }
 };
