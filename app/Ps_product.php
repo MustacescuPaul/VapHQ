@@ -10,6 +10,8 @@ class Ps_product extends Model
     protected $table = 'ps_product';
     protected $primaryKey = 'id_product';
     protected $connection = 'vapez';
+    public $timestamps = false;
+
 
     public function category()
     {

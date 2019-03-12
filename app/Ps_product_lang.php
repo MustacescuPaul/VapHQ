@@ -10,6 +10,8 @@ class Ps_product_lang extends Model
     protected $table = 'ps_product_lang';
     protected $primaryKey = 'id_product';
     protected $connection = 'vapez';
+    public $timestamps = false;
+
 
     public function ps_product()
     {

@@ -14,4 +14,8 @@ class Comanda extends Model
     {
         return $this->hasOne(Preturi_reselleri::class, 'id_produs', 'id_prod');
     }
+    public function Ps_stock_available()
+    {
+        return $this->hasOne(Ps_stock_available::class, 'id_product', 'id_prod');
+    }
 }

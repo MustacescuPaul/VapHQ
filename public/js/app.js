@@ -59512,6 +59512,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = (_props$props$data$met = {
   props: ["comanda"]
@@ -59520,7 +59525,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 }), _defineProperty(_props$props$data$met, "data", function data() {
   return {
     comandapr: this.comanda.prods,
-    viz_preturi: this.comanda.viz_preturi
+    viz_preturi: this.comanda.viz_preturi,
+    message_toggle: false,
+    message_text: ""
   };
 }), _defineProperty(_props$props$data$met, "methods", {
   addToCart: function addToCart(event) {
@@ -59547,11 +59554,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   salveazaCmd: function salveazaCmd(event) {
     var _this3 = this;
 
-    axios.post("comanda/salveazaCmd", {
-      id_prod: id_prod
-    }).then(function (response) {
-      _this3.comandapr = response.data.prods;
-      _this3.viz_preturi = response.data.viz_preturi;
+    axios.post("comanda/salveazaCmd", {}).then(function (response) {
+      _this3.message_text = response.data.message;
+      _this3.message_toggle = true;
+      console.log(response.data.cmd);
     });
   }
 }), _props$props$data$met);
@@ -59564,10 +59570,8 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "table",
-    { staticClass: "is-scrollable table is-narrow is-fullwidth" },
-    [
+  return _c("div", [
+    _c("table", { staticClass: "is-scrollable table is-narrow is-fullwidth" }, [
       _c("thead", [
         _c("tr", [
           _c("th", [_vm._v("Poza")]),
@@ -59721,8 +59725,31 @@ var render = function() {
         ],
         2
       )
-    ]
-  )
+    ]),
+    _vm._v(" "),
+    _c(
+      "section",
+      [
+        _c(
+          "b-notification",
+          {
+            attrs: {
+              "auto-close": "",
+              type: "is-success",
+              active: _vm.message_toggle
+            },
+            on: {
+              "update:active": function($event) {
+                _vm.message_toggle = $event
+              }
+            }
+          },
+          [_vm._v(_vm._s(_vm.message_text))]
+        )
+      ],
+      1
+    )
+  ])
 }
 var staticRenderFns = [
   function() {

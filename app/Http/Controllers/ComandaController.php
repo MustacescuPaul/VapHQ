@@ -8,6 +8,8 @@ use App\Product;
 use App\Comanda;
 use App\Preturi_reselleri;
 use App\Ps_product;
+use App\Ps_order;
+use App\Ps_order_detail;
 use App\Ps_stock_available;
 use App\Lista_reselleri;
 use App\User;
@@ -351,8 +353,6 @@ class ComandaController extends Controller
                     $temp['image'] = $image;
                     $products_json['prods'][$linie->id_prod] = $temp;
                 }
-                //--------------------
-                //var_dump($comanda);
 
                 return json_encode($products_json);
             }
@@ -369,6 +369,30 @@ class ComandaController extends Controller
 
         $permisiuni_finalizare_comanda = Auth::user()->users_permisiuni->finalizare;
 
-        if ($permisiuni_comenzi && $permisiuni_user_activ && $permisiuni_finalizare_comanda) { }
+        if ($permisiuni_comenzi && $permisiuni_user_activ && $permisiuni_finalizare_comanda) {
+            $response = array();
+            // $comanda_in_asteptare = Ps_order::where([['id_customer', '=', Auth::user()->id_vapoint], ['valid', '=', '1'], ['current_state', '=', '42']])->orderBy('id_order', 'DESC')->first();
+            $comanda_in_asteptare = Ps_order::where([['valid', '=', '1'], ['current_state', '=', '42']])->orderBy('id_order', 'DESC')->first();
+            if ($comanda_in_asteptare) {
+                $message = "Comanda a fost cumulata cu comanda precedenta care se afla in asteptare si asteapta sa fie procesata.";
+                $response['message'] = $message;
+                $cos = Comanda::on(Auth::user()->magazin)->get();
+                foreach ($cos as $prod) {
+
+                    $ord_det = new Ps_order_detail;
+                    $ord_det->id_shop = 1;
+                    $ord_det->product_id = $prod->id_prod;
+                    $ord_det->product_name = $prod->preturi_reselleri->nume;
+                    $ord_det->quantity = $prod->cantitate;
+                    $ord_det->product_quantity_in_stock = $prod->ps_stock_available->quantity;
+                    $ord_det->product_price = //de terminat de salvat
+                    //$comanda_in_asteptare->Ps_order_detail()->save($ord_det);
+                }
+            } else {
+                $message = "Comanda a fost salvata si asteapta sa fie procesata.";
+                $response['message'] = $message;
+            }
+            return  $response;
+        }
     }
 }
