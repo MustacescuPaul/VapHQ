@@ -15,6 +15,6 @@ class Ps_order extends Model
 
     public function ps_order_detail()
     {
-        return $this->hasMany('App\Ps_order_detail', 'id_order_detail', 'id_order');
+        return $this->hasMany('App\Ps_order_detail', 'id_order', 'id_order');
     }
 }

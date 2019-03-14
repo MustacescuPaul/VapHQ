@@ -18,4 +18,8 @@ class Comanda extends Model
     {
         return $this->hasOne(Ps_stock_available::class, 'id_product', 'id_prod');
     }
+    public function ps_product()
+    {
+        return $this->hasOne('App\Ps_product', 'id_product', 'id_prod');
+    }
 }

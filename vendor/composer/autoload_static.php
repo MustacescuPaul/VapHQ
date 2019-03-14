@@ -472,6 +472,8 @@ class ComposerStaticInit919c916d2ffbb66a2f004a381cfbadb2
         'App\\Providers\\BroadcastServiceProvider' => __DIR__ . '/../..' . '/app/Providers/BroadcastServiceProvider.php',
         'App\\Providers\\EventServiceProvider' => __DIR__ . '/../..' . '/app/Providers/EventServiceProvider.php',
         'App\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/app/Providers/RouteServiceProvider.php',
+        'App\\Ps_order' => __DIR__ . '/../..' . '/app/Ps_order.php',
+        'App\\Ps_order_detail' => __DIR__ . '/../..' . '/app/Ps_order_detail.php',
         'App\\Ps_product' => __DIR__ . '/../..' . '/app/Ps_product.php',
         'App\\Ps_product_lang' => __DIR__ . '/../..' . '/app/Ps_product_lang.php',
         'App\\Ps_stock_available' => __DIR__ . '/../..' . '/app/Ps_stock_available.php',

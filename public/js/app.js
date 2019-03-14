@@ -58730,9 +58730,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         id_prod: id_prod,
         list: 1
       }).then(function (response) {
-        console.log(_this.products[id_prod]);
         _this.$set(_this.products, id_prod, response.data.prods[id_prod]);
-        //this.products.id_prod = response.data.prods.id_prod;
+
         _this.viz_preturi = response.data.viz_preturi;
       });
     },
@@ -58744,9 +58743,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         id_prod: id_prod,
         list: 1
       }).then(function (response) {
-        console.log(_this2.products[id_prod]);
         _this2.$set(_this2.products, id_prod, response.data.prods[id_prod]);
-        //this.products.id_prod = response.data.prods.id_prod;
+
         _this2.viz_preturi = response.data.viz_preturi;
       });
     }
@@ -59557,7 +59555,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     axios.post("comanda/salveazaCmd", {}).then(function (response) {
       _this3.message_text = response.data.message;
       _this3.message_toggle = true;
-      console.log(response.data.cmd);
+      _this3.comandapr = response.data.prods;
+      setTimeout(function () {
+        // window.location.href = "comanda/";
+      }, 3000);
     });
   }
 }), _props$props$data$met);

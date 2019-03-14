@@ -102,7 +102,10 @@ export default {
       axios.post("comanda/salveazaCmd", {}).then(response => {
         this.message_text = response.data.message;
         this.message_toggle = true;
-        console.log(response.data.cmd);
+        this.comandapr = response.data.prods;
+        setTimeout(function() {
+          // window.location.href = "comanda/";
+        }, 3000);
       });
     }
   }

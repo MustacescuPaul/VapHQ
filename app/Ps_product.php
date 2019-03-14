@@ -29,4 +29,8 @@ class Ps_product extends Model
     {
         return $this->hasOne('App\Preturi_reselleri', 'id_product', 'id_produs');
     }
+    public function comanda()
+    {
+        return $this->belongsTo('App\Comanda', 'id_prod', 'id_product');
+    }
 }

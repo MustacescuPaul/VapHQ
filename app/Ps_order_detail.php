@@ -15,6 +15,6 @@ class Ps_order_detail extends Model
 
     public function ps_order()
     {
-        return $this->belongsTo('App\Ps_order_detail', 'id_order', 'id_order_detail');
+        return $this->belongsTo('App\Ps_order_detail', 'id_order', 'id_order');
     }
 }

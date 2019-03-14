@@ -53,6 +53,8 @@ return array(
     'App\\Providers\\BroadcastServiceProvider' => $baseDir . '/app/Providers/BroadcastServiceProvider.php',
     'App\\Providers\\EventServiceProvider' => $baseDir . '/app/Providers/EventServiceProvider.php',
     'App\\Providers\\RouteServiceProvider' => $baseDir . '/app/Providers/RouteServiceProvider.php',
+    'App\\Ps_order' => $baseDir . '/app/Ps_order.php',
+    'App\\Ps_order_detail' => $baseDir . '/app/Ps_order_detail.php',
     'App\\Ps_product' => $baseDir . '/app/Ps_product.php',
     'App\\Ps_product_lang' => $baseDir . '/app/Ps_product_lang.php',
     'App\\Ps_stock_available' => $baseDir . '/app/Ps_stock_available.php',

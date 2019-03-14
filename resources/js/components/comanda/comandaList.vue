@@ -71,9 +71,8 @@ export default {
           list: 1
         })
         .then(response => {
-          console.log(this.products[id_prod]);
           this.$set(this.products, id_prod, response.data.prods[id_prod]);
-          //this.products.id_prod = response.data.prods.id_prod;
+
           this.viz_preturi = response.data.viz_preturi;
         });
     },
@@ -85,9 +84,8 @@ export default {
           list: 1
         })
         .then(response => {
-          console.log(this.products[id_prod]);
           this.$set(this.products, id_prod, response.data.prods[id_prod]);
-          //this.products.id_prod = response.data.prods.id_prod;
+
           this.viz_preturi = response.data.viz_preturi;
         });
     }

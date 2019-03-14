@@ -36,6 +36,10 @@ class User extends Authenticatable
     {
         return $this->hasOne('App\Users_permisiuni', 'id', 'id');
     }
+    public function Users_vapoint()
+    {
+        return $this->hasOne('App\Users_vapoint', 'id_vapoint', 'id_vapoint');
+    }
     public function Lista_reselleri()
     {
         return $this->hasMany('App\Lista_reselleri', 'id_vapoint', 'id_client');

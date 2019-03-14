@@ -12,6 +12,8 @@ use App\Ps_order;
 use App\Ps_order_detail;
 use App\Ps_stock_available;
 use App\Lista_reselleri;
+use App\Ps_order_carrier;
+use App\Ps_order_history;
 use App\User;
 use Auth;
 use Config;
@@ -75,7 +77,7 @@ class ComandaController extends Controller
                 if ($linie->preturi_reselleri->$reducere == 0) {
                     $temp['stoc'] = 'Nu este disponibil pt comanda!';
                 }
-                $image = Image::where([['id_product', $linie->id_prod], ['cover', '=', 1]])->first()->id_image;
+                $image = $this->getImage($linie->id_prod);
                 $temp['image'] = $image;
                 $products_json['prods'][$linie->id_prod] = $temp;
             }
@@ -261,7 +263,7 @@ class ComandaController extends Controller
                 if ($linie->preturi_reselleri->$reducere == 0) {
                     $temp['stoc'] = 'Nu este disponibil pt comanda!';
                 }
-                $image = Image::where([['id_product', $linie->id_prod], ['cover', '=', 1]])->first()->id_image;
+                $image = $this->getImage($linie->id_prod);
                 $temp['image'] = $image;
                 $products_json['prods'][$linie->id_prod] = $temp;
             }
@@ -349,7 +351,7 @@ class ComandaController extends Controller
                     if ($linie->preturi_reselleri->$reducere == 0) {
                         $temp['stoc'] = 'Nu este disponibil pt comanda!';
                     }
-                    $image = Image::where([['id_product', $linie->id_prod], ['cover', '=', 1]])->first()->id_image;
+                    $image = $this->getImage($linie->id_prod);
                     $temp['image'] = $image;
                     $products_json['prods'][$linie->id_prod] = $temp;
                 }
@@ -368,31 +370,153 @@ class ComandaController extends Controller
         $permisiuni_user_activ = Auth::user()->activ;
 
         $permisiuni_finalizare_comanda = Auth::user()->users_permisiuni->finalizare;
-
+        //Verificare permisiuni
         if ($permisiuni_comenzi && $permisiuni_user_activ && $permisiuni_finalizare_comanda) {
             $response = array();
-            // $comanda_in_asteptare = Ps_order::where([['id_customer', '=', Auth::user()->id_vapoint], ['valid', '=', '1'], ['current_state', '=', '42']])->orderBy('id_order', 'DESC')->first();
-            $comanda_in_asteptare = Ps_order::where([['valid', '=', '1'], ['current_state', '=', '42']])->orderBy('id_order', 'DESC')->first();
+            $comanda_in_asteptare = Ps_order::where([['id_customer', '=', Auth::user()->id_vapoint], ['valid', '=', '1'], ['current_state', '=', '42']])->orderBy('id_order', 'DESC')->first();
+            // $comanda_in_asteptare = Ps_order::where([['valid', '=', '1'], ['current_state', '=', '42']])->orderBy('id_order', 'DESC')->first();
+            $reducere = Lista_reselleri::where('id_client', '=', Auth::user()->id_vapoint)->first()->reducere;
+            //Daca are comanda in asteptare
             if ($comanda_in_asteptare) {
                 $message = "Comanda a fost cumulata cu comanda precedenta care se afla in asteptare si asteapta sa fie procesata.";
                 $response['message'] = $message;
+                $id_order = Ps_order::where([['id_customer', '=', Auth::user()->id_vapoint], ['valid', '=', '1'], ['current_state', '=', '42']])->orderBy('id_order', 'DESC')->first()->id_order;
+                //Baga produsele din comanda in ps_order_detail
                 $cos = Comanda::on(Auth::user()->magazin)->get();
                 foreach ($cos as $prod) {
-
-                    $ord_det = new Ps_order_detail;
-                    $ord_det->id_shop = 1;
-                    $ord_det->product_id = $prod->id_prod;
-                    $ord_det->product_name = $prod->preturi_reselleri->nume;
-                    $ord_det->quantity = $prod->cantitate;
-                    $ord_det->product_quantity_in_stock = $prod->ps_stock_available->quantity;
-                    $ord_det->product_price = //de terminat de salvat
-                    //$comanda_in_asteptare->Ps_order_detail()->save($ord_det);
+                    if ($prod->cantitate > 0) {
+                        //Verifica stocul pentru fiecare produs
+                        $stoc = Ps_stock_available::where('id_product', '=', $prod->id_prod)->first()->quantity;
+                        if ($prod->cantitate > $stoc)
+                            $cantitate = $stoc;
+                        else
+                            $cantitate = $prod->cantitate;
+                        $ord_det = new Ps_order_detail;
+                        $ord_det->id_order = $comanda_in_asteptare->id_order;
+                        $ord_det->id_shop = 1;
+                        $ord_det->product_id = $prod->id_prod;
+                        $ord_det->product_name = $prod->preturi_reselleri->nume;
+                        $ord_det->product_quantity = $cantitate;
+                        $ord_det->product_quantity_in_stock = $cantitate;
+                        $ord_det->product_price = round($prod->preturi_reselleri->$reducere, 2);
+                        $ord_det->product_reference = $prod->preturi_reselleri->ref;
+                        $ord_det->product_weight = $prod->ps_product->weight;
+                        $ord_det->tax_name = '';
+                        $ord_det->total_price_tax_incl = round($prod->preturi_reselleri->$reducere * $cantitate * 1.19, 2);
+                        $ord_det->total_price_tax_excl = round($prod->preturi_reselleri->$reducere * $cantitate, 2);
+                        $ord_det->unit_price_tax_incl = round($prod->preturi_reselleri->$reducere * 1.19, 2);
+                        $ord_det->unit_price_tax_excl = round($prod->preturi_reselleri->$reducere, 2);
+                        $ord_det->purchase_supplier_price = round($prod->preturi_reselleri->intrare, 2);
+                        $ord_det->original_product_price = round($prod->preturi_reselleri->vct / 1.19, 6);
+                        $ord_det->save();
+                        //Modifica stocul dupa ce plaseaza comanda pe site
+                        $stoc = Ps_stock_available::where('id_product', '=', $prod->id_prod)->first();
+                        $stoc->quantity -= $cantitate;
+                        $stoc->save();
+                    }
                 }
-            } else {
+                $this->recaculareComanda($comanda_in_asteptare->id_order);
+                //Goleste tabela de comanda dupa plasarea ei pe site
+                Comanda::on(Auth::user()->magazin)->truncate();
+                $response['prods'] = array();
+            } else { //Daca nu are comanda in asteptare
+                //Creeaza comanda
+                $order = new Ps_order;
+                $order->reference = substr(str_shuffle(MD5(microtime())), 0, 9);
+                $order->id_carrier = 81;
+                $order->id_lang = 2;
+                $order->id_customer = Auth::user()->id_vapoint;
+                $order->id_cart = 0;
+                $order->id_currency = 1;
+                $order->id_address_delivery = Auth::user()->Users_vapoint->adresa_livrare;
+                $order->id_address_invoice = Auth::user()->users_vapoint->adresa_facturare;
+                $order->current_state = 42;
+                $order->payment =  Auth::user()->users_vapoint->nume_plata;
+                $order->valid =  1;
+                $order->date_add =  date("Y-m-d H:i:s");
+                $order->date_upd =  date("Y-m-d H:i:s");
+                $order->save();
+                $id_order = Ps_order::where([['id_customer', '=', Auth::user()->id_vapoint], ['valid', '=', '1'], ['current_state', '=', '42']])->orderBy('id_order', 'DESC')->first()->id_order;
+                $cos = Comanda::on(Auth::user()->magazin)->get();
+                //Baga produsele din comanda in ps_order_detail
+                foreach ($cos as $prod) {
+                    if ($prod->cantitate > 0) {
+                        //Verifica stocul pentru fiecare produs
+                        $stoc = Ps_stock_available::where('id_product', '=', $prod->id_prod)->first()->quantity;
+                        if ($prod->cantitate > $stoc)
+                            $cantitate = $stoc;
+                        else
+                            $cantitate = $prod->cantitate;
+                        $ord_det = new Ps_order_detail;
+                        $ord_det->id_order = $id_order;
+                        $ord_det->id_shop = 1;
+                        $ord_det->product_id = $prod->id_prod;
+                        $ord_det->product_name = $prod->preturi_reselleri->nume;
+                        $ord_det->product_quantity = $cantitate;
+                        $ord_det->product_quantity_in_stock = $cantitate;
+                        $ord_det->product_price = round($prod->preturi_reselleri->$reducere, 2);
+                        $ord_det->product_reference = $prod->preturi_reselleri->ref;
+                        $ord_det->product_weight = $prod->ps_product->weight;
+                        $ord_det->tax_name = '';
+                        $ord_det->total_price_tax_incl = round($prod->preturi_reselleri->$reducere * $cantitate * 1.19, 2);
+                        $ord_det->total_price_tax_excl = round($prod->preturi_reselleri->$reducere * $cantitate, 2);
+                        $ord_det->unit_price_tax_incl = round($prod->preturi_reselleri->$reducere * 1.19, 2);
+                        $ord_det->unit_price_tax_excl = round($prod->preturi_reselleri->$reducere, 2);
+                        $ord_det->purchase_supplier_price = round($prod->preturi_reselleri->intrare, 2);
+                        $ord_det->original_product_price = round($prod->preturi_reselleri->vct / 1.19, 6);
+                        $ord_det->save();
+                        //Modifica stocul dupa plasarea comenzii
+                        $stoc = Ps_stock_available::where('id_product', '=', $prod->id_prod)->first();
+                        $stoc->quantity -= $cantitate;
+                        $stoc->save();
+                    }
+                }
+                //Salveaza comanda in storicul comenzilor
+                $order_history = new Ps_order_history;
+                $order_history->id_employee = 0;
+                $order_history->id_order = $id_order;
+                $order_history->id_order_state = 42;
+                $order_history->date_add = date("Y-m-d H:i:s");
+                $order_history->save();
+                //Salveaza transportatorul pentru comanda(aici trebuie modificat id-ul pentru cei care nu au transportator)
+                $order_carrier = new Ps_order_carrier;
+                $order_carrier->id_order = $id_order;
+                $order_carrier->id_carrier = 81;
+                $order_carrier->date_add = date("Y-m-d H:i:s");
+                $order_carrier->save();
+
+                $this->recaculareComanda($id_order);
+                Comanda::on(Auth::user()->magazin)->truncate();
+                $response['prods'] = array();
                 $message = "Comanda a fost salvata si asteapta sa fie procesata.";
                 $response['message'] = $message;
             }
             return  $response;
         }
+    }
+    //Scoate imaginea de cover pentru un produs
+    public function getImage($id)
+    {
+        if (Image::where([['id_product', $id], ['cover', '=', 1]])->exists())
+            $image = Image::where([['id_product', $id], ['cover', '=', 1]])->first()->id_image;
+        else
+            $image = '';
+        return $image;
+    }
+    //Calculeaza si insereaza in ps_orders preturile totale
+    public function recaculareComanda($id)
+    {
+        $order = Ps_order::find($id);
+        $order->total_paid = round($order->ps_order_detail->sum('total_price_tax_excl') * 1.19, 2);
+        $order->total_paid_tax_excl = $order->ps_order_detail->sum('total_price_tax_excl');
+        $order->total_paid_tax_incl = round($order->ps_order_detail->sum('total_price_tax_excl') * 1.19, 2);
+        $order->total_paid_real = round($order->ps_order_detail->sum('total_price_tax_excl') * 1.19, 2);
+        $order->total_products = $order->ps_order_detail->sum('total_price_tax_excl');
+        $order->total_products_wt = round($order->ps_order_detail->sum('total_price_tax_excl') * 1.19, 2);
+        $carrier = Ps_order_carrier::where('id_order', '=', $id)->first();
+
+        $carrier->weight = $order->ps_order_detail->sum('product_weight') * $order->ps_order_detail->sum('product_quantity');
+        $order->save();
+        $carrier->save();
     }
 }
