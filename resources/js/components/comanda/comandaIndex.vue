@@ -6,14 +6,19 @@
       </div>
       <div class="column">
         <comanda-list v-if="show == 'products'" :viz_preturi="viz_preturi" :products="products"></comanda-list>
-        <comanda-cos v-if="show == 'cos'" :comanda="comanda"></comanda-cos>
+        <comanda-cos v-if="show == 'cos' && !response" :comanda="comanda"></comanda-cos>
+        <asteptare-cos v-if="response" :response="response"></asteptare-cos>
       </div>
     </div>
   </div>
 </template>
 <script>
 export default {
-  props: ["comanda"],
+  props: ["comanda", "response"],
+  props: {
+    response: Object,
+    comanda: Object
+  },
   data: function() {
     return {
       show: "cos",
@@ -36,7 +41,7 @@ export default {
   created() {
     axios({
       method: "post",
-      url: "comanda/comenzi_sidebar",
+      url: "../comanda/comenzi_sidebar",
       data: {
         id: 2
       },

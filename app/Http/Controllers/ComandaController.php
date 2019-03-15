@@ -47,43 +47,46 @@ class ComandaController extends Controller
         $products_json = array();
         if ($permisiuni_comenzi) {
             $comanda = Comanda::on(Auth::user()->magazin)->get();
-            //--------------------
-            foreach ($comanda as $linie) {
+            if ($comanda->isEmpty()) {
+                $products_json['viz_preturi'] = 0;
+                $products_json['message'] = "Nu aveti produse in cos!";
+                $products_json['prods'] = "";
+            } else {
+                foreach ($comanda as $linie) {
 
-                $stoc = Ps_stock_available::find($linie->id_prod);
-                $permisiuni_viz_stocuri = Auth::user()->users_permisiuni->viz_stocuri_vap;
-                $permisiuni_viz_preturi_res = Auth::user()->users_permisiuni->viz_preturi_res;
-                $permisiuni_finalizare_comanda = Auth::user()->users_permisiuni->finalizare;
+                    $stoc = Ps_stock_available::find($linie->id_prod);
+                    $permisiuni_viz_stocuri = Auth::user()->users_permisiuni->viz_stocuri_vap;
+                    $permisiuni_viz_preturi_res = Auth::user()->users_permisiuni->viz_preturi_res;
+                    $permisiuni_finalizare_comanda = Auth::user()->users_permisiuni->finalizare;
 
-                $temp['nume'] = $linie->preturi_reselleri->nume;
-                $temp['id'] = $linie->preturi_reselleri->id_produs;
-                if ($stoc['quantity'] > 0) {
-                    $temp['stoc'] = 'da';
-                } else {
-                    $temp['stoc'] = 'nu';
-                }
-                if ($permisiuni_viz_stocuri) {
-                    $temp['stoc'] = $stoc['quantity'];
-                }
-                $temp['cos'] = $linie->cantitate;
-                if ($linie->preturi_reselleri->$reducere > 0)
-                    if ($permisiuni_viz_preturi_res) {
-                        $temp['total_ctva'] = round($linie->preturi_reselleri->$reducere * 1.19 * $linie->cantitate, 2);
-                        $temp['ctva'] = round($linie->preturi_reselleri->$reducere * 1.19, 2);
-                        $temp['adaos_nr'] = round(($linie->preturi_reselleri->vct - ($linie->preturi_reselleri->$reducere * 1.19)) * $linie->cantitate, 2);
-                        $temp['adaos_proc'] = round(($linie->preturi_reselleri->vct - $linie->preturi_reselleri->$reducere * 1.19) / $temp['ctva'] * 100, 2);
-                        $products_json['viz_preturi'] = 1;
+                    $temp['nume'] = $linie->preturi_reselleri->nume;
+                    $temp['id'] = $linie->preturi_reselleri->id_produs;
+                    if ($stoc['quantity'] > 0) {
+                        $temp['stoc'] = 'da';
+                    } else {
+                        $temp['stoc'] = 'nu';
                     }
-                if ($linie->preturi_reselleri->$reducere == 0) {
-                    $temp['stoc'] = 'Nu este disponibil pt comanda!';
+                    if ($permisiuni_viz_stocuri) {
+                        $temp['stoc'] = $stoc['quantity'];
+                    }
+                    $temp['cos'] = $linie->cantitate;
+                    if ($linie->preturi_reselleri->$reducere > 0)
+                        if ($permisiuni_viz_preturi_res) {
+                            $temp['total_ctva'] = round($linie->preturi_reselleri->$reducere * 1.19 * $linie->cantitate, 2);
+                            $temp['ctva'] = round($linie->preturi_reselleri->$reducere * 1.19, 2);
+                            $temp['adaos_nr'] = round(($linie->preturi_reselleri->vct - ($linie->preturi_reselleri->$reducere * 1.19)) * $linie->cantitate, 2);
+                            $temp['adaos_proc'] = round(($linie->preturi_reselleri->vct - $linie->preturi_reselleri->$reducere * 1.19) / $temp['ctva'] * 100, 2);
+                            $products_json['viz_preturi'] = 1;
+                        }
+                    if ($linie->preturi_reselleri->$reducere == 0) {
+                        $temp['stoc'] = 'Nu este disponibil pt comanda!';
+                    }
+                    $image = $this->getImage($linie->id_prod);
+                    $temp['image'] = $image;
+                    $products_json['prods'][$linie->id_prod] = $temp;
                 }
-                $image = $this->getImage($linie->id_prod);
-                $temp['image'] = $image;
-                $products_json['prods'][$linie->id_prod] = $temp;
             }
-            //--------------------
-            //var_dump($comanda);
-            $json = json_encode($products_json);
+
             return view('comanda.index')->with('user', Auth::user())->with(
                 ['comanda' => $products_json]
             );
@@ -137,7 +140,7 @@ class ComandaController extends Controller
                 $temp['ref'] = $reseller->ref;
                 $temp['id'] = $reseller->id_produs;
                 $temp['nume'] = $reseller->nume;
-
+                $temp['stoc_s'] = $stoc['quantity'];
                 if ($stoc['quantity'] > 0) {
                     $temp['stoc'] = 'da';
                 } else {
@@ -220,6 +223,7 @@ class ComandaController extends Controller
 
                     $temp['stoc'] = 'nu';
                 }
+                $temp['stoc_s'] = $stoc['quantity'];
                 if ($permisiuni_viz_stocuri) {
                     $temp['stoc'] = $stoc['quantity'];
                 }
@@ -518,5 +522,96 @@ class ComandaController extends Controller
         $carrier->weight = $order->ps_order_detail->sum('product_weight') * $order->ps_order_detail->sum('product_quantity');
         $order->save();
         $carrier->save();
+    }
+
+    public function finalizareComanda(Request $request)
+    {
+        $permisiuni_comenzi = Auth::user()->users_permisiuni->comanda;
+
+        $permisiuni_viz_stocuri = Auth::user()->users_permisiuni->viz_stocuri_vap;
+
+        $permisiuni_finalizare = Auth::user()->users_permisiuni->finalizare;
+
+        $permisiuni_viz_preturi_res = Auth::user()->users_permisiuni->viz_preturi_res;
+        $permisiuni_user_activ = Auth::user()->activ;
+
+        $permisiuni_finalizare_comanda = Auth::user()->users_permisiuni->finalizare;
+        //Verificare permisiuni
+        if ($permisiuni_comenzi && $permisiuni_user_activ && $permisiuni_finalizare_comanda && $permisiuni_finalizare) {
+            $order = Ps_order::where([['id_customer', '=', Auth::user()->id_vapoint], ['valid', '=', '1'], ['current_state', '=', '42']])->orderBy('id_order', 'DESC')->first();
+
+            $order_history = new Ps_order_history;
+            $order_history->id_employee = 0;
+            $order_history->id_order = $order->id_order;
+            $order_history->id_order_state = 37;
+            $order_history->date_add = date("Y-m-d H:i:s");
+            $order_history->save();
+
+            $order->current_state = 37;
+            $order->date_upd = date("Y-m-d H:i:s");
+            $order->save();
+        }
+    }
+
+    public function asteptare()
+    {
+        $permisiuni_comenzi = Auth::user()->users_permisiuni->comanda;
+        $reducere = Lista_reselleri::where('id_client', '=', Auth::user()->id_vapoint)->first()->reducere;
+        $products_json = array();
+        $response = array();
+        if ($permisiuni_comenzi) {
+            $order = Ps_order::where([['id_customer', '=', Auth::user()->id_vapoint], ['valid', '=', '1'], ['current_state', '=', '42']])->orderBy('id_order', 'DESC')->first();
+            //Se verifica daca este vreo comanda in asteptare
+            if (!$order) {
+                $response['message'] = "Nu aveti nici o comanda in asteptare!";
+                $response['prod'] = $products_json;
+                return view('comanda.asteptare')->with('user', Auth::user())->with('response', $response);
+            } else {
+                $response['message'] = "Produsele sunt salvate într-o comandă şi rezervate din stocul Vapez.Comanda nu va fi procesată până nu va fi finalizată.";
+                $order_details = Ps_order_detail::where('id_order', '=', $order->id_order)->get();
+                foreach ($order_details as $linie) {
+
+                    $stoc = Ps_stock_available::find($linie->id_prod);
+                    $permisiuni_viz_stocuri = Auth::user()->users_permisiuni->viz_stocuri_vap;
+                    $permisiuni_viz_preturi_res = Auth::user()->users_permisiuni->viz_preturi_res;
+                    $permisiuni_finalizare_comanda = Auth::user()->users_permisiuni->finalizare;
+
+                    $temp['nume'] = $linie->preturi_reselleri->nume;
+                    $temp['id'] = $linie->preturi_reselleri->id_produs;
+                    if ($stoc['quantity'] > 0) {
+                        $temp['stoc'] = 'da';
+                    } else {
+                        $temp['stoc'] = 'nu';
+                    }
+                    if ($permisiuni_viz_stocuri) {
+                        $stoc = Ps_stock_available::where('id_product', '=', $linie->preturi_reselleri->id_produs)->first();
+                        $temp['stoc'] = $stoc->quantity;
+                    }
+                    $temp['cos'] = $linie->product_quantity;
+                    if ($linie->preturi_reselleri->$reducere > 0)
+                        if ($permisiuni_viz_preturi_res) {
+                            $temp['total_ctva'] = round($linie->preturi_reselleri->$reducere * 1.19 * $linie->product_quantity, 2);
+                            $temp['ctva'] = round($linie->preturi_reselleri->$reducere * 1.19, 2);
+                            $temp['adaos_nr'] = round(($linie->preturi_reselleri->vct - ($linie->preturi_reselleri->$reducere * 1.19)) * $linie->product_quantity, 2);
+                            $temp['adaos_proc'] = round(($linie->preturi_reselleri->vct - $linie->preturi_reselleri->$reducere * 1.19) / $temp['ctva'] * 100, 2);
+                            $response['viz_preturi'] = 1;
+                        }
+                    if ($linie->preturi_reselleri->$reducere == 0) {
+                        $temp['stoc'] = 'Nu este disponibil pt comanda!';
+                    }
+                    $image = $this->getImage($linie->id_prod);
+                    $temp['image'] = $image;
+                    $products_json[$linie->product_id] = $temp;
+                }
+
+                $response['prods'] = $products_json;
+
+                return view('comanda.asteptare')->with('user', Auth::user())->with(
+                    ['response' => $response]
+                );
+            }
+        } else {
+            return view('index')->with('user', Auth::user());
+        }
     }
 }

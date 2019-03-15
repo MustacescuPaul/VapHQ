@@ -12400,6 +12400,7 @@ Vue.component("comanda-list", __webpack_require__(81));
 Vue.component("comanda-sidebar", __webpack_require__(86));
 Vue.component("comanda-index", __webpack_require__(89));
 Vue.component("comanda-cos", __webpack_require__(92));
+Vue.component("asteptare-cos", __webpack_require__(139));
 
 Vue.component("garantii-index", __webpack_require__(97));
 Vue.component("date-intrare", __webpack_require__(100));
@@ -58712,12 +58713,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["products", "viz_preturi"],
 
   data: function data() {
-    return {};
+    return {
+      line_color: ""
+    };
   },
   methods: {
     addToCart: function addToCart(event) {
@@ -58725,15 +58733,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
       var cantitate = event.target.getAttribute("cantitate");
       var id_prod = event.target.getAttribute("id_prod");
-      axios.post("comanda/addToCmd", {
-        cantitate: cantitate,
-        id_prod: id_prod,
-        list: 1
-      }).then(function (response) {
-        _this.$set(_this.products, id_prod, response.data.prods[id_prod]);
+      if (this.products[id_prod]["cos"] < this.products[id_prod]["stoc_s"]) {
+        axios.post("comanda/addToCmd", {
+          cantitate: cantitate,
+          id_prod: id_prod,
+          list: 1
+        }).then(function (response) {
+          _this.$set(_this.products, id_prod, response.data.prods[id_prod]);
 
-        _this.viz_preturi = response.data.viz_preturi;
-      });
+          _this.viz_preturi = response.data.viz_preturi;
+        });
+      } else {
+        this.line_color = id_prod;
+      }
     },
     rmCmd: function rmCmd(event) {
       var _this2 = this;
@@ -58826,7 +58838,10 @@ var render = function() {
                   _c(
                     "button",
                     {
-                      staticClass: "button",
+                      class:
+                        product.id == _vm.line_color
+                          ? "button is-danger"
+                          : "button",
                       attrs: { cantitate: "1", id_prod: product.id },
                       on: { click: _vm.addToCart }
                     },
@@ -59240,6 +59255,11 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+var _props$props$data$met;
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
 //
 //
 //
@@ -59254,46 +59274,46 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
-/* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["comanda"],
-  data: function data() {
-    return {
-      show: "cos",
-      products: [],
-      menu: [],
-      cart: [],
-      viz_preturi: ""
-    };
-  },
-  methods: {
-    getProdList: function getProdList(event) {
-      var _this = this;
+/* harmony default export */ __webpack_exports__["default"] = (_props$props$data$met = {
+  props: ["comanda", "response"]
+}, _defineProperty(_props$props$data$met, "props", {
+  response: Object,
+  comanda: Object
+}), _defineProperty(_props$props$data$met, "data", function data() {
+  return {
+    show: "cos",
+    products: [],
+    menu: [],
+    cart: [],
+    viz_preturi: ""
+  };
+}), _defineProperty(_props$props$data$met, "methods", {
+  getProdList: function getProdList(event) {
+    var _this = this;
 
-      axios.get("comanda/lista_produse/" + event).then(function (response) {
-        _this.products = response.data.prods;
-        _this.viz_preturi = response.data.viz_preturi;
-        if (response.data.prods) _this.show = "products";else _this.show = "";
-      });
-    }
-  },
-  created: function created() {
-    var _this2 = this;
-
-    axios({
-      method: "post",
-      url: "comanda/comenzi_sidebar",
-      data: {
-        id: 2
-      },
-      responseType: "text"
-    }).then(function (response) {
-      _this2.menu = response.data;
+    axios.get("comanda/lista_produse/" + event).then(function (response) {
+      _this.products = response.data.prods;
+      _this.viz_preturi = response.data.viz_preturi;
+      if (response.data.prods) _this.show = "products";else _this.show = "";
     });
-    // axios.get("comanda/comenzi_cart").then(response => {
-    //   this.cart = response.data.produse;
-    // });
   }
-});
+}), _defineProperty(_props$props$data$met, "created", function created() {
+  var _this2 = this;
+
+  axios({
+    method: "post",
+    url: "../comanda/comenzi_sidebar",
+    data: {
+      id: 2
+    },
+    responseType: "text"
+  }).then(function (response) {
+    _this2.menu = response.data;
+  });
+  // axios.get("comanda/comenzi_cart").then(response => {
+  //   this.cart = response.data.produse;
+  // });
+}), _props$props$data$met);
 
 /***/ }),
 /* 91 */
@@ -59331,8 +59351,12 @@ var render = function() {
               })
             : _vm._e(),
           _vm._v(" "),
-          _vm.show == "cos"
+          _vm.show == "cos" && !_vm.response
             ? _c("comanda-cos", { attrs: { comanda: _vm.comanda } })
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.response
+            ? _c("asteptare-cos", { attrs: { response: _vm.response } })
             : _vm._e()
         ],
         1
@@ -59513,8 +59537,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = (_props$props$data$met = {
   props: ["comanda"]
@@ -59524,8 +59546,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   return {
     comandapr: this.comanda.prods,
     viz_preturi: this.comanda.viz_preturi,
-    message_toggle: false,
-    message_text: ""
+    message_text: this.comanda.message
   };
 }), _defineProperty(_props$props$data$met, "methods", {
   addToCart: function addToCart(event) {
@@ -59555,7 +59576,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     axios.post("comanda/salveazaCmd", {}).then(function (response) {
       _this3.message_text = response.data.message;
       _this3.message_toggle = true;
-      _this3.comandapr = response.data.prods;
+      _this3.comandapr = "";
       setTimeout(function () {
         // window.location.href = "comanda/";
       }, 3000);
@@ -59572,184 +59593,179 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("table", { staticClass: "is-scrollable table is-narrow is-fullwidth" }, [
-      _c("thead", [
-        _c("tr", [
-          _c("th", [_vm._v("Poza")]),
-          _vm._v(" "),
-          _c("th", [_vm._v("Nume")]),
-          _vm._v(" "),
-          _c("th", [_vm._v("Stoc")]),
-          _vm._v(" "),
-          _c("th", [_vm._v("Cos")]),
-          _vm._v(" "),
-          _c("th"),
-          _vm._v(" "),
-          _vm.viz_preturi > 0 ? _c("th", [_vm._v("cTVA")]) : _vm._e(),
-          _vm._v(" "),
-          _vm.viz_preturi > 0 ? _c("th", [_vm._v("Total cTVA")]) : _vm._e(),
-          _vm._v(" "),
-          _vm.viz_preturi > 0 ? _c("th", [_vm._v("Adaos")]) : _vm._e(),
-          _vm._v(" "),
-          _vm.viz_preturi > 0 ? _c("th") : _vm._e()
-        ])
-      ]),
-      _vm._v(" "),
-      _c(
-        "tbody",
-        [
-          _vm._l(_vm.comandapr, function(product) {
-            return _c("tr", [
-              _c("td", { staticStyle: { padding: "0px", margin: "0px" } }, [
-                _c("figure", { staticClass: "image is-128x128" }, [
-                  _c("img", {
-                    attrs: {
-                      src:
-                        "https://vapez.ro/" +
-                        product.image +
-                        "-home_default/poza.jpg"
-                    }
-                  })
-                ])
+    _c(
+      "table",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.comandapr,
+            expression: "comandapr"
+          }
+        ],
+        staticClass: "is-scrollable table is-narrow is-fullwidth"
+      },
+      [
+        _c("thead", [
+          _c("tr", [
+            _c("th", [_vm._v("Poza")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Nume")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Stoc")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Cos")]),
+            _vm._v(" "),
+            _c("th"),
+            _vm._v(" "),
+            _vm.viz_preturi > 0 ? _c("th", [_vm._v("cTVA")]) : _vm._e(),
+            _vm._v(" "),
+            _vm.viz_preturi > 0 ? _c("th", [_vm._v("Total cTVA")]) : _vm._e(),
+            _vm._v(" "),
+            _vm.viz_preturi > 0 ? _c("th", [_vm._v("Adaos")]) : _vm._e(),
+            _vm._v(" "),
+            _vm.viz_preturi > 0 ? _c("th") : _vm._e()
+          ])
+        ]),
+        _vm._v(" "),
+        _c(
+          "tbody",
+          [
+            _vm._l(_vm.comandapr, function(product) {
+              return _c("tr", [
+                _c("td", { staticStyle: { padding: "0px", margin: "0px" } }, [
+                  _c("figure", { staticClass: "image is-128x128" }, [
+                    _c("img", {
+                      attrs: {
+                        src:
+                          "https://vapez.ro/" +
+                          product.image +
+                          "-home_default/poza.jpg"
+                      }
+                    })
+                  ])
+                ]),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  {
+                    staticClass: "has-text-centered",
+                    staticStyle: { padding: "0px", margin: "0px" }
+                  },
+                  [_vm._v(_vm._s(product.nume))]
+                ),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  {
+                    staticClass: "has-text-centered",
+                    staticStyle: { padding: "0px", margin: "0px" }
+                  },
+                  [_vm._v(_vm._s(product.stoc))]
+                ),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(product.cos))]),
+                _vm._v(" "),
+                product.stoc != "Nu este disponibil pt comanda!"
+                  ? _c("td", [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "button",
+                          attrs: { cantitate: "1", id_prod: product.id },
+                          on: { click: _vm.addToCart }
+                        },
+                        [_vm._v("+")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "button",
+                          attrs: { cantitate: "-1", id_prod: product.id },
+                          on: { click: _vm.addToCart }
+                        },
+                        [_vm._v("-")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "button",
+                          attrs: { cantitate: "5", id_prod: product.id },
+                          on: { click: _vm.addToCart }
+                        },
+                        [_vm._v("+5")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "button",
+                          attrs: { cantitate: "10", id_prod: product.id },
+                          on: { click: _vm.addToCart }
+                        },
+                        [_vm._v("+10")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "button is-danger",
+                          attrs: { id_prod: product.id },
+                          on: { click: _vm.rmCmd }
+                        },
+                        [_vm._v("DEL")]
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.viz_preturi > 0 &&
+                product.stoc != "Nu este disponibil pt comanda!"
+                  ? _c("td", [_vm._v(_vm._s(product.ctva))])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.viz_preturi > 0 &&
+                product.stoc != "Nu este disponibil pt comanda!"
+                  ? _c("td", [_vm._v(_vm._s(product.total_ctva))])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.viz_preturi > 0 &&
+                product.stoc != "Nu este disponibil pt comanda!"
+                  ? _c("td", [_vm._v(_vm._s(product.adaos_nr))])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.viz_preturi > 0 &&
+                product.stoc != "Nu este disponibil pt comanda!"
+                  ? _c("td", [_vm._v(_vm._s(product.adaos_proc) + "%")])
+                  : _vm._e()
+              ])
+            }),
+            _vm._v(" "),
+            _c("tr", [
+              _c("td", [
+                _c(
+                  "button",
+                  {
+                    staticClass: "button is-fullwidth is-primary",
+                    on: { click: _vm.salveazaCmd }
+                  },
+                  [_vm._v("Salveaza Comanda")]
+                )
               ]),
               _vm._v(" "),
-              _c(
-                "td",
-                {
-                  staticClass: "has-text-centered",
-                  staticStyle: { padding: "0px", margin: "0px" }
-                },
-                [_vm._v(_vm._s(product.nume))]
-              ),
-              _vm._v(" "),
-              _c(
-                "td",
-                {
-                  staticClass: "has-text-centered",
-                  staticStyle: { padding: "0px", margin: "0px" }
-                },
-                [_vm._v(_vm._s(product.stoc))]
-              ),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(product.cos))]),
-              _vm._v(" "),
-              product.stoc != "Nu este disponibil pt comanda!"
-                ? _c("td", [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "button",
-                        attrs: { cantitate: "1", id_prod: product.id },
-                        on: { click: _vm.addToCart }
-                      },
-                      [_vm._v("+")]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        staticClass: "button",
-                        attrs: { cantitate: "-1", id_prod: product.id },
-                        on: { click: _vm.addToCart }
-                      },
-                      [_vm._v("-")]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        staticClass: "button",
-                        attrs: { cantitate: "5", id_prod: product.id },
-                        on: { click: _vm.addToCart }
-                      },
-                      [_vm._v("+5")]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        staticClass: "button",
-                        attrs: { cantitate: "10", id_prod: product.id },
-                        on: { click: _vm.addToCart }
-                      },
-                      [_vm._v("+10")]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        staticClass: "button is-danger",
-                        attrs: { id_prod: product.id },
-                        on: { click: _vm.rmCmd }
-                      },
-                      [_vm._v("DEL")]
-                    )
-                  ])
-                : _vm._e(),
-              _vm._v(" "),
-              _vm.viz_preturi > 0 &&
-              product.stoc != "Nu este disponibil pt comanda!"
-                ? _c("td", [_vm._v(_vm._s(product.ctva))])
-                : _vm._e(),
-              _vm._v(" "),
-              _vm.viz_preturi > 0 &&
-              product.stoc != "Nu este disponibil pt comanda!"
-                ? _c("td", [_vm._v(_vm._s(product.total_ctva))])
-                : _vm._e(),
-              _vm._v(" "),
-              _vm.viz_preturi > 0 &&
-              product.stoc != "Nu este disponibil pt comanda!"
-                ? _c("td", [_vm._v(_vm._s(product.adaos_nr))])
-                : _vm._e(),
-              _vm._v(" "),
-              _vm.viz_preturi > 0 &&
-              product.stoc != "Nu este disponibil pt comanda!"
-                ? _c("td", [_vm._v(_vm._s(product.adaos_proc) + "%")])
-                : _vm._e()
+              _vm._m(0)
             ])
-          }),
-          _vm._v(" "),
-          _c("tr", [
-            _c("td", [
-              _c(
-                "button",
-                {
-                  staticClass: "button is-fullwidth is-primary",
-                  on: { click: _vm.salveazaCmd }
-                },
-                [_vm._v("Salveaza Comanda")]
-              )
-            ]),
-            _vm._v(" "),
-            _vm._m(0)
-          ])
-        ],
-        2
-      )
-    ]),
-    _vm._v(" "),
-    _c(
-      "section",
-      [
-        _c(
-          "b-notification",
-          {
-            attrs: {
-              "auto-close": "",
-              type: "is-success",
-              active: _vm.message_toggle
-            },
-            on: {
-              "update:active": function($event) {
-                _vm.message_toggle = $event
-              }
-            }
-          },
-          [_vm._v(_vm._s(_vm.message_text))]
+          ],
+          2
         )
-      ],
-      1
-    )
+      ]
+    ),
+    _vm._v(" "),
+    _c("p", { staticClass: "has-text-centered" }, [
+      _vm._v(_vm._s(_vm.message_text))
+    ])
   ])
 }
 var staticRenderFns = [
@@ -63400,6 +63416,328 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 136 */,
+/* 137 */,
+/* 138 */,
+/* 139 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(140)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(142)
+/* template */
+var __vue_template__ = __webpack_require__(143)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/comanda/asteptareCos.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-1a1847a9", Component.options)
+  } else {
+    hotAPI.reload("data-v-1a1847a9", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 140 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(141);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(3)("2a6b9507", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-1a1847a9\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./asteptareCos.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-1a1847a9\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./asteptareCos.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 141 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(2)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\ntable {\n  font-size: 15px;\n}\n.button {\n  padding-left: 5px;\n  padding-right: 5px;\n  padding-top: 0px;\n  padding-bottom: 0px;\n  font-size: 15px;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 142 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+var _props$props$data$met;
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = (_props$props$data$met = {
+  props: ["response"]
+}, _defineProperty(_props$props$data$met, "props", {
+  response: Object
+}), _defineProperty(_props$props$data$met, "data", function data() {
+  return {
+    comandapr: this.response.prods,
+    viz_preturi: this.response.viz_preturi,
+    message_toggle: false,
+    message_text: this.response.message
+  };
+}), _defineProperty(_props$props$data$met, "methods", {
+  finalizeazaCmd: function finalizeazaCmd(event) {
+    var _this = this;
+
+    axios.post("../comanda/finalizareCmd", {}).then(function (response) {
+      _this.message_text = "Comanda a fost finalizata si este in asteptarea prelucrarii de catre depozit.";
+    });
+  }
+}), _props$props$data$met);
+
+/***/ }),
+/* 143 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c(
+      "table",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.response.prods,
+            expression: "response.prods"
+          }
+        ],
+        staticClass: "is-scrollable table is-narrow is-fullwidth"
+      },
+      [
+        _c("thead", [
+          _c("tr", [
+            _c("th", [_vm._v("Poza")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Nume")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Stoc")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Cos")]),
+            _vm._v(" "),
+            _c("th"),
+            _vm._v(" "),
+            _vm.viz_preturi > 0 ? _c("th", [_vm._v("cTVA")]) : _vm._e(),
+            _vm._v(" "),
+            _vm.viz_preturi > 0 ? _c("th", [_vm._v("Total cTVA")]) : _vm._e(),
+            _vm._v(" "),
+            _vm.viz_preturi > 0 ? _c("th", [_vm._v("Adaos")]) : _vm._e(),
+            _vm._v(" "),
+            _vm.viz_preturi > 0 ? _c("th") : _vm._e()
+          ])
+        ]),
+        _vm._v(" "),
+        _c(
+          "tbody",
+          [
+            _vm._l(_vm.comandapr, function(product) {
+              return _c("tr", [
+                _c("td", { staticStyle: { padding: "0px", margin: "0px" } }, [
+                  _c("figure", { staticClass: "image is-128x128" }, [
+                    _c("img", {
+                      attrs: {
+                        src:
+                          "https://vapez.ro/" +
+                          product.image +
+                          "-home_default/poza.jpg"
+                      }
+                    })
+                  ])
+                ]),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  {
+                    staticClass: "has-text-centered",
+                    staticStyle: { padding: "0px", margin: "0px" }
+                  },
+                  [_vm._v(_vm._s(product.nume))]
+                ),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  {
+                    staticClass: "has-text-centered",
+                    staticStyle: { padding: "0px", margin: "0px" }
+                  },
+                  [_vm._v(_vm._s(product.stoc))]
+                ),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(product.cos))]),
+                _vm._v(" "),
+                _c("td"),
+                _vm._v(" "),
+                _vm.viz_preturi > 0 &&
+                product.stoc != "Nu este disponibil pt comanda!"
+                  ? _c("td", [_vm._v(_vm._s(product.ctva))])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.viz_preturi > 0 &&
+                product.stoc != "Nu este disponibil pt comanda!"
+                  ? _c("td", [_vm._v(_vm._s(product.total_ctva))])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.viz_preturi > 0 &&
+                product.stoc != "Nu este disponibil pt comanda!"
+                  ? _c("td", [_vm._v(_vm._s(product.adaos_nr))])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.viz_preturi > 0 &&
+                product.stoc != "Nu este disponibil pt comanda!"
+                  ? _c("td", [_vm._v(_vm._s(product.adaos_proc) + "%")])
+                  : _vm._e()
+              ])
+            }),
+            _vm._v(" "),
+            _c("tr", [
+              _c("td", [
+                _c(
+                  "button",
+                  {
+                    staticClass: "button is-fullwidth is-primary",
+                    on: { click: _vm.finalizeazaCmd }
+                  },
+                  [_vm._v("Finalizeaza Comanda")]
+                )
+              ])
+            ])
+          ],
+          2
+        )
+      ]
+    ),
+    _vm._v(" "),
+    _c("p", { staticClass: "has-text-centered" }, [
+      _vm._v(_vm._s(_vm.message_text))
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-1a1847a9", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

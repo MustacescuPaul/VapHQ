@@ -17,4 +17,8 @@ class Ps_order_detail extends Model
     {
         return $this->belongsTo('App\Ps_order_detail', 'id_order', 'id_order');
     }
+    public function Preturi_reselleri()
+    {
+        return $this->hasOne(Preturi_reselleri::class, 'id_produs', 'product_id');
+    }
 }

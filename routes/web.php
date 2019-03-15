@@ -61,6 +61,7 @@ Route::prefix('stoc')->group(function () {
 Route::prefix('comanda')->group(function () {
 
     Route::get('/', 'ComandaController@index')->name('comanda.index');
+    Route::get('/asteptare', 'ComandaController@asteptare')->name('comanda.asteptare');
     Route::get('/comenzi_cart', 'ComandaController@show')->name('comanda.show');
     Route::post('/comenzi_sidebar', 'ComandaController@sidebar')->name('comanda.sidebar');
     Route::get('lista_produse/{id}', 'ComandaController@productList')->name('comanda.prodlist');
@@ -68,6 +69,7 @@ Route::prefix('comanda')->group(function () {
     Route::post('/addToCmd', 'ComandaController@addToCmd')->name('comanda.add_to_cmd');
     Route::post('/rmCmd', 'ComandaController@rmCmd')->name('comanda.rm_cmd');
     Route::post('/salveazaCmd', 'ComandaController@salveazaCmd')->name('comanda.salveaza_cmd');
+    Route::post('/finalizareCmd', 'ComandaController@finalizareComanda')->name('comanda.finalizeaza_cmd');
 });
 Route::prefix('garantii')->group(function () {
     Route::get('/', 'GarantiiController@index')->name('garantii.index');

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <table class="is-scrollable table is-narrow is-fullwidth">
+    <table v-show="comandapr" class="is-scrollable table is-narrow is-fullwidth">
       <thead>
         <tr>
           <th>Poza</th>
@@ -57,9 +57,7 @@
         </tr>
       </tbody>
     </table>
-    <section>
-      <b-notification auto-close type="is-success" :active.sync="message_toggle">{{message_text}}</b-notification>
-    </section>
+    <p class="has-text-centered">{{message_text}}</p>
   </div>
 </template>
 <script>
@@ -72,8 +70,7 @@ export default {
     return {
       comandapr: this.comanda.prods,
       viz_preturi: this.comanda.viz_preturi,
-      message_toggle: false,
-      message_text: ""
+      message_text: this.comanda.message
     };
   },
   methods: {
@@ -102,7 +99,7 @@ export default {
       axios.post("comanda/salveazaCmd", {}).then(response => {
         this.message_text = response.data.message;
         this.message_toggle = true;
-        this.comandapr = response.data.prods;
+        this.comandapr = "";
         setTimeout(function() {
           // window.location.href = "comanda/";
         }, 3000);
