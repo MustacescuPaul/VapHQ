@@ -174,9 +174,6 @@ class ComandaController extends Controller
         $products = Product::on($user->magazin)->where('nume', $name)->orWhere('nume', 'like', '%' . $name . '%')->get();
         return json_encode($products);
     }
-
-    public function showCos()
-    { }
     public function addToCmd(Request $request)
     {
         $permisiuni_comenzi = Auth::user()->users_permisiuni->comanda;
@@ -612,6 +609,49 @@ class ComandaController extends Controller
                     ['response' => $response]
                 );
             }
+        } else {
+            return view('index')->with('user', Auth::user());
+        }
+    }
+
+    public function istoricComenzi()
+    {
+        $permisiuniComenzi = Auth::user()->users_permisiuni->comanda;
+        $permisiuniBoss = Auth::user()->users_permisiuni->boss;
+        $permisiuniIstoricComenzi = Auth::user()->users_permisiuni->istoric_comenzi;
+
+        //Verificare permisiuni
+        if ($permisiuniBoss && $permisiuniComenzi && $permisiuniIstoricComenzi) {
+            $orderInfo = array();
+            $orderDetails = array();
+            $orders = Ps_order::where([['id_customer', '=', Auth::user()->id_vapoint], ['valid', '=', 1]])->paginate(10);
+
+            foreach ($orders as $order) {
+                $orderDet = Ps_order_detail::where('id_order', '=', $order->id_order)->get();
+                $lastState = Ps_order_history::where('id_order', '=', $order->id_order)->get()->sortByDesc('date_add')->first();
+                if ($lastState)
+                    $orderInfo['state'] = $lastState->ps_order_state_lang->where('id_lang', '=', 2)->first()->name;
+                $orderInfo['ref'] = $order->reference;
+                $orderInfo['date'] = $order->date_add;
+                $orderInfo['valoare'] = $order->total_products_wt;
+
+                foreach ($orderDet as $orderDetail) {
+                    $orderDetails['poza'] = $this->getImage($orderDetail->product_id);
+                    $orderDetails['nume'] =  iconv("ISO-8859-1", "UTF-8", $orderDetail->preturi_reselleri->nume);
+                    $orderDetails['cantitate'] = $orderDetail->product_quantity;
+                    $orderDetails['unitftva'] = round($orderDetail->product_price, 2);
+                    $orderDetails['liniectva'] = round(($orderDetail->product_price * 1.19) * $orderDetail->product_quantity, 2);
+                    $orderDetails['adaos_nr'] = round(($orderDetail->original_product_price * 1.19 - ($orderDetail->product_price * 1.19)) * $orderDetail->product_quantity, 2);
+                    if ($orderDetail->original_product_price != 0)
+                        $orderDetails['adaos_proc'] = round(($orderDetail->original_product_price * 1.19 - $orderDetail->product_price * 1.19) / $orderDetail->original_product_price * 100, 2);
+                    $orderDetails['total_vanzare'] = round($orderDetail->original_product_price * $orderDetail->product_quantity, 2);
+                    $response['produse'][$order->id_order][$orderDetail->product_id] = $orderDetails;
+                }
+                $response['orderInfo'][$order->id_order] = $orderInfo;
+            }
+            return view('comanda.istoric')->with('user', Auth::user())->with(
+                ['istoric' => $response]
+            );
         } else {
             return view('index')->with('user', Auth::user());
         }

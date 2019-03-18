@@ -70,6 +70,7 @@ Route::prefix('comanda')->group(function () {
     Route::post('/rmCmd', 'ComandaController@rmCmd')->name('comanda.rm_cmd');
     Route::post('/salveazaCmd', 'ComandaController@salveazaCmd')->name('comanda.salveaza_cmd');
     Route::post('/finalizareCmd', 'ComandaController@finalizareComanda')->name('comanda.finalizeaza_cmd');
+    Route::get('/istoric', 'ComandaController@istoricComenzi')->name('comanda.istoric');
 });
 Route::prefix('garantii')->group(function () {
     Route::get('/', 'GarantiiController@index')->name('garantii.index');

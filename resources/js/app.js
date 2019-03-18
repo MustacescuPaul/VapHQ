@@ -48,6 +48,10 @@ Vue.component(
 );
 Vue.component("comanda-cos", require("./components/comanda/comandaCos.vue"));
 Vue.component(
+    "comanda-istoric",
+    require("./components/comanda/comandaIstoric.vue")
+);
+Vue.component(
     "asteptare-cos",
     require("./components/comanda/asteptareCos.vue")
 );

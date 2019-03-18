@@ -12400,6 +12400,7 @@ Vue.component("comanda-list", __webpack_require__(81));
 Vue.component("comanda-sidebar", __webpack_require__(86));
 Vue.component("comanda-index", __webpack_require__(89));
 Vue.component("comanda-cos", __webpack_require__(92));
+Vue.component("comanda-istoric", __webpack_require__(144));
 Vue.component("asteptare-cos", __webpack_require__(97));
 
 Vue.component("garantii-index", __webpack_require__(102));
@@ -63736,6 +63737,352 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 141 */,
+/* 142 */,
+/* 143 */,
+/* 144 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(145)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(147)
+/* template */
+var __vue_template__ = __webpack_require__(148)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/comanda/comandaIstoric.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-1063610b", Component.options)
+  } else {
+    hotAPI.reload("data-v-1063610b", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 145 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(146);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(3)("0d48e710", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-1063610b\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./comandaIstoric.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-1063610b\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./comandaIstoric.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 146 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(2)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\ntable {\n  font-size: 15px;\n}\n.button {\n  padding-left: 5px;\n  padding-right: 5px;\n  padding-top: 0px;\n  padding-bottom: 0px;\n  font-size: 15px;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 147 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ["istoric"],
+  data: function data() {
+    return {
+      show: "comenzi",
+      order: []
+    };
+  },
+  methods: {
+    detalii: function detalii(event) {
+      var id = event.target.getAttribute("id_order");
+      this.show = "detalii";
+
+      this.$set(this.order, 0, this.istoric.produse[id]);
+    }
+  },
+  mounted: function mounted() {
+    console.log(this.istoric);
+  }
+});
+
+/***/ }),
+/* 148 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("table", { staticClass: "is-scrollable table is-narrow is-fullwidth" }, [
+      _vm._m(0),
+      _vm._v(" "),
+      _c(
+        "tbody",
+        _vm._l(_vm.istoric.orderInfo, function(comanda, index) {
+          return _c("tr", [
+            _c("td", [
+              _c("i", {
+                staticClass: "fas fa-arrow-circle-down",
+                attrs: { id_order: index },
+                on: { click: _vm.detalii }
+              }),
+              _vm._v("\n          " + _vm._s(comanda.ref) + "\n        ")
+            ]),
+            _vm._v(" "),
+            _c("td", [_vm._v(_vm._s(comanda.date))]),
+            _vm._v(" "),
+            _c("td", [_vm._v(_vm._s(comanda.valoare))]),
+            _vm._v(" "),
+            _c("td", [_vm._v(_vm._s(comanda.state))]),
+            _vm._v(" "),
+            _c("td"),
+            _vm._v(" "),
+            _c("td")
+          ])
+        })
+      )
+    ]),
+    _vm._v(" "),
+    _vm.show == "detalii"
+      ? _c(
+          "table",
+          { staticClass: "is-scrollable table is-narrow is-fullwidth" },
+          [
+            _vm._m(1),
+            _vm._v(" "),
+            _c(
+              "tbody",
+              _vm._l(_vm.order[0], function(produs, index) {
+                return _c("tr", [
+                  _c("td", { staticStyle: { padding: "0px", margin: "0px" } }, [
+                    _c(
+                      "figure",
+                      {
+                        staticClass: "image is-50x50",
+                        staticStyle: { width: "50px", heigth: "50" }
+                      },
+                      [
+                        _c("img", {
+                          attrs: {
+                            src:
+                              "https://vapez.ro/" +
+                              produs.poza +
+                              "-home_default/poza.jpg"
+                          }
+                        })
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(produs.nume))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(produs.cantitate))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(produs.unitftva))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(produs.liniectva))]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _vm._v(
+                      "\n          " + _vm._s(produs.adaos_nr) + "\n          "
+                    ),
+                    _c("br"),
+                    _vm._v(
+                      "\n          " + _vm._s(produs.adaos_proc) + "%\n        "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(produs.total_vanzare))])
+                ])
+              })
+            )
+          ]
+        )
+      : _vm._e()
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Comanda")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Data")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Valoare")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Status")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Factura")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Date NIR")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Poza")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Nume")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Cantitate")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("\n          Unitar\n          fTVA\n        ")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("\n          Linie\n          cTVA\n        ")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("\n          Adaos\n          fTVA\n        ")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("\n          Total\n          vanzare\n        ")])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-1063610b", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

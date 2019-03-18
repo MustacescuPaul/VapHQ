@@ -9,6 +9,7 @@
         <div class="navbar-end">
             <a href="{{route('comanda.index') }}" class="navbar-item is-tab is-hidden-mobile m-l-10">Cos</a>
             <a href="{{route('comanda.asteptare') }}" class="navbar-item is-tab is-hidden-mobile m-l-10">Comanda In Asteptare</a>
+            <a href="{{route('comanda.istoric') }}" class="navbar-item is-tab is-hidden-mobile m-l-10">Istoric Comenzi</a>
              <a href="{{route('logout')}}" class="navbar-item" onclick="event.preventDefault();
              document.getElementById('logout-form').submit();">
                 <span class="icon">
