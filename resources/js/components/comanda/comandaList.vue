@@ -71,7 +71,7 @@ export default {
     addToCart: function(event) {
       let cantitate = event.target.getAttribute("cantitate");
       var id_prod = event.target.getAttribute("id_prod");
-      if (this.products[id_prod]["cos"] < this.products[id_prod]["stoc_s"]) {
+      if (this.products[id_prod]["cos"] <= this.products[id_prod]["stoc_s"]) {
         axios
           .post("comanda/addToCmd", {
             cantitate: cantitate,
@@ -83,7 +83,8 @@ export default {
 
             this.viz_preturi = response.data.viz_preturi;
           });
-      } else {
+      }
+      if (this.products[id_prod]["cos"] == this.products[id_prod]["stoc_s"]) {
         this.line_color = id_prod;
       }
     },

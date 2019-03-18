@@ -203,13 +203,11 @@ class ComandaController extends Controller
                 $produs_comanda->id_prod = $id;
             }
             $produs_comanda->cantitate += $cantitate;
-            if ($produs_comanda->cantitate == 0) {
-                $produs_comanda->delete();
-            } else {
-                if (($stoc->quantity >= $produs_comanda->cantitate) && ($produs_comanda->cantitate >= 0)) {
-                    $produs_comanda->save();
-                }
+
+            if (($stoc->quantity >= $produs_comanda->cantitate) && ($produs_comanda->cantitate >= 0)) {
+                $produs_comanda->save();
             }
+
             if ($request->list) {
 
                 $produs_comanda = Comanda::on(Auth::user()->magazin)->find($id);
@@ -240,6 +238,9 @@ class ComandaController extends Controller
                     $temp['stoc'] = 'Nu este disponibil pt comanda!';
                 }
                 $products_json['prods'][$id] = $temp;
+                if ($produs_comanda->cantitate == 0) {
+                    $produs_comanda->delete();
+                }
                 return $products_json;
             }
             $comanda = Comanda::on(Auth::user()->magazin)->get();
@@ -296,6 +297,7 @@ class ComandaController extends Controller
                 $temp['id'] = $reseller->id_produs;
                 $temp['nume'] = $reseller->nume;
                 $temp['cos'] = 0;
+                $temp['stoc_s'] = $stoc['quantity'];
                 if ($stoc['quantity'] > 0) {
                     $temp['stoc'] = 'da';
                 } else {
