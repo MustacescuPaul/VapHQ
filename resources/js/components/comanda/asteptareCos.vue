@@ -1,6 +1,6 @@
 <template>
   <div>
-    <table v-show="response.prods" class="is-scrollable table is-narrow is-fullwidth">
+    <table v-show="comandapr" class="is-scrollable table is-narrow is-fullwidth">
       <thead>
         <tr>
           <th>Poza</th>
@@ -73,6 +73,7 @@ export default {
       axios.post("../comanda/finalizareCmd", {}).then(response => {
         this.message_text =
           "Comanda a fost finalizata si este in asteptarea prelucrarii de catre depozit.";
+        this.comandapr = "";
       });
     }
   }

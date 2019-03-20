@@ -51,9 +51,6 @@
           <td>
             <button @click="salveazaCmd" class="button is-fullwidth is-primary">Salveaza Comanda</button>
           </td>
-          <td>
-            <button class="button is-fullwidth is-primary">Finalizeaza Comanda</button>
-          </td>
         </tr>
       </tbody>
     </table>

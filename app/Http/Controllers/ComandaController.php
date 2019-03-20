@@ -122,10 +122,9 @@ class ComandaController extends Controller
             $categ = Category::on('vapez')->find($id);
             $products_json = array();
             $temp = array();
-            $products = array();
-            $products['products'] = $categ->ps_product;
 
             foreach ($categ->ps_product as $product) {
+
                 if (Comanda::on(Auth::user()->magazin)->find($product->id_product)) {
                     $produs_comanda = Comanda::on(Auth::user()->magazin)->find($product->id_product);
                     $temp['cos'] = $produs_comanda->cantitate;
@@ -161,7 +160,7 @@ class ComandaController extends Controller
                 if ($reseller->$reducere == 0) {
                     $temp['stoc'] = 'Nu este disponibil pt comanda!';
                 }
-                $products_json['prods'][$product->id_product] = $temp;
+                $products_json['prods'][$product->pivot->position] = $temp;
             }
         } else {
             return "Nu aveti permisiunile necesare!";
@@ -614,8 +613,9 @@ class ComandaController extends Controller
         }
     }
 
-    public function istoricComenzi()
+    public function istoricComenzi(Request $request)
     {
+
         $permisiuniComenzi = Auth::user()->users_permisiuni->comanda;
         $permisiuniBoss = Auth::user()->users_permisiuni->boss;
         $permisiuniIstoricComenzi = Auth::user()->users_permisiuni->istoric_comenzi;
@@ -624,34 +624,44 @@ class ComandaController extends Controller
         if ($permisiuniBoss && $permisiuniComenzi && $permisiuniIstoricComenzi) {
             $orderInfo = array();
             $orderDetails = array();
-            $orders = Ps_order::where([['id_customer', '=', Auth::user()->id_vapoint], ['valid', '=', 1]])->paginate(10);
-
+            $orders = Ps_order::where([['id_customer', '=', Auth::user()->id_vapoint], ['valid', '=', 1]])->orderBy('date_add', 'desc')->paginate(10);
+            $response['orderInfo'] = array();
             foreach ($orders as $order) {
                 $orderDet = Ps_order_detail::where('id_order', '=', $order->id_order)->get();
                 $lastState = Ps_order_history::where('id_order', '=', $order->id_order)->get()->sortByDesc('date_add')->first();
                 if ($lastState)
                     $orderInfo['state'] = $lastState->ps_order_state_lang->where('id_lang', '=', 2)->first()->name;
                 $orderInfo['ref'] = $order->reference;
-                $orderInfo['date'] = $order->date_add;
-                $orderInfo['valoare'] = $order->total_products_wt;
-
+                $orderInfo['date'] = date("d M 'y", strtotime($order->date_add));
+                $orderInfo['time'] = date("H:i", strtotime($order->date_add));
+                $orderInfo['valoare'] = round($order->total_products_wt, 2);
+                $orderInfo['id'] = $order->id_order;
                 foreach ($orderDet as $orderDetail) {
                     $orderDetails['poza'] = $this->getImage($orderDetail->product_id);
                     $orderDetails['nume'] =  iconv("ISO-8859-1", "UTF-8", $orderDetail->preturi_reselleri->nume);
                     $orderDetails['cantitate'] = $orderDetail->product_quantity;
+
                     $orderDetails['unitftva'] = round($orderDetail->product_price, 2);
                     $orderDetails['liniectva'] = round(($orderDetail->product_price * 1.19) * $orderDetail->product_quantity, 2);
-                    $orderDetails['adaos_nr'] = round(($orderDetail->original_product_price * 1.19 - ($orderDetail->product_price * 1.19)) * $orderDetail->product_quantity, 2);
+                    $orderDetails['adaos_nr'] = round(($orderDetail->original_product_price  - ($orderDetail->product_price)) * $orderDetail->product_quantity, 2);
                     if ($orderDetail->original_product_price != 0)
-                        $orderDetails['adaos_proc'] = round(($orderDetail->original_product_price * 1.19 - $orderDetail->product_price * 1.19) / $orderDetail->original_product_price * 100, 2);
+                        $orderDetails['adaos_proc'] = round(($orderDetail->original_product_price - $orderDetail->product_price) / $orderDetail->original_product_price * 100, 2);
                     $orderDetails['total_vanzare'] = round($orderDetail->original_product_price * $orderDetail->product_quantity, 2);
                     $response['produse'][$order->id_order][$orderDetail->product_id] = $orderDetails;
                 }
-                $response['orderInfo'][$order->id_order] = $orderInfo;
+                array_push($response['orderInfo'], $orderInfo);
             }
-            return view('comanda.istoric')->with('user', Auth::user())->with(
-                ['istoric' => $response]
-            );
+            ksort($response['orderInfo']);
+            $orders = Ps_order::where([['id_customer', '=', Auth::user()->id_vapoint], ['valid', '=', 1]])->paginate(10)->lastPage();
+            $response['pages'] = $orders;
+            if ($request->paginate == 1) {
+                $istoric = $response;
+                return json_encode($istoric);
+            } else {
+                return view('comanda.istoric')->with('user', Auth::user())->with(
+                    ['istoric' => $response]
+                );
+            }
         } else {
             return view('index')->with('user', Auth::user());
         }

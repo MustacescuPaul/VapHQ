@@ -15,7 +15,7 @@ class Ps_product extends Model
 
     public function category()
     {
-        return $this->belongsToMany('App\Category', 'ps_category_product', 'id_category', 'id_product');
+        return $this->belongsToMany('App\Category', 'ps_category_product', 'id_category', 'id_product')->withPivot('position')->orderBy('position', 'asc');
     }
     public function image()
     {
@@ -33,4 +33,8 @@ class Ps_product extends Model
     {
         return $this->belongsTo('App\Comanda', 'id_prod', 'id_product');
     }
+    // public function ps_category_product()
+    // {
+    //     return $this->hasOne('App\Ps_category_product', 'id_product', 'id_product');
+    // }
 }

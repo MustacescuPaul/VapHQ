@@ -58,9 +58,11 @@ export default {
       this.menu2 = [];
       this.menu3 = [];
       this.$emit("getProd", id_cat);
-      axios.post("comanda/comenzi_sidebar", { id: id_cat }).then(response => {
-        this.menu1 = response.data;
-      });
+      axios
+        .post("../comanda/comenzi_sidebar", { id: id_cat })
+        .then(response => {
+          this.menu1 = response.data;
+        });
     },
     getSubCat1: function(event) {
       let id_cat = event.target.getAttribute("id_cat");
@@ -68,18 +70,22 @@ export default {
       var ul = document.createElement("ul");
       this.menu2 = [];
       this.$emit("getProd", id_cat);
-      axios.post("comanda/comenzi_sidebar", { id: id_cat }).then(response => {
-        this.menu2 = response.data;
-      });
+      axios
+        .post("../comanda/comenzi_sidebar", { id: id_cat })
+        .then(response => {
+          this.menu2 = response.data;
+        });
     },
     getSubCat2: function(event) {
       let id_cat = event.target.getAttribute("id_cat");
       let but = event.target.parentElement;
       var ul = document.createElement("ul");
       this.$emit("getProd", id_cat);
-      axios.post("comanda/comenzi_sidebar", { id: id_cat }).then(response => {
-        this.menu3 = response.data;
-      });
+      axios
+        .post("../comanda/comenzi_sidebar", { id: id_cat })
+        .then(response => {
+          this.menu3 = response.data;
+        });
     },
     search: function(event) {
       this.$emit("search", event.target.value);

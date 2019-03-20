@@ -16,7 +16,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="product in products">
+      <tr v-for="(product,index) in products">
         <td style=" padding: 0px;
   margin: 0px;">
           <button class="button is-primary">{{product.id}}</button>
@@ -31,13 +31,13 @@
           <button
             @click="addToCart"
             cantitate="1"
-            :id_prod="product.id"
-            :class="product.id == line_color ? 'button is-danger': 'button'"
+            :pos="index"
+            :class="index == line_color ? 'button is-danger': 'button'"
           >+</button>
-          <button @click="addToCart" cantitate="-1" :id_prod="product.id" class="button">-</button>
-          <button @click="addToCart" cantitate="5" :id_prod="product.id" class="button">+5</button>
-          <button @click="addToCart" cantitate="10" :id_prod="product.id" class="button">+10</button>
-          <button @click="rmCmd" :id_prod="product.id" class="button is-danger">DEL</button>
+          <button @click="addToCart" cantitate="-1" :pos="index" class="button">-</button>
+          <button @click="addToCart" cantitate="5" :pos="index" class="button">+5</button>
+          <button @click="addToCart" cantitate="10" :pos="index" class="button">+10</button>
+          <button @click="rmCmd" :pos="index" class="button is-danger">DEL</button>
         </td>
         <td
           v-if="viz_preturi > 0 && product.stoc != 'Nu este disponibil pt comanda!'"
@@ -70,28 +70,30 @@ export default {
   methods: {
     addToCart: function(event) {
       let cantitate = event.target.getAttribute("cantitate");
-      var id_prod = event.target.getAttribute("id_prod");
-      if (this.products[id_prod]["cos"] <= this.products[id_prod]["stoc_s"]) {
+      let pos = event.target.getAttribute("pos");
+      let id_prod = this.products[pos]["id"];
+      if (this.products[pos].cos <= this.products[pos].stoc_s) {
         axios
-          .post("comanda/addToCmd", {
+          .post("../comanda/addToCmd", {
             cantitate: cantitate,
             id_prod: id_prod,
             list: 1
           })
           .then(response => {
-            this.$set(this.products, id_prod, response.data.prods[id_prod]);
+            console.log(response.data);
+            this.$set(this.products, pos, response.data.prods[pos]);
 
             this.viz_preturi = response.data.viz_preturi;
           });
       }
-      if (this.products[id_prod]["cos"] == this.products[id_prod]["stoc_s"]) {
-        this.line_color = id_prod;
+      if (this.products[pos].cos == this.products[pos].stoc_s) {
+        this.line_color = pos;
       }
     },
     rmCmd: function(event) {
       var id_prod = event.target.getAttribute("id_prod");
       axios
-        .post("comanda/rmCmd", {
+        .post("../comanda/rmCmd", {
           id_prod: id_prod,
           list: 1
         })
