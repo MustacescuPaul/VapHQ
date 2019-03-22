@@ -2,5 +2,5 @@
 
 @section('content')
 
-<redirect-index></redirect-index>
+<redirect-index :menu="{{ json_encode($menu) }}"></redirect-index>
 @endsection

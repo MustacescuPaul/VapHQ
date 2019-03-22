@@ -19,4 +19,8 @@ class Preturi_reselleri extends Model
     {
         return $this->belongsTo(Comanda::class, 'id_prod', 'id_produs');
     }
+    public function cantitate_minima()
+    {
+        return $this->hasOne('App\Cantitate_minima', 'id_prod', 'id_produs');
+    }
 }

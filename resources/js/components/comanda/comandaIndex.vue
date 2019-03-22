@@ -33,7 +33,7 @@ export default {
       axios.get("../comanda/lista_produse/" + event).then(response => {
         this.products = response.data.prods;
         this.viz_preturi = response.data.viz_preturi;
-        console.log(response.data);
+
         if (response.data.prods) this.show = "products";
         else this.show = "";
       });

@@ -25,7 +25,7 @@ class VerificationController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/casa';
+    protected $redirectTo = 'redirect';
 
     /**
      * Create a new controller instance.

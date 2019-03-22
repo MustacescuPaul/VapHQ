@@ -8,7 +8,9 @@ class CategoryProduct extends Model
 {
     //
     protected $table = 'ps_category_product';
-     protected $primaryKey = 'id_category';
+    protected $primaryKey = 'id_category';
+    protected $connection = 'vapez';
+    public $timestamps = false;
     //
     // public function Category()
     // {

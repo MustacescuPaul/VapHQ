@@ -94,12 +94,17 @@ export default {
     },
     salveazaCmd: function(event) {
       axios.post("comanda/salveazaCmd", {}).then(response => {
-        this.message_text = response.data.message;
-        this.message_toggle = true;
-        this.comandapr = "";
-        setTimeout(function() {
-          // window.location.href = "comanda/";
-        }, 3000);
+        console.log(response.data);
+        if (response.data.eroare) {
+          this.message_text = response.data.message;
+        } else {
+          this.message_text = response.data.message;
+          this.message_toggle = true;
+          this.comandapr = "";
+          setTimeout(function() {
+            // window.location.href = "comanda/";
+          }, 3000);
+        }
       });
     }
   }

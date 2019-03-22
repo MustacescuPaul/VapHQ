@@ -58210,8 +58210,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ["menu"],
   data: function data() {
     return {
       show: "menu",
@@ -58246,6 +58248,7 @@ var render = function() {
     [
       _vm.show == "menu"
         ? _c("redirect-menu", {
+            attrs: { menu: _vm.menu },
             on: {
               comenzi: _vm.interfataComenzi,
               vanzare: _vm.interfataVanzare,
@@ -58353,7 +58356,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -58399,17 +58402,54 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ["menu"],
   methods: {
-    comenzi: function comenzi(event) {
-      this.$emit("comenzi");
+    aprovizionare: function aprovizionare(event) {
+      var id = event.target.getAttribute("id");
+      if (id == "Comenzi") window.location.href = "comanda";
+      if (id == "Comenzi in asteptare") window.location.href = "comanda/asteptare";
+      if (id == "Istoric") window.location.href = "comanda/istoric";
+      if (id == "Stocare") window.location.href = "#";
+      if (id == "Upload stoc") window.location.href = "#";
     },
     vanzare: function vanzare(event) {
-      this.$emit("vanzare");
+      var id = event.target.getAttribute("id");
+      if (id == "Vanzare") window.location.href = "casa";
+      if (id == "Casa") window.location.href = "#";
+      if (id == "Stocuri") window.location.href = "#";
+      if (id == "Sertar") window.location.href = "#";
+      if (id == "Mixer baze") window.location.href = "#";
     },
-    primireService: function primireService(event) {
-      this.$emit("primireService");
+    garantii: function garantii(event) {
+      var id = event.target.getAttribute("id");
+      if (id == "Emitere") window.location.href = "#";
+      if (id == "Primire service") window.location.href = "garantii";
+      if (id == "Eliberare service") window.location.href = "#";
+      if (id == "Intrari service") window.location.href = "garantii/intrate";
+    },
+    admin: function admin(event) {
+      var id = event.target.getAttribute("id");
+      if (id == "Dashboard") window.location.href = "admin";
+    },
+    logout: function logout(event) {
+      axios.post("logout", {}).then(function (response) {
+        window.location.href = "login";
+      });
     }
   }
 });
@@ -58423,108 +58463,99 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "columns" }, [
-    _c("div", { staticClass: "column" }, [
-      _c("p", { staticClass: "has-text-centered mar-top-30" }, [
-        _vm._v("Vanzare")
-      ]),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "button mar-top-5 is-fullwidth is-primary",
-          on: { click: _vm.vanzare }
-        },
-        [_vm._v("Vanzare")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "button mar-top-5 is-fullwidth is-primary" },
-        [_vm._v("Casa")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "button mar-top-5 is-fullwidth is-primary" },
-        [_vm._v("Stocuri")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "button mar-top-5 is-fullwidth is-primary" },
-        [_vm._v("Sertar")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "button mar-top-5 is-fullwidth is-primary" },
-        [_vm._v("Mixer baze")]
-      )
-    ]),
+    _c(
+      "div",
+      { staticClass: "column" },
+      [
+        _c("p", { staticClass: "has-text-centered mar-top-30" }, [
+          _vm._v("Vanzare")
+        ]),
+        _vm._v(" "),
+        _vm._l(_vm.menu.vanzare, function(men) {
+          return _c(
+            "button",
+            {
+              staticClass: "button mar-top-5 is-fullwidth is-primary",
+              attrs: { id: men },
+              on: { click: _vm.vanzare }
+            },
+            [_vm._v(_vm._s(men))]
+          )
+        })
+      ],
+      2
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "column" },
+      [
+        _c("p", { staticClass: "has-text-centered mar-top-30" }, [
+          _vm._v("Admin")
+        ]),
+        _vm._v(" "),
+        _vm._l(_vm.menu.admin, function(men) {
+          return _c(
+            "button",
+            {
+              staticClass: "button mar-top-5 is-fullwidth is-primary",
+              attrs: { id: men },
+              on: { click: _vm.admin }
+            },
+            [_vm._v(_vm._s(men))]
+          )
+        })
+      ],
+      2
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "column" },
+      [
+        _c("p", { staticClass: "has-text-centered mar-top-30" }, [
+          _vm._v("Garantii")
+        ]),
+        _vm._v(" "),
+        _vm._l(_vm.menu.garantii, function(men) {
+          return _c(
+            "button",
+            {
+              staticClass: "button mar-top-5 is-fullwidth is-primary",
+              attrs: { id: men },
+              on: { click: _vm.garantii }
+            },
+            [_vm._v(_vm._s(men))]
+          )
+        })
+      ],
+      2
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "column" },
+      [
+        _c("p", { staticClass: "has-text-centered mar-top-30" }, [
+          _vm._v("Aprovizionare")
+        ]),
+        _vm._v(" "),
+        _vm._l(_vm.menu.aprovizionare, function(men) {
+          return _c(
+            "button",
+            {
+              staticClass: "button mar-top-5 is-fullwidth is-primary",
+              attrs: { id: men },
+              on: { click: _vm.aprovizionare }
+            },
+            [_vm._v(_vm._s(men))]
+          )
+        })
+      ],
+      2
+    ),
     _vm._v(" "),
     _c("div", { staticClass: "column" }, [
-      _c("p", { staticClass: "has-text-centered mar-top-30" }, [
-        _vm._v("Garantii")
-      ]),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "button mar-top-5 is-fullwidth is-primary" },
-        [_vm._v("Emitere")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "button mar-top-5 is-fullwidth is-primary",
-          on: { click: _vm.primireService }
-        },
-        [_vm._v("Primire service")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "button mar-top-5 is-fullwidth is-primary" },
-        [_vm._v("Eliberare Service")]
-      )
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "column" }, [
-      _c("p", { staticClass: "has-text-centered mar-top-30" }, [
-        _vm._v("Aprovizionare")
-      ]),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "button mar-top-5 is-fullwidth is-primary",
-          on: { click: _vm.comenzi }
-        },
-        [_vm._v("Comenzi")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "button mar-top-5 is-fullwidth is-primary" },
-        [_vm._v("Upload stoc")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "button mar-top-5 is-fullwidth is-primary" },
-        [_vm._v("Stocare")]
-      )
-    ]),
-    _vm._v(" "),
-    _vm._m(0)
-  ])
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "column" }, [
       _c("p", { staticClass: "has-text-centered mar-top-30" }, [
         _vm._v("Utile")
       ]),
@@ -58547,12 +58578,18 @@ var staticRenderFns = [
         [_vm._v("Documente")]
       ),
       _vm._v(" "),
-      _c("button", { staticClass: "button mar-top-5 is-fullwidth is-danger" }, [
-        _vm._v("Logout")
-      ])
+      _c(
+        "button",
+        {
+          staticClass: "button mar-top-5 is-fullwidth is-danger",
+          on: { click: _vm.logout }
+        },
+        [_vm._v("Logout")]
+      )
     ])
-  }
-]
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -59296,7 +59333,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     axios.get("../comanda/lista_produse/" + event).then(function (response) {
       _this.products = response.data.prods;
       _this.viz_preturi = response.data.viz_preturi;
-      console.log(response.data);
+
       if (response.data.prods) _this.show = "products";else _this.show = "";
     });
   }
@@ -59574,12 +59611,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     var _this3 = this;
 
     axios.post("comanda/salveazaCmd", {}).then(function (response) {
-      _this3.message_text = response.data.message;
-      _this3.message_toggle = true;
-      _this3.comandapr = "";
-      setTimeout(function () {
-        // window.location.href = "comanda/";
-      }, 3000);
+      console.log(response.data);
+      if (response.data.eroare) {
+        _this3.message_text = response.data.message;
+      } else {
+        _this3.message_text = response.data.message;
+        _this3.message_toggle = true;
+        _this3.comandapr = "";
+        setTimeout(function () {
+          // window.location.href = "comanda/";
+        }, 3000);
+      }
     });
   }
 }), _props$props$data$met);
@@ -61516,7 +61558,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["intrari"],
@@ -61564,72 +61605,82 @@ var render = function() {
     "div",
     { staticClass: "container is-fluid" },
     [
-      _vm.show == "garantii"
-        ? _c("table", { staticClass: "table is-centered" }, [
-            _vm._m(0),
-            _vm._v(" "),
-            _c(
-              "tbody",
-              _vm._l(_vm.intrarii, function(intrare) {
-                return _c("tr", [
-                  _c("td", [_vm._v(_vm._s(intrare.nume_vapoint))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(intrare.nume_client))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(intrare.adresa_client))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(intrare.telefon_client))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(intrare.email_client))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(intrare.data))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(intrare.status))]),
-                  _vm._v(" "),
-                  _c("td", [
-                    _c("input", {
-                      staticClass: "checkbox",
-                      attrs: {
-                        type: "checkbox",
-                        value: "Expediat",
-                        id: intrare.id,
-                        disabled:
-                          intrare.status != "Primit @ " + intrare.nume_vapoint
-                      },
-                      domProps: { checked: _vm.temp },
-                      on: { click: _vm.primitVap }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("td", [
-                    _c("input", {
-                      staticClass: "checkbox",
-                      attrs: {
-                        type: "checkbox",
-                        value: "Returnat",
-                        id: intrare.id,
-                        disabled: intrare.status != "Expediat @ Service"
-                      },
-                      domProps: { checked: _vm.temp },
-                      on: { click: _vm.primitVap }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("td", [
-                    _c("i", {
-                      staticClass: "fas fa-chevron-circle-right",
-                      on: {
-                        click: function($event) {
-                          _vm.afiseazaProduse(intrare.id)
-                        }
+      _c(
+        "table",
+        {
+          staticClass: "is-scrollable table is-narrow is-fullwidth is-striped"
+        },
+        [
+          _vm._m(0),
+          _vm._v(" "),
+          _c(
+            "tbody",
+            _vm._l(_vm.intrarii, function(intrare) {
+              return _c("tr", [
+                _c(
+                  "td",
+                  {
+                    on: {
+                      click: function($event) {
+                        _vm.afiseazaProduse(intrare.id)
                       }
-                    })
-                  ])
+                    }
+                  },
+                  [
+                    _c("i", { staticClass: "far fa-eye" }),
+                    _vm._v(
+                      "\n          " +
+                        _vm._s(intrare.nume_vapoint) +
+                        "\n        "
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(intrare.nume_client))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(intrare.adresa_client))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(intrare.telefon_client))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(intrare.email_client))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(intrare.data))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(intrare.status))]),
+                _vm._v(" "),
+                _c("td", [
+                  _c("input", {
+                    staticClass: "checkbox",
+                    attrs: {
+                      type: "checkbox",
+                      value: "Expediat",
+                      id: intrare.id,
+                      disabled:
+                        intrare.status != "Primit @ " + intrare.nume_vapoint
+                    },
+                    domProps: { checked: _vm.temp },
+                    on: { click: _vm.primitVap }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("td", [
+                  _c("input", {
+                    staticClass: "checkbox",
+                    attrs: {
+                      type: "checkbox",
+                      value: "Returnat",
+                      id: intrare.id,
+                      disabled: intrare.status != "Expediat @ Service"
+                    },
+                    domProps: { checked: _vm.temp },
+                    on: { click: _vm.primitVap }
+                  })
                 ])
-              })
-            )
-          ])
-        : _vm._e(),
+              ])
+            })
+          )
+        ]
+      ),
       _vm._v(" "),
       _vm.show == "produse"
         ? _c("detalii-produse", {
@@ -61668,9 +61719,7 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Expediata")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Primita")]),
-        _vm._v(" "),
-        _c("th")
+        _c("th", [_vm._v("Primita")])
       ])
     ])
   }
@@ -61762,24 +61811,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['produse_intrare'],
-    data: function data() {
-        return {
-            message: ''
-        };
-    },
-    methods: {
-        back: function back(event) {
-            this.$emit('Back');
-        }
-    },
-    beforeUpdate: function beforeUpdate() {
-        if (this.produse_intrare.length == 0) this.message = "Nu au fost gasite produse pentru aceasta intrare!";
+  props: ["produse_intrare"],
+  data: function data() {
+    return {
+      message: ""
+    };
+  },
+  methods: {
+    back: function back(event) {
+      this.$emit("Back");
     }
+  },
+  beforeUpdate: function beforeUpdate() {
+    if (this.produse_intrare.length == 0) this.message = "Nu au fost gasite produse pentru aceasta intrare!";
+  }
 });
 
 /***/ }),
@@ -61791,35 +61838,34 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("i", {
-      staticClass: "fas fa-chevron-circle-left",
-      on: { click: _vm.back }
-    }),
-    _vm._v(" "),
-    _c("table", { staticClass: "table" }, [
-      _vm._m(0),
-      _vm._v(" "),
-      _c(
-        "tbody",
-        [
-          _vm._v("\n        " + _vm._s(this.message) + "\n        "),
-          _vm._l(_vm.produse_intrare, function(produs) {
-            return _c("tr", [
-              _c("td", [_vm._v(_vm._s(produs.nume))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(produs.cod))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(produs.defect))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(produs.stare))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(produs.remediere))])
-            ])
-          })
-        ],
-        2
-      )
-    ])
+    _c(
+      "table",
+      { staticClass: "is-scrollable table is-narrow is-fullwidth is-striped" },
+      [
+        _vm._m(0),
+        _vm._v(" "),
+        _c(
+          "tbody",
+          [
+            _vm._v("\n      " + _vm._s(this.message) + "\n      "),
+            _vm._l(_vm.produse_intrare, function(produs) {
+              return _c("tr", [
+                _c("td", [_vm._v(_vm._s(produs.nume))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(produs.cod))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(produs.defect))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(produs.stare))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(produs.remediere))])
+              ])
+            })
+          ],
+          2
+        )
+      ]
+    )
   ])
 }
 var staticRenderFns = [

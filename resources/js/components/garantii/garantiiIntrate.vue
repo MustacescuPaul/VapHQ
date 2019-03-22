@@ -1,6 +1,6 @@
 <template>
   <div class="container is-fluid">
-    <table v-if="show == 'garantii'" class="table is-centered">
+    <table class="is-scrollable table is-narrow is-fullwidth is-striped">
       <thead>
         <tr>
           <th>Nume Vapoint</th>
@@ -12,12 +12,14 @@
           <th>Status</th>
           <th>Expediata</th>
           <th>Primita</th>
-          <th></th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="intrare in intrarii">
-          <td>{{intrare.nume_vapoint}}</td>
+          <td @click="afiseazaProduse(intrare.id)">
+            <i class="far fa-eye"></i>
+            {{intrare.nume_vapoint}}
+          </td>
           <td>{{intrare.nume_client}}</td>
           <td>{{intrare.adresa_client}}</td>
           <td>{{intrare.telefon_client}}</td>
@@ -45,9 +47,6 @@
               :disabled="intrare.status != 'Expediat @ Service'"
               class="checkbox"
             >
-          </td>
-          <td>
-            <i @click="afiseazaProduse(intrare.id)" class="fas fa-chevron-circle-right"></i>
           </td>
         </tr>
       </tbody>

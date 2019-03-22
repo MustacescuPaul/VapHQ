@@ -13,7 +13,9 @@ use App\Ps_order_detail;
 use App\Ps_stock_available;
 use App\Lista_reselleri;
 use App\Ps_order_carrier;
+use App\Cantitate_minima;
 use App\Ps_order_history;
+use App\CategoryProduct;
 use App\User;
 use Auth;
 use Config;
@@ -205,7 +207,7 @@ class ComandaController extends Controller
             }
 
             if ($request->list) {
-
+                $pos = CategoryProduct::where('id_product', '=', $id)->first()->position;
                 $produs_comanda = Comanda::on(Auth::user()->magazin)->find($id);
                 $temp['ref'] = $produs_comanda->preturi_reselleri->ref;
                 $temp['id'] = $produs_comanda->preturi_reselleri->id_produs;
@@ -233,7 +235,8 @@ class ComandaController extends Controller
                 if ($produs_comanda->preturi_reselleri->$reducere == 0) {
                     $temp['stoc'] = 'Nu este disponibil pt comanda!';
                 }
-                $products_json['prods'][$id] = $temp;
+                $product = Ps_product::find($produs_comanda->preturi_reselleri->id_produs);
+                $products_json['prods'][$pos] = $temp;
                 if ($produs_comanda->cantitate == 0) {
                     $produs_comanda->delete();
                 }
@@ -280,6 +283,7 @@ class ComandaController extends Controller
         $permisiuni_comenzi = Auth::user()->users_permisiuni->comanda;
         $id = $request->id_prod;
         if ($permisiuni_comenzi) {
+            $pos = CategoryProduct::where('id_product', '=', $id)->first()->position;
             if ($request->list) {
                 $prod_cmd = Comanda::on(Auth::user()->magazin)->find($request->id_prod);
                 $prod_cmd->delete();
@@ -315,7 +319,7 @@ class ComandaController extends Controller
                 if ($reseller->$reducere == 0) {
                     $temp['stoc'] = 'Nu este disponibil pt comanda!';
                 }
-                $products_json['prods'][$id] = $temp;
+                $products_json['prods'][$pos] = $temp;
                 return $products_json;
             } else {
                 $reducere = Lista_reselleri::where('id_client', '=', Auth::user()->id_vapoint)->first()->reducere;
@@ -355,7 +359,7 @@ class ComandaController extends Controller
                     }
                     $image = $this->getImage($linie->id_prod);
                     $temp['image'] = $image;
-                    $products_json['prods'][$linie->id_prod] = $temp;
+                    $products_json['prods'][$pos] = $temp;
                 }
 
                 return json_encode($products_json);
@@ -374,6 +378,16 @@ class ComandaController extends Controller
         $permisiuni_finalizare_comanda = Auth::user()->users_permisiuni->finalizare;
         //Verificare permisiuni
         if ($permisiuni_comenzi && $permisiuni_user_activ && $permisiuni_finalizare_comanda) {
+            $cos = Comanda::on(Auth::user()->magazin)->get();
+
+            foreach ($cos as $prod) {
+                if ($this->verificaCantMin($prod->id_prod) !== 0) {
+                    $response['message'] = $this->verificaCantMin($prod->id_prod);
+                    $response['prods'] = array();
+                    $response['eroare'] = "da";
+                    return $response;
+                }
+            }
             $response = array();
             $comanda_in_asteptare = Ps_order::where([['id_customer', '=', Auth::user()->id_vapoint], ['valid', '=', '1'], ['current_state', '=', '42']])->orderBy('id_order', 'DESC')->first();
             // $comanda_in_asteptare = Ps_order::where([['valid', '=', '1'], ['current_state', '=', '42']])->orderBy('id_order', 'DESC')->first();
@@ -384,15 +398,17 @@ class ComandaController extends Controller
                 $response['message'] = $message;
                 $id_order = Ps_order::where([['id_customer', '=', Auth::user()->id_vapoint], ['valid', '=', '1'], ['current_state', '=', '42']])->orderBy('id_order', 'DESC')->first()->id_order;
                 //Baga produsele din comanda in ps_order_detail
-                $cos = Comanda::on(Auth::user()->magazin)->get();
+
                 foreach ($cos as $prod) {
                     if ($prod->cantitate > 0) {
                         //Verifica stocul pentru fiecare produs
+
                         $stoc = Ps_stock_available::where('id_product', '=', $prod->id_prod)->first()->quantity;
                         if ($prod->cantitate > $stoc)
                             $cantitate = $stoc;
                         else
                             $cantitate = $prod->cantitate;
+
                         $ord_det = new Ps_order_detail;
                         $ord_det->id_order = $comanda_in_asteptare->id_order;
                         $ord_det->id_shop = 1;
@@ -417,6 +433,7 @@ class ComandaController extends Controller
                         $stoc->save();
                     }
                 }
+
                 $this->recaculareComanda($comanda_in_asteptare->id_order);
                 //Goleste tabela de comanda dupa plasarea ei pe site
                 Comanda::on(Auth::user()->magazin)->truncate();
@@ -443,6 +460,7 @@ class ComandaController extends Controller
                 //Baga produsele din comanda in ps_order_detail
                 foreach ($cos as $prod) {
                     if ($prod->cantitate > 0) {
+
                         //Verifica stocul pentru fiecare produs
                         $stoc = Ps_stock_available::where('id_product', '=', $prod->id_prod)->first()->quantity;
                         if ($prod->cantitate > $stoc)
@@ -473,29 +491,31 @@ class ComandaController extends Controller
                         $stoc->save();
                     }
                 }
-                //Salveaza comanda in storicul comenzilor
-                $order_history = new Ps_order_history;
-                $order_history->id_employee = 0;
-                $order_history->id_order = $id_order;
-                $order_history->id_order_state = 42;
-                $order_history->date_add = date("Y-m-d H:i:s");
-                $order_history->save();
-                //Salveaza transportatorul pentru comanda(aici trebuie modificat id-ul pentru cei care nu au transportator)
-                $order_carrier = new Ps_order_carrier;
-                $order_carrier->id_order = $id_order;
-                $order_carrier->id_carrier = 81;
-                $order_carrier->date_add = date("Y-m-d H:i:s");
-                $order_carrier->save();
-
-                $this->recaculareComanda($id_order);
-                Comanda::on(Auth::user()->magazin)->truncate();
-                $response['prods'] = array();
-                $message = "Comanda a fost salvata si asteapta sa fie procesata.";
-                $response['message'] = $message;
             }
+            //Salveaza comanda in storicul comenzilor
+            $order_history = new Ps_order_history;
+            $order_history->id_employee = 0;
+            $order_history->id_order = $id_order;
+            $order_history->id_order_state = 42;
+            $order_history->date_add = date("Y-m-d H:i:s");
+            $order_history->save();
+            //Salveaza transportatorul pentru comanda(aici trebuie modificat id-ul pentru cei care nu au transportator)
+            $order_carrier = new Ps_order_carrier;
+            $order_carrier->id_order = $id_order;
+            $order_carrier->id_carrier = 81;
+            $order_carrier->date_add = date("Y-m-d H:i:s");
+            $order_carrier->save();
+
+            $this->recaculareComanda($id_order);
+            Comanda::on(Auth::user()->magazin)->truncate();
+            $response['prods'] = array();
+            $message = "Comanda a fost salvata si asteapta sa fie procesata.";
+            $response['message'] = $message;
+
             return  $response;
         }
     }
+
     //Scoate imaginea de cover pentru un produs
     public function getImage($id)
     {
@@ -558,7 +578,9 @@ class ComandaController extends Controller
         $products_json = array();
         $response = array();
         if ($permisiuni_comenzi) {
+
             $order = Ps_order::where([['id_customer', '=', Auth::user()->id_vapoint], ['valid', '=', '1'], ['current_state', '=', '42']])->orderBy('id_order', 'DESC')->first();
+
             //Se verifica daca este vreo comanda in asteptare
             if (!$order) {
                 $response['message'] = "Nu aveti nici o comanda in asteptare!";
@@ -568,7 +590,7 @@ class ComandaController extends Controller
                 $response['message'] = "Produsele sunt salvate într-o comandă şi rezervate din stocul Vapez.Comanda nu va fi procesată până nu va fi finalizată.";
                 $order_details = Ps_order_detail::where('id_order', '=', $order->id_order)->get();
                 foreach ($order_details as $linie) {
-
+                    $pos = CategoryProduct::where('id_product', '=', $linie->preturi_reselleri->id_produs)->first()->position;
                     $stoc = Ps_stock_available::find($linie->id_prod);
                     $permisiuni_viz_stocuri = Auth::user()->users_permisiuni->viz_stocuri_vap;
                     $permisiuni_viz_preturi_res = Auth::user()->users_permisiuni->viz_preturi_res;
@@ -599,7 +621,7 @@ class ComandaController extends Controller
                     }
                     $image = $this->getImage($linie->id_prod);
                     $temp['image'] = $image;
-                    $products_json[$linie->product_id] = $temp;
+                    $products_json[$linie->preturi_reselleri->id_produs] = $temp;
                 }
 
                 $response['prods'] = $products_json;
@@ -665,5 +687,16 @@ class ComandaController extends Controller
         } else {
             return view('index')->with('user', Auth::user());
         }
+    }
+
+    public function verificaCantMin($id)
+    {
+        $cantitate_min = Cantitate_minima::find($id);
+        $cantitate = Comanda::on(Auth::user()->magazin)->find($id)->cantitate;
+        if ($cantitate_min)
+            if ($cantitate % $cantitate_min->cant_min != 0) {
+                return $cantitate_min->mesaj;
+            }
+        return 0;
     }
 }

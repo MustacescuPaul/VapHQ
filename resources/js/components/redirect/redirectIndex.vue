@@ -1,6 +1,7 @@
 <template>
   <div>
     <redirect-menu
+      :menu="menu"
       v-if="show == 'menu'"
       @comenzi="interfataComenzi"
       @vanzare="interfataVanzare"
@@ -11,6 +12,7 @@
 
 <script>
 export default {
+  props: ["menu"],
   data: function() {
     return {
       show: "menu",
