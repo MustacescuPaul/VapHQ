@@ -2,7 +2,7 @@
   <div class="container is-fluid">
     <div class="columns">
       <div class="colum">
-        <comanda-sidebar @getProd="getProdList($event)" :menu="menu"></comanda-sidebar>
+        <comanda-sidebar @search="search($event)" @getProd="getProdList($event)" :menu="menu"></comanda-sidebar>
       </div>
       <div class="column">
         <comanda-list v-if="show == 'products'" :viz_preturi="viz_preturi" :products="products"></comanda-list>
@@ -36,6 +36,14 @@ export default {
 
         if (response.data.prods) this.show = "products";
         else this.show = "";
+      });
+    },
+    search: function(event) {
+      axios.get("../comanda/search/" + event).then(response => {
+        this.products = response.data.prods;
+        this.viz_preturi = response.data.viz_preturi;
+
+        this.show = "products";
       });
     }
   },

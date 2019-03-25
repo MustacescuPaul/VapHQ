@@ -71,6 +71,7 @@ Route::prefix('comanda')->group(function () {
     Route::post('/salveazaCmd', 'ComandaController@salveazaCmd')->name('comanda.salveaza_cmd');
     Route::post('/finalizareCmd', 'ComandaController@finalizareComanda')->name('comanda.finalizeaza_cmd');
     Route::get('/istoric', 'ComandaController@istoricComenzi')->name('comanda.istoric');
+    Route::get('/search/{name}', 'ComandaController@search')->name('comanda.search');
 });
 Route::prefix('garantii')->group(function () {
     Route::get('/', 'GarantiiController@index')->name('garantii.index');

@@ -36,13 +36,13 @@
           </td>
           <td
             v-if="viz_preturi > 0 && product.stoc != 'Nu este disponibil pt comanda!'"
-          >{{product.ctva}}</td>
+          >{{product.ctva.toFixed(2)}}</td>
           <td
             v-if="viz_preturi > 0 && product.stoc != 'Nu este disponibil pt comanda!'"
-          >{{product.total_ctva}}</td>
+          >{{product.total_ctva.toFixed(2)}}</td>
           <td
             v-if="viz_preturi > 0 && product.stoc != 'Nu este disponibil pt comanda!'"
-          >{{product.adaos_nr}}</td>
+          >{{product.adaos_nr.toFixed(2)}}</td>
           <td
             v-if="viz_preturi > 0 && product.stoc != 'Nu este disponibil pt comanda!'"
           >{{product.adaos_proc}}%</td>

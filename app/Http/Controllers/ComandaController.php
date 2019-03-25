@@ -172,8 +172,55 @@ class ComandaController extends Controller
     public function search($name)
     {
         $user = Auth::user();
-        $products = Product::on($user->magazin)->where('nume', $name)->orWhere('nume', 'like', '%' . $name . '%')->get();
-        return json_encode($products);
+        $permisiuni_comenzi = Auth::user()->users_permisiuni->comanda;
+        $reducere = Lista_reselleri::where('id_client', '=', Auth::user()->id_vapoint)->first()->reducere;
+        if ($permisiuni_comenzi) {
+            $products = Preturi_reselleri::where('nume', $name)->orWhere('nume', 'like', '%' . $name . '%')->get()->sortByDesc('id_product');
+
+            foreach ($products as $product) {
+
+                if (Comanda::on(Auth::user()->magazin)->find($product->ps_product->id_product)) {
+                    $produs_comanda = Comanda::on(Auth::user()->magazin)->find($product->ps_product->id_product);
+                    $temp['cos'] = $produs_comanda->cantitate;
+                } else {
+                    $temp['cos'] = 0;
+                }
+                $reseller = Preturi_reselleri::find($product->ps_product->id_product);
+                $stoc = Ps_stock_available::find($product->ps_product->id_product);
+                $permisiuni_viz_stocuri = Auth::user()->users_permisiuni->viz_stocuri_vap;
+                $permisiuni_viz_preturi_res = Auth::user()->users_permisiuni->viz_preturi_res;
+
+                $temp['ref'] = $reseller->ref;
+                $temp['id'] = $reseller->id_produs;
+                $temp['nume'] = $reseller->nume;
+                $temp['stoc_s'] = $stoc['quantity'];
+                if ($stoc['quantity'] > 0) {
+                    $temp['stoc'] = 'da';
+                } else {
+                    $temp['stoc'] = 'nu';
+                }
+                if ($permisiuni_viz_stocuri) {
+                    $temp['stoc'] = $stoc['quantity'];
+                }
+                if ($reseller->$reducere > 0)
+                    if ($permisiuni_viz_preturi_res) {
+                        $temp['ftva'] = $reseller->$reducere;
+                        $temp['ctva'] = round($reseller->$reducere * 1.19, 2);
+                        $temp['site'] = $reseller->vct;
+                        $temp['adaos_nr'] = round($reseller->vct - round($reseller->$reducere * 1.19, 2), 2);
+                        $temp['adaos_proc'] = round(($temp['adaos_nr'] / $temp['ctva']) * 100, 2);
+                        $products_json['viz_preturi'] = 1;
+                    }
+                if ($reseller->$reducere == 0) {
+                    $temp['stoc'] = 'Nu este disponibil pt comanda!';
+                }
+                $pos = CategoryProduct::where('id_product', '=', $product->ps_product->id_product)->first()->position;
+                $products_json['prods'][$pos] = $temp;
+            }
+        } else {
+            return "Nu aveti permisiunile necesare!";
+        }
+        return json_encode($products_json);
     }
     public function addToCmd(Request $request)
     {
@@ -408,25 +455,33 @@ class ComandaController extends Controller
                             $cantitate = $stoc;
                         else
                             $cantitate = $prod->cantitate;
+                        if ($ord_det_asteptare = Ps_order_detail::where([['product_id', '=', $prod->id_prod], ['id_order', '=', $comanda_in_asteptare->id_order]])->first()) {
+                            $ord_det_asteptare->product_quantity += $cantitate;
+                            $ord_det_asteptare->product_quantity_in_stock += $cantitate;
+                            $ord_det_asteptare->total_price_tax_incl = round($prod->preturi_reselleri->$reducere * $ord_det_asteptare->product_quantity * 1.19, 2);
+                            $ord_det_asteptare->total_price_tax_excl = round($prod->preturi_reselleri->$reducere * $ord_det_asteptare->product_quantity, 2);
 
-                        $ord_det = new Ps_order_detail;
-                        $ord_det->id_order = $comanda_in_asteptare->id_order;
-                        $ord_det->id_shop = 1;
-                        $ord_det->product_id = $prod->id_prod;
-                        $ord_det->product_name = $prod->preturi_reselleri->nume;
-                        $ord_det->product_quantity = $cantitate;
-                        $ord_det->product_quantity_in_stock = $cantitate;
-                        $ord_det->product_price = round($prod->preturi_reselleri->$reducere, 2);
-                        $ord_det->product_reference = $prod->preturi_reselleri->ref;
-                        $ord_det->product_weight = $prod->ps_product->weight;
-                        $ord_det->tax_name = '';
-                        $ord_det->total_price_tax_incl = round($prod->preturi_reselleri->$reducere * $cantitate * 1.19, 2);
-                        $ord_det->total_price_tax_excl = round($prod->preturi_reselleri->$reducere * $cantitate, 2);
-                        $ord_det->unit_price_tax_incl = round($prod->preturi_reselleri->$reducere * 1.19, 2);
-                        $ord_det->unit_price_tax_excl = round($prod->preturi_reselleri->$reducere, 2);
-                        $ord_det->purchase_supplier_price = round($prod->preturi_reselleri->intrare, 2);
-                        $ord_det->original_product_price = round($prod->preturi_reselleri->vct / 1.19, 6);
-                        $ord_det->save();
+                            $ord_det_asteptare->save();
+                        } else {
+                            $ord_det = new Ps_order_detail;
+                            $ord_det->id_order = $comanda_in_asteptare->id_order;
+                            $ord_det->id_shop = 1;
+                            $ord_det->product_id = $prod->id_prod;
+                            $ord_det->product_name = $prod->preturi_reselleri->nume;
+                            $ord_det->product_quantity = $cantitate;
+                            $ord_det->product_quantity_in_stock = $cantitate;
+                            $ord_det->product_price = round($prod->preturi_reselleri->$reducere, 2);
+                            $ord_det->product_reference = $prod->preturi_reselleri->ref;
+                            $ord_det->product_weight = $prod->ps_product->weight;
+                            $ord_det->tax_name = '';
+                            $ord_det->total_price_tax_incl = round($prod->preturi_reselleri->$reducere * $cantitate * 1.19, 2);
+                            $ord_det->total_price_tax_excl = round($prod->preturi_reselleri->$reducere * $cantitate, 2);
+                            $ord_det->unit_price_tax_incl = round($prod->preturi_reselleri->$reducere * 1.19, 2);
+                            $ord_det->unit_price_tax_excl = round($prod->preturi_reselleri->$reducere, 2);
+                            $ord_det->purchase_supplier_price = round($prod->preturi_reselleri->intrare, 2);
+                            $ord_det->original_product_price = round($prod->preturi_reselleri->vct / 1.19, 6);
+                            $ord_det->save();
+                        }
                         //Modifica stocul dupa ce plaseaza comanda pe site
                         $stoc = Ps_stock_available::where('id_product', '=', $prod->id_prod)->first();
                         $stoc->quantity -= $cantitate;
@@ -440,6 +495,8 @@ class ComandaController extends Controller
                 $response['prods'] = array();
             } else { //Daca nu are comanda in asteptare
                 //Creeaza comanda
+                $message = "Comanda a fost salvata si asteapta sa fie procesata.";
+                $response['message'] = $message;
                 $order = new Ps_order;
                 $order->reference = substr(str_shuffle(MD5(microtime())), 0, 9);
                 $order->id_carrier = 81;
@@ -509,8 +566,7 @@ class ComandaController extends Controller
             $this->recaculareComanda($id_order);
             Comanda::on(Auth::user()->magazin)->truncate();
             $response['prods'] = array();
-            $message = "Comanda a fost salvata si asteapta sa fie procesata.";
-            $response['message'] = $message;
+
 
             return  $response;
         }

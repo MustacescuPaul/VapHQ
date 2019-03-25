@@ -91,14 +91,15 @@ export default {
       }
     },
     rmCmd: function(event) {
-      var id_prod = event.target.getAttribute("id_prod");
+      let pos = event.target.getAttribute("pos");
+      let id_prod = this.products[pos]["id"];
       axios
         .post("../comanda/rmCmd", {
           id_prod: id_prod,
           list: 1
         })
         .then(response => {
-          this.$set(this.products, id_prod, response.data.prods[id_prod]);
+          this.$set(this.products, pos, response.data.prods[pos]);
 
           this.viz_preturi = response.data.viz_preturi;
         });

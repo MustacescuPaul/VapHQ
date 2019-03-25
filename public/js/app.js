@@ -58791,12 +58791,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     rmCmd: function rmCmd(event) {
       var _this2 = this;
 
-      var id_prod = event.target.getAttribute("id_prod");
+      var pos = event.target.getAttribute("pos");
+      var id_prod = this.products[pos]["id"];
       axios.post("../comanda/rmCmd", {
         id_prod: id_prod,
         list: 1
       }).then(function (response) {
-        _this2.$set(_this2.products, id_prod, response.data.prods[id_prod]);
+        _this2.$set(_this2.products, pos, response.data.prods[pos]);
 
         _this2.viz_preturi = response.data.viz_preturi;
       });
@@ -59336,9 +59337,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       if (response.data.prods) _this.show = "products";else _this.show = "";
     });
+  },
+  search: function search(event) {
+    var _this2 = this;
+
+    axios.get("../comanda/search/" + event).then(function (response) {
+      _this2.products = response.data.prods;
+      _this2.viz_preturi = response.data.viz_preturi;
+
+      _this2.show = "products";
+    });
   }
 }), _defineProperty(_props$props$data$met, "created", function created() {
-  var _this2 = this;
+  var _this3 = this;
 
   axios({
     method: "post",
@@ -59348,7 +59359,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     responseType: "text"
   }).then(function (response) {
-    _this2.menu = response.data;
+    _this3.menu = response.data;
   });
   // axios.get("comanda/comenzi_cart").then(response => {
   //   this.cart = response.data.produse;
@@ -59372,6 +59383,9 @@ var render = function() {
           _c("comanda-sidebar", {
             attrs: { menu: _vm.menu },
             on: {
+              search: function($event) {
+                _vm.search($event)
+              },
               getProd: function($event) {
                 _vm.getProdList($event)
               }
@@ -59765,17 +59779,17 @@ var render = function() {
                 _vm._v(" "),
                 _vm.viz_preturi > 0 &&
                 product.stoc != "Nu este disponibil pt comanda!"
-                  ? _c("td", [_vm._v(_vm._s(product.ctva))])
+                  ? _c("td", [_vm._v(_vm._s(product.ctva.toFixed(2)))])
                   : _vm._e(),
                 _vm._v(" "),
                 _vm.viz_preturi > 0 &&
                 product.stoc != "Nu este disponibil pt comanda!"
-                  ? _c("td", [_vm._v(_vm._s(product.total_ctva))])
+                  ? _c("td", [_vm._v(_vm._s(product.total_ctva.toFixed(2)))])
                   : _vm._e(),
                 _vm._v(" "),
                 _vm.viz_preturi > 0 &&
                 product.stoc != "Nu este disponibil pt comanda!"
-                  ? _c("td", [_vm._v(_vm._s(product.adaos_nr))])
+                  ? _c("td", [_vm._v(_vm._s(product.adaos_nr.toFixed(2)))])
                   : _vm._e(),
                 _vm._v(" "),
                 _vm.viz_preturi > 0 &&
@@ -60201,16 +60215,18 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _c("td", { staticClass: "has-text-centered" }, [
-                    _vm._v(_vm._s(produs.unitftva))
+                    _vm._v(_vm._s(produs.unitftva.toFixed(2)))
                   ]),
                   _vm._v(" "),
                   _c("td", { staticClass: "has-text-centered" }, [
-                    _vm._v(_vm._s(produs.liniectva))
+                    _vm._v(_vm._s(produs.liniectva.toFixed(2)))
                   ]),
                   _vm._v(" "),
                   _c("td", { staticClass: "has-text-centered" }, [
                     _vm._v(
-                      "\n          " + _vm._s(produs.adaos_nr) + "\n          "
+                      "\n          " +
+                        _vm._s(produs.adaos_nr.toFixed(2)) +
+                        "\n          "
                     ),
                     _c("br"),
                     _vm._v(
@@ -60568,17 +60584,17 @@ var render = function() {
                 _vm._v(" "),
                 _vm.viz_preturi > 0 &&
                 product.stoc != "Nu este disponibil pt comanda!"
-                  ? _c("td", [_vm._v(_vm._s(product.ctva))])
+                  ? _c("td", [_vm._v(_vm._s(product.ctva.toFixed(2)))])
                   : _vm._e(),
                 _vm._v(" "),
                 _vm.viz_preturi > 0 &&
                 product.stoc != "Nu este disponibil pt comanda!"
-                  ? _c("td", [_vm._v(_vm._s(product.total_ctva))])
+                  ? _c("td", [_vm._v(_vm._s(product.total_ctva.toFixed(2)))])
                   : _vm._e(),
                 _vm._v(" "),
                 _vm.viz_preturi > 0 &&
                 product.stoc != "Nu este disponibil pt comanda!"
-                  ? _c("td", [_vm._v(_vm._s(product.adaos_nr))])
+                  ? _c("td", [_vm._v(_vm._s(product.adaos_nr.toFixed(2)))])
                   : _vm._e(),
                 _vm._v(" "),
                 _vm.viz_preturi > 0 &&

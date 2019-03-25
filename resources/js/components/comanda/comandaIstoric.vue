@@ -85,10 +85,10 @@
           </td>
           <td class="has-text-centered">{{produs.nume}}</td>
           <td class="has-text-centered">{{produs.cantitate}}</td>
-          <td class="has-text-centered">{{produs.unitftva}}</td>
-          <td class="has-text-centered">{{produs.liniectva}}</td>
+          <td class="has-text-centered">{{produs.unitftva.toFixed(2)}}</td>
+          <td class="has-text-centered">{{produs.liniectva.toFixed(2)}}</td>
           <td class="has-text-centered">
-            {{produs.adaos_nr}}
+            {{produs.adaos_nr.toFixed(2)}}
             <br>
             {{produs.adaos_proc}}%
           </td>
