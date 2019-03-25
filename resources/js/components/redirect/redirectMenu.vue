@@ -63,7 +63,7 @@ export default {
       var id = event.target.getAttribute("id");
       if (id == "Vanzare") window.location.href = "casa";
       if (id == "Casa") window.location.href = "#";
-      if (id == "Stocuri") window.location.href = "#";
+      if (id == "Stocuri") window.location.href = "stoc";
       if (id == "Sertar") window.location.href = "#";
       if (id == "Mixer baze") window.location.href = "#";
     },

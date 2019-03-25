@@ -27,6 +27,11 @@ Vue.component("date-client", require("./components/casa/dateClient.vue"));
 
 Vue.component("stoc-index", require("./components/stoc/stocIndex.vue"));
 Vue.component("stock-list", require("./components/stoc/stockList.vue"));
+Vue.component("stoc-sidebar", require("./components/stoc/stocSidebar.vue"));
+Vue.component(
+    "modificari-list",
+    require("./components/stoc/modificariList.vue")
+);
 
 Vue.component(
     "redirect-index",

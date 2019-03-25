@@ -2,56 +2,61 @@
   <div class="container is-fluid">
     <div class="columns">
       <div class="colum">
-        <categ-menu
-          @getProd="getProdList($event)"
-          @search="search($event)"
-          @showChanged="show = $event"
-          :menu="menu"
-        ></categ-menu>
+        <stoc-sidebar @motiv="motiv = $event" :menu="menu" @getProd="getProdList($event)"></stoc-sidebar>
       </div>
-      <stock-list v-if="show == 'products'" :products="products"></stock-list>
+
+      <modificari-list v-if="show == 'modificari'" :modificari="modificari"></modificari-list>
+      <stock-list v-if="show == 'products'" @modifica="modifica($event)" :products="products"></stock-list>
     </div>
   </div>
 </template>
 <script>
 export default {
-  props: [],
+  props: ["modificari"],
   data: function() {
     return {
-      show: "cart",
+      show: "modificari",
       products: [],
       menu: [],
-      cart: []
+      cart: [],
+      motiv: ""
     };
   },
   methods: {
     getProdList: function(event) {
-      axios.get("casa/lista_produse/" + event).then(response => {
-        this.products = response.data.products;
-        this.show = "products";
+      axios.get("../stoc/lista_produse/" + event).then(response => {
+        this.products = response.data;
+        if (response.data.data) this.show = "products";
+        else this.show = ",odificari";
       });
     },
     search: function(event) {
-      axios.get("casa/search/" + event).then(response => {
+      axios.get("../stoc/search/" + event).then(response => {
         this.products = response.data;
 
         this.show = "products";
       });
+    },
+    modifica: function(event) {
+      axios
+        .post("../stoc/modifica", {
+          cantitate: event.cantitate,
+          id_prod: event.id,
+          motiv: this.motiv
+        })
+        .then(response => {});
     }
   },
   created() {
     axios({
       method: "post",
-      url: "casa/sidebar_categ",
+      url: "stoc/sidebar",
       data: {
         id: 2
       },
       responseType: "text"
     }).then(response => {
       this.menu = response.data;
-    });
-    axios.get("casa/showcart").then(response => {
-      this.cart = response.data.produse;
     });
   }
 };

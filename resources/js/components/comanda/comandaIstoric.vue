@@ -133,9 +133,7 @@ export default {
       }
     }
   },
-  mounted() {
-    console.log(this.istoricl);
-  }
+  mounted() {}
 };
 </script>
 <style>

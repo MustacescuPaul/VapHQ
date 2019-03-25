@@ -1,28 +1,48 @@
 <template>
-  <table class="is-scrollable table is-fullwidth">
+  <table class="is-scrollable table is-narrow is-fullwidth is-striped">
     <thead>
       <tr>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
+        <th class="has-text-centered">
+          <i class="fas fa-fingerprint"></i>
+        </th>
+        <th class="has-text-centered">
+          <i class="fas fa-tag"></i>
+        </th>
+        <th class="has-text-centered">
+          <i class="fas fa-shopping-basket"></i>
+        </th>
+        <th class="has-text-right">
+          <i class="fas fa-plus"></i>
+        </th>
+        <th class="has-text-centered">Stoc</th>
+        <th class="has-text-left">
+          <i class="fas fa-minus"></i>
+        </th>
       </tr>
     </thead>
     <tbody>
-      <tr v-for="product in products">
-        <td>
-          <button class="button is-primary">Info</button>
+      <tr v-for="product in products.data">
+        <td class="has-text-centered">{{product.id}}</td>
+        <td class="has-text-centered">{{product.ref}}</td>
+        <td class="has-text-centered">{{product.nume}}</td>
+        <td class="has-text-right">
+          <input
+            :id_prod="product.id"
+            sign="1"
+            v-on:keyup.enter="trimite"
+            type="text"
+            class="input"
+          >
         </td>
-        <td>[38]</td>
-        <td>23</td>
-        <td>
-          <button class="button is-primary">Cos</button>
-        </td>
-        <td>{{product.nume}}</td>
-        <td>
-          <button class="button is-primary is-fullwidth is-block" :id_prod="product.id_prod"></button>
+        <td class="has-text-centered">{{product.stoc}}</td>
+        <td class="has-text-left">
+          <input
+            :id_prod="product.id"
+            sign="-1"
+            v-on:keyup.enter="trimite"
+            type="text"
+            class="input"
+          >
         </td>
       </tr>
     </tbody>
@@ -35,9 +55,41 @@ export default {
   data: function() {
     return {};
   },
-  methods: {}
+  methods: {
+    trimite: function(event) {
+      let id = event.target.getAttribute("id_prod");
+      let cantitate = event.target.value;
+      let sign = event.target.getAttribute("sign");
+      cantitate = Number(cantitate) * Number(sign);
+      this.$emit("modifica", { id: id, cantitate: cantitate });
+    }
+  }
 };
 </script>
 
-<style scoped>
+<style>
+table {
+  font-size: 15px;
+  padding-bottom: 0px;
+  margin-bottom: 0px !important;
+  margin-top: 15px;
+  margin-left: 5px;
+}
+.button {
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  font-size: 15px;
+}
+.fa-long-arrow-alt-left {
+  padding: 0px;
+  margin: 0px;
+}
+.pagination {
+  margin-top: 8px;
+}
+input {
+  width: 50px !important;
+}
 </style>

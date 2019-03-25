@@ -57,6 +57,9 @@ Route::prefix('casa')->group(function () {
 Route::prefix('stoc')->group(function () {
 
     Route::get('/', 'StocController@index')->name('stoc.index');
+    Route::post('/sidebar', 'StocController@sidebar')->name('stoc.sidebar');
+    Route::post('/modifica', 'StocController@modificaStoc')->name('stoc.modifica');
+    Route::get('/lista_produse/{id}', 'StocController@productList')->name('stoc.productList');
 });
 Route::prefix('comanda')->group(function () {
 

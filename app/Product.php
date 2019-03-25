@@ -9,6 +9,8 @@ class Product extends Model
     //
     protected $table = 'produse';
     protected $primaryKey = 'id_prod';
+    public $timestamps = false;
+
 
     public function category()
     {
