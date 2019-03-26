@@ -2,7 +2,7 @@
   <div class="container is-fluid">
     <div class="columns">
       <div class="colum">
-        <stoc-sidebar @motiv="motiv = $event" :menu="menu" @getProd="getProdList($event)"></stoc-sidebar>
+        <stoc-sidebar @search="search" @motiv="motiv = $event" :menu="menu" @getProd="getProdList($event)"></stoc-sidebar>
       </div>
 
       <modificari-list v-if="show == 'modificari'" :modificari="modificari"></modificari-list>

@@ -21,7 +21,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(product,index) in products.data">
+      <tr v-for="(product,index) in prods">
         <td class="has-text-centered">{{product.id}}</td>
         <td class="has-text-centered">{{product.ref}}</td>
         <td class="has-text-centered">{{product.nume}}</td>
@@ -70,6 +70,14 @@ export default {
         this.products.data[pos]["stoc"] + cantitate
       );
       this.$emit("modifica", { id: id, cantitate: cantitate });
+    }
+  },
+  computed: {
+    prods: function() {
+      if ("meta" in this.products)
+        if ("search" in this.products.meta)
+          return _.orderBy(this.products.data, ["id"], ["desc"]);
+      return _.orderBy(this.products.data, ["id"], ["asc"]);
     }
   }
 };

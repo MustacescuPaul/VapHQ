@@ -57853,6 +57853,7 @@ var render = function() {
             _c("stoc-sidebar", {
               attrs: { menu: _vm.menu },
               on: {
+                search: _vm.search,
                 motiv: function($event) {
                   _vm.motiv = $event
                 },
@@ -58060,6 +58061,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.$set(this.products.data[pos], "stoc", this.products.data[pos]["stoc"] + cantitate);
       this.$emit("modifica", { id: id, cantitate: cantitate });
     }
+  },
+  computed: {
+    prods: function prods() {
+      if ("meta" in this.products) if ("search" in this.products.meta) return _.orderBy(this.products.data, ["id"], ["desc"]);
+      return _.orderBy(this.products.data, ["id"], ["asc"]);
+    }
   }
 });
 
@@ -58079,7 +58086,7 @@ var render = function() {
       _vm._v(" "),
       _c(
         "tbody",
-        _vm._l(_vm.products.data, function(product, index) {
+        _vm._l(_vm.prods, function(product, index) {
           return _c("tr", [
             _c("td", { staticClass: "has-text-centered" }, [
               _vm._v(_vm._s(product.id))

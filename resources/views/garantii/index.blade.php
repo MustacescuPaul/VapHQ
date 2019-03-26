@@ -1,4 +1,4 @@
-@extends('layouts.fara-navbar')
+@extends('layouts.meniu-principal')
 
 @section('content')
 <garantii-index></garantii-index>

@@ -140,4 +140,35 @@ class StocController extends Controller
             $modificare->save();
         }
     }
+
+    public function search($name)
+    {
+        $permisiuni_stoc = Auth::user()->users_permisiuni->stocuri;
+
+        if ($permisiuni_stoc) {
+
+            $user = Auth::user();
+            $prods = Preturi_reselleri::where('nume', $name)->orWhere('nume', 'like', '%' . $name . '%')->get()->sortByDesc('id_produs');
+            $products = array();
+            $temp = array();
+
+            foreach ($prods as $product) {
+
+                if ($produs = Product::on(Auth::user()->magazin)->find($product->id_product))
+                    $cantitate = $produs->stoc;
+                else
+                    $cantitate = 0;
+
+                $products['data'][$product->id_produs]['id'] = $product->id_produs;
+                $products['data'][$product->id_produs]['ref'] = $product->ref;
+                $products['data'][$product->id_produs]['nume'] = $product->nume;
+                $products['data'][$product->id_produs]['stoc'] = $cantitate;
+            }
+            $products['meta']['search'] = "1";
+        } else {
+            return "Nu aveti permisiunile necesare!";
+        }
+
+        return json_encode($products);
+    }
 }

@@ -60,6 +60,7 @@ Route::prefix('stoc')->group(function () {
     Route::post('/sidebar', 'StocController@sidebar')->name('stoc.sidebar');
     Route::post('/modifica', 'StocController@modificaStoc')->name('stoc.modifica');
     Route::get('/lista_produse/{id}', 'StocController@productList')->name('stoc.productList');
+    Route::get('/search/{name}', 'StocController@search')->name('stoc.search');
 });
 Route::prefix('comanda')->group(function () {
 
