@@ -28,69 +28,36 @@ Vue.component("date-client", require("./components/casa/dateClient.vue"));
 Vue.component("stoc-index", require("./components/stoc/stocIndex.vue"));
 Vue.component("stock-list", require("./components/stoc/stockList.vue"));
 Vue.component("stoc-sidebar", require("./components/stoc/stocSidebar.vue"));
-Vue.component(
-    "modificari-list",
-    require("./components/stoc/modificariList.vue")
-);
+Vue.component("modificari-list", require("./components/stoc/modificariList.vue"));
 
-Vue.component(
-    "redirect-index",
-    require("./components/redirect/redirectIndex.vue")
-);
-Vue.component(
-    "redirect-menu",
-    require("./components/redirect/redirectMenu.vue")
-);
+Vue.component("sertar-index", require("./components/sertar/sertarIndex.vue"));
+Vue.component("sertar-afisare", require("./components/sertar/sertarAfisare.vue"));
+Vue.component("retragere-depunere", require("./components/sertar/retragereDepunere.vue"));
+Vue.component("depunere-banca", require("./components/sertar/depunereBanca.vue"));
+Vue.component("sertar-sidebar", require("./components/sertar/sertarSidebar.vue"));
+
+Vue.component("redirect-index", require("./components/redirect/redirectIndex.vue"));
+Vue.component("redirect-menu", require("./components/redirect/redirectMenu.vue"));
 
 Vue.component("comanda-list", require("./components/comanda/comandaList.vue"));
-Vue.component(
-    "comanda-sidebar",
-    require("./components/comanda/comandaSidebar.vue")
-);
-Vue.component(
-    "comanda-index",
-    require("./components/comanda/comandaIndex.vue")
-);
+Vue.component("comanda-sidebar", require("./components/comanda/comandaSidebar.vue"));
+Vue.component("comanda-index", require("./components/comanda/comandaIndex.vue"));
 Vue.component("comanda-cos", require("./components/comanda/comandaCos.vue"));
-Vue.component(
-    "comanda-istoric",
-    require("./components/comanda/comandaIstoric.vue")
-);
-Vue.component(
-    "asteptare-cos",
-    require("./components/comanda/asteptareCos.vue")
-);
+Vue.component("comanda-istoric", require("./components/comanda/comandaIstoric.vue"));
+Vue.component("asteptare-cos", require("./components/comanda/asteptareCos.vue"));
 
-Vue.component(
-    "garantii-index",
-    require("./components/garantii/garantiiIndex.vue")
-);
+Vue.component("garantii-index", require("./components/garantii/garantiiIndex.vue"));
 Vue.component("date-intrare", require("./components/garantii/dateIntrare.vue"));
 Vue.component("bon-deschis", require("./components/garantii/bonDeschis.vue"));
-Vue.component(
-    "intrare-produs",
-    require("./components/garantii/intrareProdus.vue")
-);
-Vue.component(
-    "garantii-intrate",
-    require("./components/garantii/garantiiIntrate.vue")
-);
-Vue.component(
-    "detalii-produse",
-    require("./components/garantii/detaliiProduse.vue")
-);
+Vue.component("intrare-produs", require("./components/garantii/intrareProdus.vue"));
+Vue.component("garantii-intrate", require("./components/garantii/garantiiIntrate.vue"));
+Vue.component("detalii-produse", require("./components/garantii/detaliiProduse.vue"));
 
 Vue.component("admin-index", require("./components/admin/adminIndex.vue"));
 Vue.component("admin-sidebar", require("./components/admin/adminSidebar.vue"));
 Vue.component("admin-content", require("./components/admin/adminContent.vue"));
-Vue.component(
-    "admin-accounts",
-    require("./components/admin/adminAccounts.vue")
-);
-Vue.component(
-    "accounts-settings",
-    require("./components/admin/accountsSettings.vue")
-);
+Vue.component("admin-accounts", require("./components/admin/adminAccounts.vue"));
+Vue.component("accounts-settings", require("./components/admin/accountsSettings.vue"));
 Vue.component("admin-service", require("./components/admin/adminService.vue"));
 
 /*const files = require.context('./', true, /\.vue$/i)

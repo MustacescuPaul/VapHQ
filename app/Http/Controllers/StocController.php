@@ -154,7 +154,7 @@ class StocController extends Controller
 
             foreach ($prods as $product) {
 
-                if ($produs = Product::on(Auth::user()->magazin)->find($product->id_product))
+                if ($produs = Product::on(Auth::user()->magazin)->find($product->id_produs))
                     $cantitate = $produs->stoc;
                 else
                     $cantitate = 0;
@@ -164,9 +164,6 @@ class StocController extends Controller
                 $products['data'][$product->id_produs]['nume'] = $product->nume;
                 $products['data'][$product->id_produs]['stoc'] = $cantitate;
             }
-            $products['meta']['search'] = "1";
-        } else {
-            return "Nu aveti permisiunile necesare!";
         }
 
         return json_encode($products);

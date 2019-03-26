@@ -62,6 +62,9 @@ Route::prefix('stoc')->group(function () {
     Route::get('/lista_produse/{id}', 'StocController@productList')->name('stoc.productList');
     Route::get('/search/{name}', 'StocController@search')->name('stoc.search');
 });
+Route::prefix('sertar')->group(function () {
+    Route::get('/', 'SertarController@index')->name('sertar.index');
+});
 Route::prefix('comanda')->group(function () {
 
     Route::get('/', 'ComandaController@index')->name('comanda.index');

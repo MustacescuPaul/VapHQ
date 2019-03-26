@@ -64,7 +64,7 @@ export default {
       if (id == "Vanzare") window.location.href = "casa";
       if (id == "Casa") window.location.href = "#";
       if (id == "Stocuri") window.location.href = "stoc";
-      if (id == "Sertar") window.location.href = "#";
+      if (id == "Sertar") window.location.href = "sertar";
       if (id == "Mixer baze") window.location.href = "#";
     },
     garantii: function(event) {
