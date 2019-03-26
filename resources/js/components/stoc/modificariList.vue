@@ -26,7 +26,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(modificare,index) in modificari.data">
+      <tr v-for="(modificare,index) in mods">
         <td class="has-text-centered">{{modificare.data}}</td>
         <td class="has-text-centered">{{modificare.ora}}</td>
         <td class="has-text-centered">{{modificare.user}}</td>
@@ -78,6 +78,11 @@ export default {
             this.modificari = response.data;
           });
       }
+    }
+  },
+  computed: {
+    mods: function() {
+      return _.orderBy(this.modificari.data, ["data", "ora"], ["desc", "desc"]);
     }
   }
 };

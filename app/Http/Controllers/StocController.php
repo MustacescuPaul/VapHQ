@@ -45,6 +45,7 @@ class StocController extends Controller
                 $modificari['data'][$stoc->id]['ref'] = $produs->ref;
             }
             $modificari['meta']['pages'] = $stocuri->lastPage();
+
             if ($request->paginate == 1) {
 
                 return $modificari;
@@ -98,7 +99,7 @@ class StocController extends Controller
             $temp = array();
 
             foreach ($categ->ps_product as $product) {
-                $pos = CategoryProduct::where('id_product', '=', $product->id_product)->first()->position;
+                $pos = CategoryProduct::where([['id_product', '=', $product->id_product], ['id_category', '=', $id]])->first()->position;
                 if ($produs = Product::on(Auth::user()->magazin)->find($product->id_product))
                     $cantitate = $produs->stoc;
                 else

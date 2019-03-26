@@ -21,7 +21,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="product in products.data">
+      <tr v-for="(product,index) in products.data">
         <td class="has-text-centered">{{product.id}}</td>
         <td class="has-text-centered">{{product.ref}}</td>
         <td class="has-text-centered">{{product.nume}}</td>
@@ -29,6 +29,7 @@
           <input
             :id_prod="product.id"
             sign="1"
+            :pos="index"
             v-on:keyup.enter="trimite"
             type="text"
             class="input"
@@ -39,6 +40,7 @@
           <input
             :id_prod="product.id"
             sign="-1"
+            :pos="index"
             v-on:keyup.enter="trimite"
             type="text"
             class="input"
@@ -58,9 +60,15 @@ export default {
   methods: {
     trimite: function(event) {
       let id = event.target.getAttribute("id_prod");
+      let pos = event.target.getAttribute("pos");
       let cantitate = event.target.value;
       let sign = event.target.getAttribute("sign");
       cantitate = Number(cantitate) * Number(sign);
+      this.$set(
+        this.products.data[pos],
+        "stoc",
+        this.products.data[pos]["stoc"] + cantitate
+      );
       this.$emit("modifica", { id: id, cantitate: cantitate });
     }
   }
