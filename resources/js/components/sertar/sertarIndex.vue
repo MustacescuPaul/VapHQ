@@ -5,7 +5,7 @@
         <sertar-sidebar></sertar-sidebar>
       </div>
 
-      <sertar-afisare v-if="show == 'sertar'"></sertar-afisare>
+      <sertar-afisare :response="response" v-if="show == 'sertar'"></sertar-afisare>
       <!-- <retragere-depunere></retragere-depunere> -->
       <!-- <depunere-banca></depunere-banca> -->
     </div>
@@ -14,6 +14,7 @@
 
 <script>
 export default {
+  props: ["response"],
   data: function() {
     return {
       show: "sertar"

@@ -26,14 +26,14 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(operatiune,index) in operatiuni">
-        <td class="has-text-centered">{{operatiune.data}}</td>
+      <tr v-for="(operatiune,index) in response.data">
+        <td class="has-text-centered">{{operatiune.date}}</td>
         <td class="has-text-centered">{{operatiune.ora}}</td>
         <td class="has-text-centered">{{operatiune.user}}</td>
         <td class="has-text-centered">{{operatiune.tip}}</td>
         <td class="has-text-centered">{{operatiune.suma}}</td>
         <td class="has-text-centered">{{operatiune.motiv}}</td>
-        <td class="has-text-centered">{{operatiune.problema}}</td>
+        <td class="has-text-centered">{{operatiune.eroare}}</td>
       </tr>
       <tr>
         <td>
@@ -43,7 +43,7 @@
         <td></td>
         <td></td>
         <td>
-          <p class="pagination has-text-centered">{{ currentPage }} / {{ totalPages }}</p>
+          <p class="pagination has-text-centered">{{ currentPage }}</p>
         </td>
         <td></td>
         <td>
@@ -56,27 +56,24 @@
 
 <script>
 export default {
+  props: ["response"],
   data: function() {
     return {
-      currentPage: "1",
-      totalPages: this.modificari.meta.pages
+      currentPage: "1"
     };
   },
   methods: {
     paginate: function(event) {
       let page = event.target.getAttribute("page");
 
-      if (
-        Number(this.currentPage) + Number(page) <= this.totalPages &&
-        Number(this.currentPage) + Number(page) > 0
-      ) {
+      let pg = Number(this.currentPage) + Number(page);
+
         this.currentPage = Number(this.currentPage) + Number(page);
-        axios
-          .get("../stoc?page=" + this.currentPage + "&paginate=1")
-          .then(response => {
-            this.modificari = response.data;
-          });
-      }
+        axios.get("../sertar?" + "paginate=1&page=" + page).then(response => {
+          this.response = response.data;
+          if (page < 0) this.currentPage = 1;
+        });
+      
     }
   }
 };
