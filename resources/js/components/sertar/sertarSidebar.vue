@@ -3,10 +3,13 @@
     <div class="columns" style="list-style-type: none; margin-top: 3px;">
       <div class="column" style="max-width:160px;padding-left:0px;padding-right:0px;">
         <li>
-          <button class="button is-outlined is-fullwidth">Sertar</button>
+          <button @click="show('sertar')" class="button is-outlined is-fullwidth">Sertar</button>
         </li>
         <li>
-          <button class="button is-outlined is-fullwidth">Retragere/Depunere</button>
+          <button
+            @click="show('retragere')"
+            class="button is-outlined is-fullwidth"
+          >Retragere/Depunere</button>
         </li>
         <li>
           <button class="button is-outlined is-fullwidth">Depunere banca</button>
@@ -17,7 +20,16 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data: function() {
+    return {};
+  },
+  methods: {
+    show: function(button) {
+      this.$emit("show", button);
+    }
+  }
+};
 </script>
 
 <style scoped>

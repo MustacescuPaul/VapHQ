@@ -64,6 +64,7 @@ Route::prefix('stoc')->group(function () {
 });
 Route::prefix('sertar')->group(function () {
     Route::get('/', 'SertarController@index')->name('sertar.index');
+    Route::get('/retrageri_depuneri', 'SertarController@retragereDepunere')->name('sertar.retrageriDepuneri');
 });
 Route::prefix('comanda')->group(function () {
 

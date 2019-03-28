@@ -68,12 +68,11 @@ export default {
 
       let pg = Number(this.currentPage) + Number(page);
 
-        this.currentPage = Number(this.currentPage) + Number(page);
-        axios.get("../sertar?" + "paginate=1&page=" + page).then(response => {
-          this.response = response.data;
-          if (page < 0) this.currentPage = 1;
-        });
-      
+      this.currentPage = Number(this.currentPage) + Number(page);
+      axios.get("../sertar?" + "paginate=1&page=" + pg).then(response => {
+        this.response = response.data;
+        if (page < 0) this.currentPage = 1;
+      });
     }
   }
 };
