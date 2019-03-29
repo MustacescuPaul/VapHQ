@@ -3,37 +3,75 @@
     <thead>
       <tr>
         <th class="has-text-centered">
-          <i class="fas fa-calendar-day"></i>
+          <i class="fas fa-calendar-day"></i>D
         </th>
         <th class="has-text-centered">
-          <i class="fas fa-clock"></i>
+          <i class="fas fa-calendar-day"></i>I
+        </th>
+        <th class="has-text-centered">
+          <i class="fas fa-clock"></i>D
+        </th>
+        <th class="has-text-centered">
+          <i class="fas fa-clock"></i>I
         </th>
         <th class="has-text-centered">
           <i class="fas fa-user"></i>
         </th>
+
         <th class="has-text-centered">
-          <i class="fas fa-tag"></i>
+          <i class="fas fa-money-bill-alt"></i>D
         </th>
         <th class="has-text-centered">
-          <i class="fas fa-money-bill-alt"></i>
+          <i class="fas fa-money-bill-alt"></i>V
+        </th>
+        <th class="has-text-centered">
+          <i class="fas fa-money-bill-alt"></i>I
+        </th>
+
+        <th class="has-text-centered">
+          <i class="fas fa-money-bill-alt"></i>R/D/DB
         </th>
         <th class="has-text-centered">
           <i class="fas fa-bars"></i>
         </th>
         <th class="has-text-centered">
-          <i class="fas fa-exclamation-triangle"></i>
+          <i class="fas fa-exclamation-triangle"></i>D
+        </th>
+        <th class="has-text-centered">
+          <i class="fas fa-exclamation-triangle"></i>I
         </th>
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(operatiune,index) in response.data">
+      <tr v-for="(operatiune,index) in response">
         <td class="has-text-centered">{{operatiune.date}}</td>
+        <td class="has-text-centered">{{operatiune.date_i}}</td>
         <td class="has-text-centered">{{operatiune.ora}}</td>
+        <td class="has-text-centered">{{operatiune.ora_i}}</td>
         <td class="has-text-centered">{{operatiune.user}}</td>
-        <td class="has-text-centered">{{operatiune.tip}}</td>
-        <td class="has-text-centered">{{operatiune.suma}}</td>
-        <td class="has-text-centered">{{operatiune.motiv}}</td>
-        <td class="has-text-centered">{{operatiune.eroare}}</td>
+        <td class="has-text-centered">{{operatiune.deschidere}}</td>
+        <td class="has-text-centered">{{operatiune.vanzari}}</td>
+        <td class="has-text-centered">{{operatiune.inchidere}}</td>
+
+        <td class="has-text-centered">
+          <p>{{operatiune.retragere}}</p>
+          <p>{{operatiune.depunere}}</p>
+          <p>{{operatiune.depunere_banca}}</p>
+        </td>
+
+        <td class="has-text-centered">
+          <p>{{operatiune.motiv_r}}</p>
+          <br v-if="operatiune.motiv_r == '' ">
+          <p>{{operatiune.motiv_d}}</p>
+          <br v-if="operatiune.motiv_d = ''">
+          <p>{{operatiune.motiv_db}}</p>
+        </td>
+        <td class="has-text-centered has-text-danger">
+          <p v-if="operatiune.eroare_deschidere">{{operatiune.eroare_deschidere}}</p>
+        </td>
+        <td class="has-text-centered has-text-danger">
+          <p v-if="operatiune.eroare_inchidere">{{operatiune.eroare_inchidere}}</p>
+        </td>
       </tr>
       <tr>
         <td>
