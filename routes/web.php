@@ -65,6 +65,8 @@ Route::prefix('stoc')->group(function () {
 Route::prefix('sertar')->group(function () {
     Route::get('/', 'SertarController@index')->name('sertar.index');
     Route::get('/retrageri_depuneri', 'SertarController@retragereDepunere')->name('sertar.retrageriDepuneri');
+    Route::get('/depuneri_banca', 'SertarController@depunereBanca')->name('sertar.depunereBanca');
+    Route::post('/valideaza_depunere', 'SertarController@valideazaDepunere')->name('sertar.valideazaDepunere');
 });
 Route::prefix('comanda')->group(function () {
 

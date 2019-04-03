@@ -7,7 +7,7 @@
 
       <sertar-afisare :response="response" v-if="show == 'sertar'"></sertar-afisare>
       <retragere-depunere v-if="show == 'retragere' "></retragere-depunere>
-      <!-- <depunere-banca></depunere-banca> -->
+      <depunere-banca v-if="show == 'depuneri_banca'"></depunere-banca>
     </div>
   </div>
 </template>

@@ -43,7 +43,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(operatiune,index) in response">
+      <tr v-for="(operatiune,index) in lresponse">
         <td class="has-text-centered">{{operatiune.date}}</td>
         <td class="has-text-centered">{{operatiune.date_i}}</td>
         <td class="has-text-centered">{{operatiune.ora}}</td>
@@ -63,7 +63,7 @@
           <p>{{operatiune.motiv_r}}</p>
           <br v-if="operatiune.motiv_r == '' ">
           <p>{{operatiune.motiv_d}}</p>
-          <br v-if="operatiune.motiv_d = ''">
+          <br v-if="operatiune.motiv_d == ''">
           <p>{{operatiune.motiv_db}}</p>
         </td>
         <td class="has-text-centered has-text-danger">
@@ -80,9 +80,15 @@
         <td></td>
         <td></td>
         <td></td>
+        <td></td>
+        <td></td>
+
         <td>
           <p class="pagination has-text-centered">{{ currentPage }}</p>
         </td>
+        <td></td>
+        <td></td>
+        <td></td>
         <td></td>
         <td>
           <i @click="paginate" page="1" class="fas fa-long-arrow-alt-right fa-4x is-pulled-right"></i>
@@ -97,7 +103,8 @@ export default {
   props: ["response"],
   data: function() {
     return {
-      currentPage: "1"
+      currentPage: "1",
+      lresponse: this.response
     };
   },
   methods: {
@@ -105,12 +112,12 @@ export default {
       let page = event.target.getAttribute("page");
 
       let pg = Number(this.currentPage) + Number(page);
-
-      this.currentPage = Number(this.currentPage) + Number(page);
-      axios.get("../sertar?" + "paginate=1&page=" + pg).then(response => {
-        this.response = response.data;
-        if (page < 0) this.currentPage = 1;
-      });
+      if (pg > 0) {
+        this.currentPage = Number(this.currentPage) + Number(page);
+        axios.get("../sertar?" + "paginate=1&page=" + pg).then(response => {
+          this.lresponse = response.data;
+        });
+      }
     }
   }
 };

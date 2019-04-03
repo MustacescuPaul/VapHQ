@@ -48,7 +48,9 @@ class SertarController extends Controller
             $zi['retragere'] = 0;
             $zi['depunere_banca'] = 0;
             foreach ($operatiuni as $key => $op) {
+                //selecteaza cate 7 zile
                 if ($temp < 8) {
+                    //inchidere
                     if ($op->tip == 4) {
                         $zi['inchidere'] = $op->suma;
                         $zi['vanzari'] = $op->vanzari;
@@ -64,6 +66,7 @@ class SertarController extends Controller
                             );
                         }
                     }
+                    //depunere/retragere
                     if ($op->tip == 2) {
 
                         if ($op->suma > 0) {
@@ -82,6 +85,7 @@ class SertarController extends Controller
                             array_push($operatii, ['motiv' => $op->motiv, 'retragere' => $op->suma]);
                         }
                     }
+                    //depunere banca
                     if ($op->tip == 3) {
                         if ($zi['motiv_db'])
                             $zi['motiv_db'] .= '+' . $op->motiv;
@@ -90,6 +94,7 @@ class SertarController extends Controller
                         $zi['depunere_banca'] += $op->suma;
                         array_push($operatii, ['motiv' => $op->motiv, 'depunere_banca' => $op->suma]);
                     }
+                    //deschidere
                     if ($op->tip == 1) {
                         $zi['deschidere'] = $op->suma;
                         $zi['operatii'] = $operatii;
@@ -99,12 +104,14 @@ class SertarController extends Controller
                         $zi['user'] = User::find($op->angajat)->prenume . ' ' . User::find($op->angajat)->nume;
 
 
-
+                        //verificare erari la inchidere
                         if ((float)$zi['deschidere'] + (float)$zi['retragere'] + (float)$zi['vanzari'] != (float)$zi['inchidere']) {
                             $zi['eroare_inchidere'] = (float)$zi['deschidere'] + (float)$zi['retragere'] + (float)$zi['vanzari'] -  (float)$zi['inchidere'];
                         }
+                        //salveaza ziua
                         array_push($saptamana, $zi);
 
+                        //pregatire pentru urmattoarea iteratie
                         $temp++;
                         $zi['eroare_inchidere'] = 0;
                         $zi['inchidere'] = 0;
@@ -119,149 +126,112 @@ class SertarController extends Controller
                     }
                 } else {
 
-                    //dd(session('saptamana'));
+                    //nu verifica prima deschidere din db
                     foreach ($saptamana as $key => $zi) {
                         if ($key < 6)
                             if ($zi['deschidere'] != $saptamana[$key + 1]['inchidere'])                             $saptamana[$key]['eroare_deschidere'] = $saptamana[$key + 1]['inchidere'] - $zi['deschidere'];
                     }
-                    //var_dump(session('saptamana'));
-                    //return Response::json($saptamana);
+                    //return pentru requesturile din Vue
+                    if ($request->paginate)
+                        return $saptamana;
+                    //return pentru requesturile GET normale
                     return view('sertar.index')->with('user', Auth::user())->with(
                         ['response' => $saptamana]
                     );
                 }
             }
+            //pentru ultimele inregistrari din db(in cazul in care numarul total de zile din db nu se imparte fix la 7) intra mai jos
+            foreach ($saptamana as $key => $zi) {
+                if ($key < 4)
+                    if ($zi['deschidere'] != $saptamana[$key + 1]['inchidere'])                             $saptamana[$key]['eroare_deschidere'] = $saptamana[$key + 1]['inchidere'] - $zi['deschidere'];
+            }
 
-
-            // if ($request->page) {
-            //     $page = $request->page;
-            // } else {
-            //     $page = 1;
-            //     $sf = strtotime(Casa::on(Auth::user()->magazin)->where('tip', '=', 4)->orderBy('data', 'desc')->first()->data);
-            // }
-            // $inceput = $page * 7 + 1;
-            // $sfarsit = 2;
-            // $tip = [
-            //     1 => 'Deschidere',
-            //     2 => 'Depunere',
-            //     -2 => 'Retragere',
-            //     3 => 'Depunere banca',
-            //     4 => 'Inchidere'
-            // ];
-            // $data_start = strtotime(Casa::on(Auth::user()->magazin)->where('tip', '=', 4)->orderBy('data', 'desc')->first()->data);
-
-            // $inc = date('Y-m-d', strtotime('-' . $inceput . 'days', $data_start));
-            // $sf = date('Y-m-d', strtotime('-' . $sfarsit . 'days', $data_start));
-            // //dd($data_start);
-            // $operatiuni = Casa::on(Auth::user()->magazin)->whereDate('data', '<=', $sf)->WhereDate('data', '>=', $inc)->orderBy('data', 'desc')->get();
-            // dd($operatiuni);
-
-            // $temp = [];
-            // $response = [];
-            // $response['data'] = [];
-            // $response['meta'] = [];
-            // $resp = [];
-            // $zile = 1;
-            // $max = 9;
-            // //session(['inchidere' => '']);
-            // $temp['suma_deschidere'] = 0;
-            // $temp['suma_inchidere'] = 0;
-            // $temp['suma_retragere'] = 0;
-
-
-            // foreach ($operatiuni as $op) {
-            //     if ($zile < 9) {
-
-            //         if ($op->tip == 1) {
-            //             $temp['suma_deschidere'] = (float)$op->suma;
-            //         }
-            //         if ($op->tip == 4) {
-            //             $temp['suma_inchidere'] = (float)$op->suma;
-            //             $temp['vanzare'] = (float)$op->vanzari;
-            //             $zile++;
-            //         }
-            //         if (($op->tip == 2) || ($op->tip == 3)) {
-            //             $temp['suma_retragere'] += (float)$op->suma;
-            //         }
-            //         if ($op->tip == 4 && $temp['suma_deschidere'] >  0 && $temp['suma_inchidere'] >  0) {
-            //             if ((float)$temp["suma_deschidere"] != (float)$temp['suma_inchidere']) {
-            //                 // $resp['eroare'] = (float)$temp["suma_deschidere"] - (float)$temp["suma_inchidere"];
-            //             } else {
-            //                 $resp['eroare'] = '';
-            //             }
-            //         }
-            //         if ($op->tip == 1 && $temp['suma_deschidere'] > 0 && $temp['suma_inchidere'] > 0) {
-            //             if ((float)$temp["suma_deschidere"] + (float)$temp['vanzare'] + (float)$temp['suma_retragere'] != (float)$temp['suma_inchidere']) {
-            //                 // var_dump($temp["suma_inchidere"]);
-            //                 // var_dump($temp["suma_deschidere"]);
-            //                 // var_dump($temp["vanzare"]);
-            //                 // var_dump($temp["suma_deschidere"] + $temp['vanzare'] + $temp['suma_retragere']);
-            //                 $response['data'][count($response['data']) - 1]['eroare'] =
-            //                     $temp['suma_deschidere'] + $temp['vanzare'] + $temp['suma_retragere'] - $temp['suma_inchidere'];
-            //             } else {
-            //                 $resp['eroare'] = '';
-            //             }
-            //             $temp['suma_retragere'] = 0;
-            //         }
-            //         $resp['date'] = date("d M 'y", strtotime($op->data));
-            //         $resp['ora'] = date("H:i", strtotime($op->data));;
-            //         $resp['user'] = User::find($op->angajat)->prenume . ' ' . User::find($op->angajat)->nume;
-            //         $resp['suma'] = $op->suma;
-            //         $resp['motiv'] = $op->motiv;
-            //         if ($op->suma > 0)
-            //             $resp['tip'] = $tip[$op->tip];
-            //         else
-            //             $resp['tip'] = "Retragere";
-            //         array_push($response['data'], $resp);
-            //         $resp['eroare'] = '';
-            //         if ($zile == 9) {
-            //             session(['inchidere' => $op->id]);
-            //             foreach ($response['data'] as $key => $r) {
-            //                 if ($r['tip'] == 'Deschidere') {
-            //                     if ($r['suma'] != $response['data'][$key + 1]['suma'])
-            //                         $response['data'][$key]['eroare'] = $r['suma'] - $response['data'][$key + 1]['suma'];
-            //                 }
-            //             }
-            //         }
-            //     } else {
-            //         // echo '<pre>';
-            //         // print_r($response);
-            //         // echo '</pre>';
-            //         if (($request->paginate)) {
-            //             return $response;
-            //         }
-            //         return view('sertar.index')->with('user', Auth::user())->with(
-            //             ['response' => $response]
-            //         );
-            //     }
-            // }
+            if ($request->paginate)
+                return $saptamana;
+            return view('sertar.index')->with('user', Auth::user())->with(
+                ['response' => $saptamana]
+            );
         }
     }
 
     public function retragereDepunere()
     {
-        $retrageri = Casa::on(Auth::user()->magazin)->where('tip', '=', 2)->orWhere('tip', '=', 3)->orWhere('tip', '=', -2)->orderBy('data', 'desc')->paginate(10);
+        $permisiuni_sertar = Auth::user()->users_permisiuni->sertar;
         $response = [];
-        $response['data'] = [];
-        $tip = [
-            1 => 'Deschidere',
-            2 => 'Depunere',
-            3 => 'Depunere banca',
-            4 => 'Inchidere'
-        ];
-        foreach ($retrageri as $retragere) {
-            $resp['date'] = date("d M 'y", strtotime($retragere->data));
-            $resp['ora'] = date("H:i", strtotime($retragere->data));
-            $resp['user'] = User::find($retragere->angajat)->prenume . ' ' . User::find($retragere->angajat)->nume;
-            $resp['suma'] = $retragere->suma;
-            $resp['motiv'] = $retragere->motiv;
-            if ($retragere->suma > 0)
-                $resp['tip'] = $tip[$retragere->tip];
-            else
-                $resp['tip'] = "Retragere";
-            array_push($response['data'], $resp);
+        if ($permisiuni_sertar) {
+            $retrageri = Casa::on(Auth::user()->magazin)->where('tip', '=', 2)->orWhere('tip', '=', 3)->orWhere('tip', '=', -2)->orderBy('data', 'desc')->paginate(10);
+            $response = [];
+            $response['data'] = [];
+            $tip = [
+                1 => 'Deschidere',
+                2 => 'Depunere',
+                3 => 'Depunere banca',
+                4 => 'Inchidere'
+            ];
+            foreach ($retrageri as $retragere) {
+                $resp['date'] = date("d M 'y", strtotime($retragere->data));
+                $resp['ora'] = date("H:i", strtotime($retragere->data));
+                $resp['user'] = User::find($retragere->angajat)->prenume . ' ' . User::find($retragere->angajat)->nume;
+                $resp['suma'] = $retragere->suma;
+                $resp['motiv'] = $retragere->motiv;
+                if ($retragere->suma > 0)
+                    $resp['tip'] = $tip[$retragere->tip];
+                else
+                    $resp['tip'] = "Retragere";
+                array_push($response['data'], $resp);
+            }
+            $response['meta']['pages'] = $retrageri->lastPage();
         }
-        $response['meta']['pages'] = $retrageri->lastPage();
         return $response;
+    }
+    public function depunereBanca()
+    {
+        $permisiuni_sertar = Auth::user()->users_permisiuni->sertar;
+        $permisiuni_boss = Auth::user()->users_permisiuni->boss;
+        $response = [];
+        if ($permisiuni_sertar && $permisiuni_boss) {
+            $depuneri_banca = Casa::on(Auth::user()->magazin)->where('tip', '=', 3)->orderBy('data', 'desc')->paginate(10);
+            $response = [];
+            $response['data'] = [];
+            $tip = [
+                1 => 'Deschidere',
+                2 => 'Depunere',
+                3 => 'Depunere banca',
+                4 => 'Inchidere'
+            ];
+            foreach ($depuneri_banca as $depunere) {
+                $resp['date'] = date("d M 'y", strtotime($depunere->data));
+                $resp['ora'] = date("H:i", strtotime($depunere->data));
+                $resp['user'] = User::find($depunere->angajat)->prenume . ' ' . User::find($depunere->angajat)->nume;
+                $resp['suma'] = $depunere->suma;
+                $resp['id'] = $depunere->id;
+                $resp['motiv'] = $depunere->motiv;
+                $resp['verificat'] = $depunere->verificat;
+                if ($depunere->suma > 0)
+                    $resp['tip'] = $tip[$depunere->tip];
+                else
+                    $resp['tip'] = "Retragere";
+                array_push($response['data'], $resp);
+            }
+            $response['meta']['pages'] = $depuneri_banca->lastPage();
+        }
+        return $response;
+    }
+
+    public function valideazaDepunere(Request $request)
+    {
+        $permisiuni_sertar = Auth::user()->users_permisiuni->sertar;
+        $permisiuni_boss = Auth::user()->users_permisiuni->boss;
+
+        if ($permisiuni_sertar && $permisiuni_boss) {
+            $depunere_banca = Casa::on(Auth::user()->magazin)->find($request->id);
+            if ($depunere_banca->verificat == 0)
+                $depunere_banca->verificat = 1;
+            else
+                $depunere_banca->verificat = 0;
+            $depunere_banca->save();
+
+            $this->depunereBanca();
+        }
     }
 }

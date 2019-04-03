@@ -12,7 +12,10 @@
           >Retragere/Depunere</button>
         </li>
         <li>
-          <button class="button is-outlined is-fullwidth">Depunere banca</button>
+          <button
+            @click="show('depuneri_banca')"
+            class="button is-outlined is-fullwidth"
+          >Depunere banca</button>
         </li>
       </div>
     </div>

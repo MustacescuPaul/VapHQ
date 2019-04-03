@@ -59052,7 +59052,9 @@ var render = function() {
           ? _c("sertar-afisare", { attrs: { response: _vm.response } })
           : _vm._e(),
         _vm._v(" "),
-        _vm.show == "retragere" ? _c("retragere-depunere") : _vm._e()
+        _vm.show == "retragere" ? _c("retragere-depunere") : _vm._e(),
+        _vm._v(" "),
+        _vm.show == "depuneri_banca" ? _c("depunere-banca") : _vm._e()
       ],
       1
     )
@@ -59259,12 +59261,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["response"],
   data: function data() {
     return {
-      currentPage: "1"
+      currentPage: "1",
+      lresponse: this.response
     };
   },
   methods: {
@@ -59274,12 +59283,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       var page = event.target.getAttribute("page");
 
       var pg = Number(this.currentPage) + Number(page);
-
-      this.currentPage = Number(this.currentPage) + Number(page);
-      axios.get("../sertar?" + "paginate=1&page=" + pg).then(function (response) {
-        _this.response = response.data;
-        if (page < 0) _this.currentPage = 1;
-      });
+      if (pg > 0) {
+        this.currentPage = Number(this.currentPage) + Number(page);
+        axios.get("../sertar?" + "paginate=1&page=" + pg).then(function (response) {
+          _this.lresponse = response.data;
+        });
+      }
     }
   }
 });
@@ -59301,7 +59310,7 @@ var render = function() {
       _c(
         "tbody",
         [
-          _vm._l(_vm.response, function(operatiune, index) {
+          _vm._l(_vm.lresponse, function(operatiune, index) {
             return _c("tr", [
               _c("td", { staticClass: "has-text-centered" }, [
                 _vm._v(_vm._s(operatiune.date))
@@ -59350,7 +59359,7 @@ var render = function() {
                 _vm._v(" "),
                 _c("p", [_vm._v(_vm._s(operatiune.motiv_d))]),
                 _vm._v(" "),
-                (operatiune.motiv_d = "") ? _c("br") : _vm._e(),
+                operatiune.motiv_d == "" ? _c("br") : _vm._e(),
                 _vm._v(" "),
                 _c("p", [_vm._v(_vm._s(operatiune.motiv_db))])
               ]),
@@ -59384,11 +59393,21 @@ var render = function() {
             _vm._v(" "),
             _c("td"),
             _vm._v(" "),
+            _c("td"),
+            _vm._v(" "),
+            _c("td"),
+            _vm._v(" "),
             _c("td", [
               _c("p", { staticClass: "pagination has-text-centered" }, [
                 _vm._v(_vm._s(_vm.currentPage))
               ])
             ]),
+            _vm._v(" "),
+            _c("td"),
+            _vm._v(" "),
+            _c("td"),
+            _vm._v(" "),
+            _c("td"),
             _vm._v(" "),
             _c("td"),
             _vm._v(" "),
@@ -59798,15 +59817,20 @@ if (false) {
 /* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(180)
+}
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = null
+var __vue_script__ = __webpack_require__(182)
 /* template */
-var __vue_template__ = null
+var __vue_template__ = __webpack_require__(183)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
-var __vue_styles__ = null
+var __vue_styles__ = injectStyle
 /* scopeId */
 var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
@@ -59820,6 +59844,22 @@ var Component = normalizeComponent(
   __vue_module_identifier__
 )
 Component.options.__file = "resources/js/components/sertar/depunereBanca.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-807d09c4", Component.options)
+  } else {
+    hotAPI.reload("data-v-807d09c4", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
 
 module.exports = Component.exports
 
@@ -59910,7 +59950,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -59921,6 +59961,9 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
 //
 //
 //
@@ -60011,25 +60054,27 @@ var render = function() {
               )
             ]),
             _vm._v(" "),
-            _vm._m(0)
+            _c("li", [
+              _c(
+                "button",
+                {
+                  staticClass: "button is-outlined is-fullwidth",
+                  on: {
+                    click: function($event) {
+                      _vm.show("depuneri_banca")
+                    }
+                  }
+                },
+                [_vm._v("Depunere banca")]
+              )
+            ])
           ]
         )
       ]
     )
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("li", [
-      _c("button", { staticClass: "button is-outlined is-fullwidth" }, [
-        _vm._v("Depunere banca")
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -66203,6 +66248,335 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 177 */,
+/* 178 */,
+/* 179 */,
+/* 180 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(181);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(2)("3ca2163e", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-807d09c4\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./depunereBanca.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-807d09c4\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./depunereBanca.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 181 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\ntable {\n  font-size: 15px;\n  padding-bottom: 0px;\n  margin-bottom: 0px !important;\n  margin-top: 15px;\n  margin-left: 5px;\n}\n.button {\n  padding-left: 5px;\n  padding-right: 5px;\n  padding-top: 0px;\n  padding-bottom: 0px;\n  font-size: 15px;\n}\n.fa-long-arrow-alt-left {\n  padding: 0px;\n  margin: 0px;\n}\n.pagination {\n  margin-top: 8px;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 182 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: [],
+  data: function data() {
+    return {
+      currentPage: "1",
+      retrageri: [],
+      pages: "",
+      verificate: []
+    };
+  },
+  methods: {
+    paginate: function paginate(event) {
+      var _this = this;
+
+      var page = event.target.getAttribute("page");
+
+      var pg = Number(this.currentPage) + Number(page);
+      if (Number(this.currentPage) + Number(page) <= this.pages && Number(this.currentPage) + Number(page) > 0) {
+        this.currentPage = Number(this.currentPage) + Number(page);
+        axios.get("../sertar/depuneri_banca?" + "page=" + pg).then(function (response) {
+          _this.retrageri = response.data;
+        });
+      }
+    },
+    valideazaDepunere: function valideazaDepunere(event) {
+      var id = event.target.getAttribute("id");
+
+      axios.post("../sertar/valideaza_depunere", {
+        id: id
+      }).then(function (response) {});
+    }
+  },
+  mounted: function mounted() {
+    var _this2 = this;
+
+    axios.get("../sertar/depuneri_banca").then(function (response) {
+      _this2.retrageri = response.data;
+      _this2.pages = response.data.meta.pages;
+    });
+  }
+});
+
+/***/ }),
+/* 183 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "table",
+    { staticClass: "is-scrollable table is-narrow is-fullwidth is-striped" },
+    [
+      _vm._m(0),
+      _vm._v(" "),
+      _c(
+        "tbody",
+        [
+          _vm._l(_vm.retrageri.data, function(operatiune, index) {
+            return _c("tr", [
+              _c("td", { staticClass: "has-text-centered" }, [
+                _vm._v(_vm._s(operatiune.date))
+              ]),
+              _vm._v(" "),
+              _c("td", { staticClass: "has-text-centered" }, [
+                _vm._v(_vm._s(operatiune.ora))
+              ]),
+              _vm._v(" "),
+              _c("td", { staticClass: "has-text-centered" }, [
+                _vm._v(_vm._s(operatiune.user))
+              ]),
+              _vm._v(" "),
+              _c("td", { staticClass: "has-text-centered" }, [
+                _vm._v(_vm._s(operatiune.tip))
+              ]),
+              _vm._v(" "),
+              _c("td", { staticClass: "has-text-centered" }, [
+                _vm._v(_vm._s(operatiune.suma))
+              ]),
+              _vm._v(" "),
+              _c("td", { staticClass: "has-text-centered" }, [
+                _vm._v(_vm._s(operatiune.motiv))
+              ]),
+              _vm._v(" "),
+              _c("td", { staticClass: "has-text-centered" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: operatiune.verificat,
+                      expression: "operatiune.verificat"
+                    }
+                  ],
+                  attrs: { id: operatiune.id, type: "checkbox" },
+                  domProps: {
+                    checked: Array.isArray(operatiune.verificat)
+                      ? _vm._i(operatiune.verificat, null) > -1
+                      : operatiune.verificat
+                  },
+                  on: {
+                    click: _vm.valideazaDepunere,
+                    change: function($event) {
+                      var $$a = operatiune.verificat,
+                        $$el = $event.target,
+                        $$c = $$el.checked ? true : false
+                      if (Array.isArray($$a)) {
+                        var $$v = null,
+                          $$i = _vm._i($$a, $$v)
+                        if ($$el.checked) {
+                          $$i < 0 &&
+                            _vm.$set(operatiune, "verificat", $$a.concat([$$v]))
+                        } else {
+                          $$i > -1 &&
+                            _vm.$set(
+                              operatiune,
+                              "verificat",
+                              $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                            )
+                        }
+                      } else {
+                        _vm.$set(operatiune, "verificat", $$c)
+                      }
+                    }
+                  }
+                })
+              ])
+            ])
+          }),
+          _vm._v(" "),
+          _c("tr", [
+            _c("td", [
+              _c("i", {
+                staticClass: "fas fa-long-arrow-alt-left fa-4x is-pulled-left",
+                attrs: { page: "-1" },
+                on: { click: _vm.paginate }
+              })
+            ]),
+            _vm._v(" "),
+            _c("td"),
+            _vm._v(" "),
+            _c("td"),
+            _vm._v(" "),
+            _c("td"),
+            _vm._v(" "),
+            _c("td", [
+              _c("p", { staticClass: "pagination has-text-centered" }, [
+                _vm._v(_vm._s(_vm.currentPage) + " / " + _vm._s(_vm.pages))
+              ])
+            ]),
+            _vm._v(" "),
+            _c("td"),
+            _vm._v(" "),
+            _c("td", [
+              _c("i", {
+                staticClass:
+                  "fas fa-long-arrow-alt-right fa-4x is-pulled-right",
+                attrs: { page: "1" },
+                on: { click: _vm.paginate }
+              })
+            ])
+          ])
+        ],
+        2
+      )
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", { staticClass: "has-text-centered" }, [
+          _c("i", { staticClass: "fas fa-calendar-day" })
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "has-text-centered" }, [
+          _c("i", { staticClass: "fas fa-clock" })
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "has-text-centered" }, [
+          _c("i", { staticClass: "fas fa-user" })
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "has-text-centered" }, [
+          _c("i", { staticClass: "fas fa-tag" })
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "has-text-centered" }, [
+          _c("i", { staticClass: "fas fa-money-bill-alt" })
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "has-text-centered" }, [
+          _c("i", { staticClass: "fas fa-bars" })
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "has-text-centered" }, [
+          _c("i", { staticClass: "fas fa-check" })
+        ])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-807d09c4", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);
