@@ -30,6 +30,10 @@ Vue.component("stock-list", require("./components/stoc/stockList.vue"));
 Vue.component("stoc-sidebar", require("./components/stoc/stocSidebar.vue"));
 Vue.component("modificari-list", require("./components/stoc/modificariList.vue"));
 
+Vue.component("monetar-index", require("./components/monetar/monetarIndex.vue"));
+Vue.component("monetar-sidebar", require("./components/monetar/monetarSidebar.vue"));
+Vue.component("monetar-casa", require("./components/monetar/monetarCasa.vue"));
+
 Vue.component("sertar-index", require("./components/sertar/sertarIndex.vue"));
 Vue.component("sertar-afisare", require("./components/sertar/sertarAfisare.vue"));
 Vue.component("retragere-depunere", require("./components/sertar/retragereDepunere.vue"));
