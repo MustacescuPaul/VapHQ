@@ -31,6 +31,11 @@ export default {
     show: function(button) {
       this.$emit("show", button);
     }
+  },
+  mounted() {
+    axios.post("../sertar/butoane_sidebar").then(response => {
+      this.butoane = response.data;
+    });
   }
 };
 </script>
